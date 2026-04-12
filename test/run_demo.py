@@ -2,12 +2,18 @@
 """
 Run this to see the agent in action on all 5 scenarios.
 Usage: python -m tests.phase4.run_demo
-       python -m tests.phase4.run_demo brute_force_ssh
+    python -m tests.phase4.run_demo brute_force_ssh
 """
 import sys, json, time
+from pathlib import Path
 from unittest.mock import patch, MagicMock
-from tests.phase4.mock_alerts import get_alert, ALERTS
-from tests.phase4.mock_elastic import get_context_logs
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from mock_alerts import get_alert, ALERTS
+from mock_elastic import get_context_logs
 
 def print_report(report: dict):
     SEV_COLOR = {

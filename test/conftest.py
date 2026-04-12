@@ -1,7 +1,7 @@
 # tests/phase4/conftest.py
 import pytest
 from unittest.mock import patch, MagicMock
-from .mock_elastic import get_context_logs
+from mock_elastic import get_context_logs
 
 @pytest.fixture(autouse=True)
 def mock_external_dependencies():

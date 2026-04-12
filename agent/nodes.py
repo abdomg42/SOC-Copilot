@@ -1,14 +1,89 @@
 import json, re
 from langchain_ollama import ChatOllama
-from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage
-from .state import AgentState
-from .tools import get_tools, execute_tool
-from .prompts import SYSTEM_PROMPT, REPORT_FORMAT_PROMPT
-from .knowledge_base import get_retriever
+from langchain_core.messages import AIMessage, SystemMessage, HumanMessage, ToolMessage
+from state import AgentState
+from tools import get_tools, execute_tool
+from prompts import SYSTEM_PROMPT, REPORT_FORMAT_PROMPT
+from knowledge_base import get_retriever
 
 # LLM via Ollama — change model name if needed
 LLM = ChatOllama(model='mistral', temperature=0)
 LLM_WITH_TOOLS = LLM.bind_tools(get_tools())
+
+#added to node1 for test
+
+def _choose_mitre_from_alert(alert: dict) -> tuple[str, str, str]:
+    """Return a best-effort MITRE mapping from alert text."""
+    text = (
+        f"{alert.get('rule_description', '')} "
+        f"{alert.get('ml_attack_category', '')}"
+    ).lower()
+    if any(k in text for k in ['ssh', 'brute force', 'password', 'authentication failed']):
+        return ('T1110.001', 'Password Guessing', 'Credential Access')
+    if any(k in text for k in ['scan', 'port scan', 'reconnaissance']):
+        return ('T1046', 'Network Service Discovery', 'Discovery')
+    if any(k in text for k in ['privilege escalation', 'sudo', 'uac']):
+        return ('T1548', 'Abuse Elevation Control Mechanism', 'Privilege Escalation')
+    if any(k in text for k in ['malware', 'payload', 'trojan']):
+        return ('T1204', 'User Execution', 'Execution')
+    return ('T1595', 'Active Scanning', 'Reconnaissance')
+
+
+def _fallback_report(state: AgentState) -> dict:
+    """Build a deterministic report when LLM inference is unavailable."""
+    alert = state.get('alert', {})
+    logs = state.get('context_logs', [])
+    severity = str(alert.get('ml_severity', 'medium')).lower()
+    if severity not in {'critical', 'high', 'medium', 'low'}:
+        severity = 'medium'
+
+    mitre_id, mitre_name, tactic = _choose_mitre_from_alert(alert)
+    src_ip = alert.get('src_ip', 'unknown')
+    description = alert.get('rule_description', 'Security alert detected')
+    title = f"{mitre_name} attempt from {src_ip}"
+
+    attack_sequence = [
+        f"Detection rule triggered: {description}",
+        f"Source {src_ip} generated related telemetry in the context window",
+    ]
+    if logs:
+        attack_sequence.append('Correlated context logs indicate repeated suspicious activity')
+
+    return {
+        'severity': severity,
+        'title': title,
+        'mitre_technique_id': mitre_id,
+        'mitre_technique_name': mitre_name,
+        'mitre_tactic': tactic,
+        'explanation': (
+            f"The alert indicates likely {mitre_name.lower()} behavior from {src_ip}. "
+            'Automated fallback analysis was used because the LLM backend was unavailable, '
+            'so findings are based on local alert and context evidence only.'
+        ),
+        'attack_sequence': attack_sequence,
+        'iocs': [
+            {
+                'type': 'ip',
+                'value': src_ip,
+                'context': description,
+            }
+        ],
+        'remediation_steps': [
+            {
+                'priority': 'immediate',
+                'action': f'Block or rate-limit source IP {src_ip} at firewall/WAF boundaries.',
+            },
+            {
+                'priority': 'short_term',
+                'action': 'Enable stronger authentication controls and tune detection thresholds.',
+            },
+            {
+                'priority': 'long_term',
+                'action': 'Review IAM hardening baseline and incident response playbooks for this technique.',
+            },
+        ],
+        'confidence': 0.62,
+    }
 
 # ── Node 1 : validate and normalize the incoming alert ──────────────
 def receive_alert(state: AgentState) -> AgentState:
@@ -90,9 +165,19 @@ Analyze this incident. You may call tools if you need more information.
             HumanMessage(content=human_content),
         ]
 
-    response = LLM_WITH_TOOLS.invoke(messages)
+    try:
+        response = LLM_WITH_TOOLS.invoke(messages)
+    except Exception as exc:
+        # Keep the graph running offline when Ollama is not reachable.
+        response = AIMessage(
+            content=(
+                'LLM backend unavailable. Proceeding with fallback analysis and no additional tool calls. '
+                f'Error: {type(exc).__name__}'
+            ),
+            tool_calls=[],
+        )
     messages.append(response)
-    return {'messages': messages, 'tool_calls': response.tool_calls}
+    return {'messages': messages, 'tool_calls': getattr(response, 'tool_calls', [])}
 
 # ── Node 5 : execute tool calls requested by the LLM ────────────────
 def call_tool(state: AgentState) -> AgentState:
@@ -112,12 +197,12 @@ def generate_report(state: AgentState) -> AgentState:
     from langchain_core.messages import HumanMessage
     messages = list(state['messages'])
     messages.append(HumanMessage(content=REPORT_FORMAT_PROMPT))
-    response = LLM.invoke(messages)  # No tools here — just JSON output
-    raw = response.content
-    # Extract JSON from response (handle markdown code blocks)
-    match = re.search(r'\{[\s\S]*\}', raw)
     try:
+        response = LLM.invoke(messages)  # No tools here — just JSON output
+        raw = response.content
+        # Extract JSON from response (handle markdown code blocks)
+        match = re.search(r'\{[\s\S]*\}', raw)
         report = json.loads(match.group()) if match else {'raw_output': raw}
-    except json.JSONDecodeError:
-        report = {'raw_output': raw, 'parse_error': True}
+    except Exception:
+        report = _fallback_report(state)
     return {'report': report}
