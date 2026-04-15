@@ -8,12 +8,12 @@ embedding = HuggingFaceEmbeddings(
 )
 
 vs = Chroma(
-    persist_directory="./agent/data/chroma_db",
+    persist_directory="../data/chroma_db",
     collection_name="soc_knowledge",
     embedding_function=embedding
 )
 
-print(vs)  # print first 5 document IDs in the collection
+print(f"the length of documents in the collection: {vs._collection.count()}")
 docs = vs.similarity_search("How to detect privilege escalation?", k=3)
 print(f"Top {len(docs)} results for query: 'How to detect privilege escalation?'\n")
 for d in docs:
