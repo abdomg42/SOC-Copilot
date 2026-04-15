@@ -14,7 +14,7 @@ vs = Chroma(
 )
 
 print(f"the length of documents in the collection: {vs._collection.count()}")
-docs = vs.similarity_search("How to detect privilege escalation?", k=3)
+docs = vs.similarity_search("How to detect privilege escalation?", k=5)
 print(f"Top {len(docs)} results for query: 'How to detect privilege escalation?'\n")
 for d in docs:
     print(d.page_content)
