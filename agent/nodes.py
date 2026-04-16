@@ -102,7 +102,7 @@ def receive_alert(state: AgentState) -> AgentState:
             else:             alert['ml_severity'] = 'low'
     return {'alert': alert}
 
-# ── Node 2 : fetch context logs from Elasticsearch ──────────────────
+# ── Node 2 : fetch context logs from Wazuh ──────────────────
 def enrich_context(state: AgentState) -> AgentState:
     alert = state['alert']
     ip    = alert.get('src_ip', 'unknown')
@@ -117,6 +117,21 @@ def enrich_context(state: AgentState) -> AgentState:
             {'event': f'Port scan from {ip}', 'ports_scanned': 254, 'minutes_ago': 15},
         ]
     return {'context_logs': logs}
+# # ── Node 2 : fetch context logs from Elasticsearch ──────────────────
+# def enrich_context(state: AgentState) -> AgentState:
+#     alert = state['alert']
+#     ip    = alert.get('src_ip', 'unknown')
+#     # Try real Elasticsearch, fall back to mock
+#     try:
+#         from ingestion.elastic_client import get_client, search_related
+#         es   = get_client()
+#         logs = search_related(es, ip, minutes=15)
+#     except Exception:
+#         logs = [  # MOCK — works even without Phase 1 complete
+#             {'event': f'SSH failed login from {ip}', 'count': 47, 'minutes_ago': 2},
+#             {'event': f'Port scan from {ip}', 'ports_scanned': 254, 'minutes_ago': 15},
+#         ]
+#     return {'context_logs': logs}
 
 # ── Node 3 : semantic search in the knowledge base (RAG) ────────────
 def rag_lookup(state: AgentState) -> AgentState:
