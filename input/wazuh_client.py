@@ -18,3 +18,20 @@ def get_token():
     r.raise_for_status()
     return r.json()['data']['token']
 
+def get_recent_alerts(token, minutes=15):
+
+    token = get_token()
+    headers = {"Authorization": f"Bearer {token}"}
+    
+    since = (datetime.utcnow() - timedelta(minutes=minutes)).strftime('%Y-%m-%dT%H:%M:%S')
+    params = {
+        'query': f'alert.timestamp:>="{since}"',
+        'sort': 'timestamp:desc',
+        'size': 20
+    }
+    r = requests.get(f'{BASE_URL}/alerts', headers=headers, params=params, verify=False, timeout=20)
+    if r.status_code != 200:
+        return []
+    return r.json().get('data', {}).get('alerts', [])
+
+    
