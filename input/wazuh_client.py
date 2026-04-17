@@ -1,126 +1,95 @@
 import argparse
 import json
-import os
-import sys
 from datetime import datetime, timedelta
 
-import requests
-from dotenv import load_dotenv
-
-load_dotenv()
-
-WAZUH_HOST = os.getenv("WAZUH_HOST", "")
-WAZUH_PORT = os.getenv("WAZUH_PORT", "")
-WAZUH_USERNAME = os.getenv("WAZUH_USERNAME", "")
-WAZUH_PASSWORD = os.getenv("WAZUH_PASSWORD", "")
-BASE_URL = f"https://{WAZUH_HOST}:{WAZUH_PORT}/api"
+from opensearchpy import OpenSearch
 
 
-
-def get_token(timeout: int = 10, verify_ssl: bool = False) -> str:
-    
-    response = requests.post(
-        f"{BASE_URL}/security/user/authenticate",
-        auth=(WAZUH_USERNAME, WAZUH_PASSWORD),
-        verify=verify_ssl,
-        timeout=timeout,
+def create_client():
+    return OpenSearch(
+        hosts=[{'host': 'localhost', 'port': 9200}],
+        http_auth=('admin', 'ea?JTvU2PfxVFTsZ?.hy2..t?Q3FWItz'),
+        use_ssl=False,
+        verify_certs=False,
+        ssl_show_warn=False
     )
-    response.raise_for_status()
-    return response.json()["data"]["token"]
 
 
-def get_recent_alerts(token: str, minutes: int = 15, limit: int = 20, verify_ssl: bool = False):
-    headers = {"Authorization": f"Bearer {token}"}
-    since = (datetime.utcnow() - timedelta(minutes=minutes)).strftime("%Y-%m-%dT%H:%M:%S")
-    params = {
-        "q": f'alert.timestamp:>="{since}"',
-        "sort": "timestamp:desc",
-        "limit": limit,
+def get_recent_logs(client, minutes=15, limit=100):
+    since = (datetime.utcnow() - timedelta(minutes=minutes)).isoformat() + "Z"
+
+    query = {
+        "_source": ["@timestamp", "src_ip", "dst_ip", "protocol"],
+        "size": limit,
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": since,
+                    "lte": "now"
+                }
+            }
+        }
     }
-    response = requests.get(
-        f"{BASE_URL}/alerts",
-        headers=headers,
-        params=params,
-        verify=verify_ssl,
-        timeout=20,
-    )
-    response.raise_for_status()
-    return response.json().get("data", {}).get("alerts", [])
+
+    response = client.search(index="wazuh-alerts-*", body=query)
+    return response["hits"]["hits"]
 
 
-def get_alerts_by_ip(
-    token: str,
-    ip: str,
-    minutes: int = 15,
-    limit: int = 100,
-    verify_ssl: bool = False,
-):
-    headers = {"Authorization": f"Bearer {token}"}
-    since = (datetime.utcnow() - timedelta(minutes=minutes)).strftime("%Y-%m-%dT%H:%M:%S")
-    params = {
-        "limit": limit,
-        "sort": "timestamp:desc",
-        "q": f"alert.srcip:{ip} AND alert.timestamp:>='{since}'",
+def get_logs_by_ip(client, ip, minutes=15, limit=100):
+    since = (datetime.utcnow() - timedelta(minutes=minutes)).isoformat() + "Z"
+
+    query = {
+        "_source": ["@timestamp", "src_ip", "dst_ip", "protocol"],
+        "size": limit,
+        "query": {
+            "bool": {
+                "must": [
+                    {"match": {"src_ip": ip}},
+                    {
+                        "range": {
+                            "@timestamp": {
+                                "gte": since,
+                                "lte": "now"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
     }
-    response = requests.get(
-        f"{BASE_URL}/alerts",
-        headers=headers,
-        params=params,
-        verify=verify_ssl,
-        timeout=20,
-    )
-    response.raise_for_status()
-    return response.json().get("data", {}).get("alerts", [])
+
+    response = client.search(index="logstash_rot--*", body=query)
+    return response["hits"]["hits"]
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Fetch alerts from Wazuh API")
+def main():
+    parser = argparse.ArgumentParser(description="Fetch logs from OpenSearch")
+
     parser.add_argument(
         "--mode",
         choices=["recent", "by-ip"],
         default="recent",
-        help="Fetch recent alerts or alerts filtered by source IP",
+        help="Fetch recent logs or filter by source IP"
     )
-    parser.add_argument("--ip", help="Source IP address (required when --mode by-ip)")
-    parser.add_argument("--minutes", type=int, default=15, help="Lookback window in minutes")
-    parser.add_argument("--limit", type=int, default=20, help="Maximum number of alerts to fetch")
-    parser.add_argument(
-        "--verify-ssl",
-        action="store_true",
-        help="Enable SSL certificate verification (disabled by default)",
-    )
+
+    parser.add_argument("--ip", help="Source IP (required for by-ip mode)")
+    parser.add_argument("--minutes", type=int, default=15)
+    parser.add_argument("--limit", type=int, default=100)
+
     args = parser.parse_args()
 
     if args.mode == "by-ip" and not args.ip:
-        parser.error("--ip is required when --mode by-ip")
+        parser.error("--ip is required when using --mode by-ip")
 
-    try:
-        token = get_token(verify_ssl=args.verify_ssl)
-        if args.mode == "recent":
-            alerts = get_recent_alerts(
-                token,
-                minutes=args.minutes,
-                limit=args.limit,
-                verify_ssl=args.verify_ssl,
-            )
-        else:
-            alerts = get_alerts_by_ip(
-                token,
-                args.ip,
-                minutes=args.minutes,
-                limit=args.limit,
-                verify_ssl=args.verify_ssl,
-            )
+    client = create_client()
 
-        print(json.dumps(alerts, indent=2))
-        return 0
-    except requests.RequestException as exc:
-        print(f"Wazuh API request failed: {exc}", file=sys.stderr)
-        return 1
-    except ValueError as exc:
-        print(str(exc), file=sys.stderr)
-        return 1
+    if args.mode == "recent":
+        logs = get_recent_logs(client, args.minutes, args.limit)
+    else:
+        logs = get_logs_by_ip(client, args.ip, args.minutes, args.limit)
+
+    print(json.dumps(logs, indent=2))
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()
