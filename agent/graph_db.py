@@ -15,3 +15,17 @@ def get_driver():
         )
     return _driver
 
+_driver.verify_connectivity()
+
+def init_schema():
+    with get_driver().session() as session:
+        session.run("""
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:IP) ASSERT n.address IS UNIQUE;
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:Host) ASSERT n.name IS UNIQUE;
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:Protocol) ASSERT n.name IS UNIQUE;
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:Agent) ASSERT n.id IS UNIQUE;
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:Rule) ASSERT n.id IS UNIQUE;
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:MITRE) ASSERT n.id IS UNIQUE;
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:Event) ASSERT n.id IS UNIQUE;
+        CREATE CONSTRAINT IF NOT EXISTS ON (n:File) ASSERT n.path IS UNIQUE;
+        """)
