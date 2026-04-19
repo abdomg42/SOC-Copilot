@@ -7,7 +7,6 @@ from graph_db import get_driver
 
 CHROMA_DIR = Path('../data/chroma_db')
 
-
 def chroma_db_retiever():
     embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
     vectorstore = Chroma(persist_directory=str(CHROMA_DIR), collection_name="soc_copilot", embedding_function=embedding)
@@ -67,6 +66,58 @@ def get_d3fend_for_techniques(mitre_ids):
             """, ids=mitre_ids)
             return result.data()
     except Exception as e:
-        print(f'[graph_retriever] D3FEND query error: {e}')
+        print(f'graph_retriever D3FEND query error: {e}')
         return []
 
+# get traverse MITRE graph for related techniques 
+def get_mitre_context(tid):
+    try:
+        with get_driver().session() as s:
+            result = s.run("""
+                MATCH (t:MitreTechnique {tid: $tid})
+                OPTIONAL MATCH (t)-[:BELONGS_TO]->(tac:MitreTactic)
+                OPTIONAL MATCH (t)-[:SUB_TECHNIQUE_OF]->(parent:MitreTechnique)
+                OPTIONAL MATCH (sib)-[:SUB_TECHNIQUE_OF]->(parent)
+                  WHERE sib.tid <> $tid
+                RETURN t.name     AS name,
+                       t.desc     AS desc,
+                       t.platforms AS platforms,
+                       collect(DISTINCT tac.name)  AS tactics,
+                       parent.tid  AS parent_tid,
+                       parent.name AS parent_name,
+                       collect(DISTINCT sib.tid)   AS siblings
+                LIMIT 1
+            """, tid=tid).single()
+            return dict(result) if result else {}
+    except Exception as e:
+        print(f'graph_retriever MITRE context error: {e}')
+        return {}
+# ChromaDB: semantic search 
+def semantic_search(query):
+    try:
+        docs = retriever().invoke(query)
+        return [{'text': d.page_content, 'source': d.metadata.get('source','?')}
+                for d in docs]
+    except Exception as e:
+        print(f'[graph_retriever] ChromaDB error: {e}')
+        return []
+
+# Main Function : combining all retrieval resources for the llm prompt
+def retrieve_all(alert):
+    ip = alert.get('src_ip','')
+    desc      = alert.get('rule_description', '')
+    mitre_ids = alert.get('mitre_ids', [])
+    category  = alert.get('ml_attack_category', '')
+    ip_context = get_ip_context(ip)      # IP history from Neo4j
+    d3fend = get_d3fend_for_techniques(mitre_ids)      # D3FEND defenses from Neo4j
+    mitre_ctx = get_mitre_context(mitre_ids[0]) if mitre_ids else {}        # MITRE technique details from Neo4j
+    query   = f'{desc} {category} {" ".join(mitre_ids)}'    
+    rag_docs = semantic_search(query)       # Semantic search from ChromaDB
+    return {
+        'ip_context':  ip_context,       
+        'd3fend':      d3fend,         
+        'mitre_ctx':   mitre_ctx,      
+        'rag_docs':    rag_docs,       
+    }
+
+# Build the LLM prompt 
