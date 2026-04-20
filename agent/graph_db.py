@@ -1,4 +1,6 @@
+
 import csv
+from importlib.resources import path
 import json
 import os
 from neo4j import GraphDatabase
@@ -16,17 +18,21 @@ def get_driver():
     return _driver
 
 def init_schema():
-    with get_driver().session() as session:
-        session.run("""
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:IP) ASSERT n.address IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Host) ASSERT n.name IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Protocol) ASSERT n.name IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Agent) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Rule) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:MITRE) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Event) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:File) ASSERT n.path IS UNIQUE;
-        """)
+    pass
+    # with get_driver().session() as session:
+    #     session.run("""
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:IP) ASSERT n.address IS UNIQUE;
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:Host) ASSERT n.name IS UNIQUE;
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:Protocol) ASSERT n.name IS UNIQUE;
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:Agent) ASSERT n.id IS UNIQUE;
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:Rule) ASSERT n.id IS UNIQUE;
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:MITRE) ASSERT n.id IS UNIQUE;
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:Event) ASSERT n.id IS UNIQUE;
+    #     CREATE CONSTRAINT IF NOT EXISTS ON (n:File) ASSERT n.path IS UNIQUE;
+    #     """)
+
+
+
 
 def ingest_d3fend_csv(csv_path):
     """Ingest D3FEND techniques from d3fend.csv into Neo4j."""
@@ -47,31 +53,53 @@ def ingest_d3fend_csv(csv_path):
                     definition=row.get('Definition', '')
                 )
 
-def ingest_mitre_json(json_path):
-    """Ingest MITRE ATT&CK techniques from mitre_attack.json into Neo4j."""
-    with open(json_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    objects = data.get('objects', [])
-    with get_driver().session() as session:
-        for obj in objects:
-            if obj.get('type') == 'attack-pattern':
-                # Find external_id
-                ext_id = None
-                for ref in obj.get('external_references', []):
-                    if ref.get('source_name') == 'mitre-attack':
-                        ext_id = ref.get('external_id')
-                        break
-                if ext_id:
-                    session.run(
-                        """
-                        MERGE (m:MITRE {id: $id})
-                        SET m.name = $name, m.description = $description, m.external_id = $external_id
-                        """,
-                        id=obj['id'],
-                        name=obj.get('name', ''),
-                        description=obj.get('description', ''),
-                        external_id=ext_id
-                    )
+def ingest_mitre_json(path):
+
+    data       = json.loads(path.read_text())
+    techniques = [o for o in data["objects"]
+                  if o.get("type") == "attack-pattern" and not o.get("revoked")]
+
+
+    with get_driver().session() as s:
+        for obj in techniques:
+            refs = obj.get("external_references", [])
+            tid  = next((e["external_id"] for e in refs if e.get("source_name") == "mitre-attack"), "")
+            if not tid:
+                continue
+            name     = obj.get("name", "")
+            desc     = (obj.get("description") or "")[:500]
+            platforms= obj.get("x_mitre_platforms", [])
+            phases   = obj.get("kill_chain_phases", [])
+            tactics  = [p["phase_name"] for p in phases]
+            #Create MitreTechnique node
+            s.run("""
+                MERGE (t:MitreTechnique {tid: $tid})
+                SET t.name      = $name,
+                    t.desc      = $desc,
+                    t.platforms = $platforms,
+                    t.tactics   = $tactics
+            """, tid=tid, name=name, desc=desc,
+                 platforms=platforms, tactics=tactics)
+
+            #Create MitreTactic nodes + BELONGS_TO edges
+            for tactic in tactics:
+                s.run("""
+                    MERGE (tac:MitreTactic {name: $tactic})
+                    WITH tac
+                    MATCH (t:MitreTechnique {tid: $tid})
+                    MERGE (t)-[:BELONGS_TO]->(tac)
+                """, tactic=tactic, tid=tid)
+
+            #SUB_TECHNIQUE_OF edge (T1059.007 → T1059)
+            if "." in tid:
+                parent_id = tid.split(".")[0]
+                s.run("""
+                    MERGE (parent:MitreTechnique {tid: $pid})
+                    WITH parent
+                    MATCH (child:MitreTechnique {tid: $cid})
+                    MERGE (child)-[:SUB_TECHNIQUE_OF]->(parent)
+                """, pid=parent_id, cid=tid)
+                
 
 def ingest_d3fend_mappings(csv_path):
     """Ingest mappings from d3fend-full-mappings.csv and create relationships between D3FEND and MITRE nodes."""
@@ -94,154 +122,19 @@ def ingest_d3fend_mappings(csv_path):
                         off_tech_id=off_tech_id,
                         rel_type=rel_type
                     )
-from neo4j import GraphDatabase
-import json, os 
-from pathlib import Path
-from dotenv import load_dotenv
-load_dotenv()
 
+if __name__ == "__main__":
+    # Chemins par défaut (adapter si besoin)
+    d3fend_csv = os.path.join('..', 'data', 'd3fend', 'd3fend.csv')
+    mitre_json = os.path.join('..', 'data', 'mitre_attack.json')
+    mappings_csv = os.path.join('..', 'data', 'd3fend', 'd3fend-full-mappings.csv')
 
-_driver = None
-def get_driver():
-    global _driver
-    if _driver is None:
-        _driver = GraphDatabase.driver(
-            os.getenv('NEO4J_URI'),
-            auth=(os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
-        )
-    return _driver
-
-_driver.verify_connectivity()
-
-def init_schema():
-    with get_driver().session() as session:
-        session.run("""
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:IP) ASSERT n.address IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Host) ASSERT n.name IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Protocol) ASSERT n.name IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Agent) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Rule) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:MITRE) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:Event) ASSERT n.id IS UNIQUE;
-        CREATE CONSTRAINT IF NOT EXISTS ON (n:File) ASSERT n.path IS UNIQUE;
-        """)
-
-
-def ingest_mitre_attack(json_path):
-
-    def ingest_alerts(alerts_path):
-        """Ingest alerts from alerts.json into Neo4j."""
-        import re
-        with open(alerts_path, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-        with get_driver().session() as session:
-            for line in lines:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    alert = json.loads(line)
-                except Exception:
-                    continue
-                alert_id = alert.get('id')
-                timestamp = alert.get('timestamp')
-                full_log = alert.get('full_log')
-                location = alert.get('location')
-                # Agent
-                agent = alert.get('agent', {})
-                agent_id = agent.get('id')
-                agent_name = agent.get('name')
-                # Rule
-                rule = alert.get('rule', {})
-                rule_id = rule.get('id')
-                rule_desc = rule.get('description')
-                rule_level = rule.get('level')
-                # Create Event/Alert node
-                session.run(
-                    """
-                    MERGE (e:Event {id: $id})
-                    SET e.timestamp = $timestamp, e.full_log = $full_log, e.location = $location, e.raw = $raw
-                    """,
-                    id=alert_id,
-                    timestamp=timestamp,
-                    full_log=full_log,
-                    location=location,
-                    raw=json.dumps(alert)
-                )
-                # Create Agent node and relationship
-                if agent_id:
-                    session.run(
-                        """
-                        MERGE (a:Agent {id: $agent_id})
-                        SET a.name = $agent_name
-                        WITH a
-                        MATCH (e:Event {id: $event_id})
-                        MERGE (e)-[:GENERATED_BY]->(a)
-                        """,
-                        agent_id=agent_id,
-                        agent_name=agent_name,
-                        event_id=alert_id
-                    )
-                # Create Rule node and relationship
-                if rule_id:
-                    session.run(
-                        """
-                        MERGE (r:Rule {id: $rule_id})
-                        SET r.description = $rule_desc, r.level = $rule_level
-                        WITH r
-                        MATCH (e:Event {id: $event_id})
-                        MERGE (e)-[:TRIGGERED_RULE]->(r)
-                        """,
-                        rule_id=rule_id,
-                        rule_desc=rule_desc,
-                        rule_level=rule_level,
-                        event_id=alert_id
-                    )
-    def ingest_d3fend(json_path):
-        """Ingest MITRE D3FEND JSON-LD data into Neo4j."""
-        with open(json_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-        graph = data.get('@graph', [])
-        with get_driver().session() as session:
-            for obj in graph:
-                node_id = obj.get('@id', None)
-                node_type = obj.get('@type', None)
-                label = obj.get('rdfs:label', None)
-                definition = obj.get('d3f:definition', None)
-                # Only ingest nodes with an id and label
-                if node_id and label:
-                    session.run(
-                        """
-                        MERGE (n:D3FEND {id: $id})
-                        SET n.type = $type, n.label = $label, n.definition = $definition, n.raw = $raw
-                        """,
-                        id=node_id,
-                        type=node_type if isinstance(node_type, str) else str(node_type),
-                        label=label,
-                        definition=definition,
-                        raw=json.dumps(obj)
-                    )
-    """Ingest MITRE ATT&CK JSON data into Neo4j."""
-    with open(json_path, 'r', encoding='utf-8') as f:
-        data = json.load(f)
-    objects = data.get('objects', [])
-    with get_driver().session() as session:
-        for obj in objects:
-            node_type = obj.get('type', 'Unknown')
-            node_id = obj.get('id', None)
-            name = obj.get('name', None)
-            description = obj.get('description', None)
-            # Only ingest nodes with an id and name
-            if node_id and name:
-                session.run(
-                    """
-                    MERGE (n:MITRE {id: $id})
-                    SET n.type = $type, n.name = $name, n.description = $description, n.raw = $raw
-                    """,
-                    id=node_id,
-                    type=node_type,
-                    name=name,
-                    description=description,
-                    raw=json.dumps(obj)
-                )
-
+    print("[+] Initialisation du schéma Neo4j...")
+    init_schema()
+    print("[+] Ingestion D3FEND...")
+    ingest_d3fend_csv(d3fend_csv)
+    print("[+] Ingestion MITRE ATT&CK...")
+    ingest_mitre_json(mitre_json)
+    print("[+] Ingestion des mappings D3FEND <-> MITRE...")
+    ingest_d3fend_mappings(mappings_csv)
+    print("[✓] Import terminé.")
