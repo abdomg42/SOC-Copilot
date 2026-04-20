@@ -7,9 +7,9 @@ from opensearchpy import OpenSearch
 
 def create_client():
     return OpenSearch(
-        hosts=[{'host': 'localhost', 'port': 9200}],
+        hosts=[{'host': '100.97.198.85', 'port': 9200}],
         http_auth=('admin', 'ea?JTvU2PfxVFTsZ?.hy2..t?Q3FWItz'),
-        use_ssl=False,
+        use_ssl=True,
         verify_certs=False,
         ssl_show_warn=False
     )

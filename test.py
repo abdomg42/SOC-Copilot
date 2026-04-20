@@ -1,27 +1,33 @@
-from agent.graph import soc_agent
+from os import path
 
-test_alert = {
-    'rule_description': 'Multiple failed SSH logins',
-'src_ip': '192.168.56.10',
-    'timestamp': '2025-03-22T10:00:00',
-    'rule_level': 10,
-    'ml_severity': 'high',
-    'ml_attack_category': 'brute_force',
-    'ml_anomaly_score': 0.91,
-}
+from neo4j import GraphDatabase
+import json, os 
+from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
-initial_state = {
-    'alert': test_alert,
-    'context_logs': [],
-    'rag_results': [],
-    'messages': [],
-    'tool_calls': [],
-    'report': None,
-    'error': None,
-}
 
-print('Running SOC agent...')
-result = soc_agent.invoke(initial_state)
-print('\n=== REPORT ===')
-import json
-print(json.dumps(result['report'], indent=2, ensure_ascii=False))
+# _driver = None
+# def get_driver():
+#     global _driver
+#     if _driver is None:
+#         _driver = GraphDatabase.driver(
+#             os.getenv('NEO4J_URI'),
+#             auth=(os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
+#         )
+#     print(_driver)
+#     return _driver
+
+# print(get_driver().verify_connectivity())
+
+# def return_all():
+#     with get_driver().session() as s :
+#         res = s.run("MATCH (n) RETURN n").data()
+#     print(res)
+
+# if __name__ == "__main__":
+    # return_all()
+path = "C:\\Users\\PC\\projects\\soc-copilot\\data\\d3fend\\d3fend.csv"
+with open(path ,encoding='utf-8') as f:
+            lines = f.readlines()
+            print(lines[5])
