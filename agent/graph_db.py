@@ -1,6 +1,7 @@
 
 import csv
 from importlib.resources import path
+from pathlib import Path
 import json
 import os
 from neo4j import GraphDatabase
@@ -53,7 +54,7 @@ def ingest_d3fend_csv(csv_path):
                     definition=row.get('Definition', '')
                 )
 
-def ingest_mitre_json(path):
+def ingest_mitre_json(path):    
 
     data       = json.loads(path.read_text())
     techniques = [o for o in data["objects"]
@@ -99,7 +100,7 @@ def ingest_mitre_json(path):
                     MATCH (child:MitreTechnique {tid: $cid})
                     MERGE (child)-[:SUB_TECHNIQUE_OF]->(parent)
                 """, pid=parent_id, cid=tid)
-                
+
 
 def ingest_d3fend_mappings(csv_path):
     """Ingest mappings from d3fend-full-mappings.csv and create relationships between D3FEND and MITRE nodes."""
