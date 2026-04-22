@@ -65,7 +65,8 @@ def ingest_alert(alert: dict[str, Any], report: dict[str, Any], driver: Driver |
 
         session.run(
             """
-            MATCH (ip:IP {address: $ip}), (h:Host {name: $host})
+            MATCH (ip:IP {address: $ip})
+            MATCH (h:Host {name: $host})
             MERGE (ip)-[r:ATTACKED]->(h)
             ON CREATE SET r.count = 1, r.first = $ts
             ON MATCH SET r.count = r.count + 1, r.last = $ts
@@ -77,7 +78,8 @@ def ingest_alert(alert: dict[str, Any], report: dict[str, Any], driver: Driver |
 
         session.run(
             """
-            MATCH (ip:IP {address: $ip}), (a:Alert {alert_id: $aid})
+            MATCH (ip:IP {address: $ip})
+            MATCH (a:Alert {alert_id: $aid})
             MERGE (ip)-[:TRIGGERED]->(a)
             """,
             ip=src_ip,
