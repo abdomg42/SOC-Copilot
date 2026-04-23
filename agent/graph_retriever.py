@@ -1,23 +1,5 @@
-from typing import Optional
-import json
-from pathlib import Path
-from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import HuggingFaceEmbeddings
 from agent.neo4j_ingest.connection import get_driver
-
-
-CHROMA_DIR = Path('../data/chroma_db')
-
-def chroma_db_retiever():
-    embedding = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-    vectorstore = Chroma(persist_directory=str(CHROMA_DIR), collection_name="soc_copilot", embedding_function=embedding)
-    return vectorstore.as_retriever(search_kwargs={"k": 5})
-
-_chroma = None
-def retriever():
-    global _chroma
-    if _chroma is None: _chroma = chroma_db_retiever()
-    return _chroma
+from agent.knowledge_base import get_retriever
 
 
 # get ip context from neo4j 
@@ -96,7 +78,7 @@ def get_mitre_context(tid):
 # ChromaDB: semantic search 
 def semantic_search(query):
     try:
-        docs = retriever().invoke(query)
+        docs = get_retriever().invoke(query)
         return [{'text': d.page_content, 'source': d.metadata.get('source','?')}
                 for d in docs]
     except Exception as e:

@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
 import time
-from graph import soc_agent
+from agent.graph import soc_agent
 
 app = FastAPI(
     title='SOC Copilot Agent API',
@@ -41,7 +41,7 @@ async def analyze_alert(alert: AlertInput):
     initial_state = {
         'alert':        alert.model_dump(),
         'context_logs': [],
-        'rag_results':  [],
+        'rag_results':  [], 
         'messages':     [],
         'tool_calls':   [],
         'report':       None,
@@ -66,7 +66,7 @@ async def chat(data: ChatInput):
     """Free-form chat with the SOC agent for ad-hoc analysis."""
     from langchain_ollama import ChatOllama
     from langchain_core.messages import SystemMessage, HumanMessage
-    from prompts import SYSTEM_PROMPT
+    from agent.prompts import SYSTEM_PROMPT
     llm = ChatOllama(model='mistral:7b', temperature=0.3)
     messages = [SystemMessage(content=SYSTEM_PROMPT)]
     for m in data.history[-6:]:  # keep last 6 turns

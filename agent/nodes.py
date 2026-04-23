@@ -3,6 +3,8 @@ from langchain_ollama import ChatOllama
 from langchain_core.messages import SystemMessage, HumanMessage, ToolMessage
 from .state   import AgentState
 from .tools   import get_tools, execute_tool
+from .knowledge_base import get_retriever
+from .graph_retriever import retrieve_all
 from .prompts import SYSTEM_PROMPT, REPORT_FORMAT_PROMPT
 
 LLM            = ChatOllama(model="mistral:7b", temperature=0)
@@ -29,117 +31,45 @@ def receive_alert(state: AgentState) -> AgentState:
 
 # ── Node 2 : enrich context — Neo4j + ChromaDB + Wazuh ──────────────────────
 def enrich_context(state: AgentState) -> AgentState:
-    alert     = state["alert"]
-    ip        = alert.get("src_ip", "")
-    desc      = alert.get("rule_description", "")
-    mitre_ids = alert.get("mitre_ids", [])
+    alert = state["alert"]
 
-    # ── A. Neo4j : IP history + D3FEND defenses + Engage activities ──────────
     graph_facts = {}
-    try:
-        from agent.neo4j_ingest.connection import get_driver
-        with get_driver().session() as s:
-
-            # IP risk profile
-            ip_summary = s.run("""
-                MATCH (ip:IP {address: $ip})
-                RETURN ip.risk_score   AS risk,
-                       ip.attack_count AS count,
-                       ip.first_seen   AS first
-            """, ip=ip).single()
-
-            past_techniques = s.run("""
-                MATCH (ip:IP {address: $ip})-[:TRIGGERED]->(:Alert)
-                      -[:USES]->(t:MitreTechnique)
-                RETURN DISTINCT t.tid AS tid, t.name AS name
-            """, ip=ip).data()
-
-            kill_chain = s.run("""
-                MATCH path=(ip:IP {address: $ip})-[:TRIGGERED]
-                      ->(a1:Alert)-[:FOLLOWED_BY*1..4]->(a2:Alert)
-                RETURN [n IN nodes(path) WHERE n:Alert |
-                        {desc:n.description, sev:n.severity}] AS chain
-                ORDER BY length(path) DESC LIMIT 1
-            """, ip=ip).single()
-
-            # D3FEND defenses for detected MITRE techniques
-            d3fend = []
-            if mitre_ids:
-                d3fend = s.run("""
-                    UNWIND $ids AS tid
-                    MATCH (d:D3FEND)-[:DEFENDS_AGAINST]
-                          ->(t:MitreTechnique {tid: tid})
-                    RETURN DISTINCT d.name AS name,
-                                   d.tactic AS tactic,
-                                   d.definition AS definition
-                    LIMIT 6
-                """, ids=mitre_ids).data()
-
-            # Engage counter-activities
-            engage = []
-            if mitre_ids:
-                engage = s.run("""
-                    UNWIND $ids AS tid
-                    MATCH (e:EngageActivity)-[r:COUNTERS]
-                          ->(t:MitreTechnique {tid: tid})
-                    RETURN DISTINCT e.name AS name,
-                                   e.approach AS approach,
-                                   r.why AS why
-                    LIMIT 4
-                """, ids=mitre_ids).data()
-
-            # MITRE technique details from graph
-            mitre_ctx = {}
-            if mitre_ids:
-                rec = s.run("""
-                    MATCH (t:MitreTechnique {tid: $tid})
-                    OPTIONAL MATCH (t)-[:BELONGS_TO]->(tac:MitreTactic)
-                    OPTIONAL MATCH (t)-[:SUB_TECHNIQUE_OF]->(parent)
-                    RETURN t.name AS name, t.desc AS desc,
-                           t.platforms AS platforms,
-                           collect(DISTINCT tac.name) AS tactics,
-                           parent.tid AS parent_tid
-                    LIMIT 1
-                """, tid=mitre_ids[0]).single()
-                if rec:
-                    mitre_ctx = dict(rec)
-
-        graph_facts = {
-            "ip_known":        bool(ip_summary and ip_summary["count"] > 0),
-            "risk_score":      float(ip_summary["risk"] or 0) if ip_summary else 0.0,
-            "attack_count":    ip_summary["count"] if ip_summary else 0,
-            "past_techniques": past_techniques,
-            "kill_chain":      kill_chain["chain"] if kill_chain else [],
-            "d3fend":          d3fend,
-            "engage":          engage,
-            "mitre_ctx":       mitre_ctx,
-        }
-    except Exception as e:
-        print(f"[Neo4j] enrich_context warning: {e}")
-
-    # ── B. ChromaDB : semantic passages ──────────────────────────────────────
     rag_passages = []
     try:
-        from langchain_community.vectorstores import Chroma
-        from langchain_community.embeddings import HuggingFaceEmbeddings
+        ctx = retrieve_all(alert)
 
-        emb = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            model_kwargs={"device": "cpu"}
-        )
-        vs  = Chroma(
-            persist_directory="../data/chroma_db",
-            collection_name="soc_knowledge",
-            embedding_function=emb
-        )
-        query = f"{desc} {' '.join(mitre_ids)} {alert.get('ml_attack_category','')}"
-        docs  = vs.similarity_search(query, k=4)
+        ip_context = ctx.get("ip_context", {})
+        d3fend_raw = ctx.get("d3fend", [])
+        mitre_ctx = ctx.get("mitre_ctx", {})
+        rag_docs = ctx.get("rag_docs", [])
+
+        # Normalize D3FEND fields to match the existing reason() formatter.
+        d3fend = [
+            {
+                "name": d.get("defense", "unknown"),
+                "tactic": d.get("attack_technique", "unknown"),
+                "definition": d.get("definition", ""),
+            }
+            for d in d3fend_raw
+        ]
+
+        graph_facts = {
+            "ip_known": bool(ip_context.get("known", False)),
+            "risk_score": float(ip_context.get("risk_score", 0.0) or 0.0),
+            "attack_count": ip_context.get("attack_count", 0),
+            "past_techniques": ip_context.get("techniques", []),
+            "kill_chain": ip_context.get("kill_chain", []),
+            "d3fend": d3fend,
+            "engage": [],
+            "mitre_ctx": mitre_ctx,
+        }
+
         rag_passages = [
-            {"text": d.page_content, "source": d.metadata.get("source", "?")}
-            for d in docs
+            {"text": d.get("text", ""), "source": d.get("source", "?")}
+            for d in rag_docs
         ]
     except Exception as e:
-        print(f"[ChromaDB] enrich_context warning: {e}")
+        print(f"[Retriever] enrich_context warning: {e}")
 
     # ── C. Wazuh : recent context logs from same IP ───────────────────────────
     wazuh_logs = []
@@ -186,21 +116,9 @@ def rag_lookup(state: AgentState) -> AgentState:
         return {}  # nothing to add
 
     try:
-        from langchain_community.vectorstores import Chroma
-        from langchain_community.embeddings import HuggingFaceEmbeddings
-        emb = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2",
-            model_kwargs={"device": "cpu"}
-        )
-        vs   = Chroma(
-            persist_directory="../data/chroma_db",
-            collection_name="soc_knowledge",
-            embedding_function=emb
-        )
+        retriever = get_retriever()
         # Search specifically for runbook
-        runbook_docs = vs.similarity_search(
-            f"{category} runbook response procedure", k=2
-        )
+        runbook_docs = retriever.invoke(f"{category} runbook response procedure")[:2]
         extra = [
             {"text": d.page_content, "source": d.metadata.get("source", "?")}
             for d in runbook_docs

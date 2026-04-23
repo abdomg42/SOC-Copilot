@@ -1,7 +1,8 @@
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
+from pathlib import Path
 
-CHROMA_DIR = '../data/chroma_db'
+CHROMA_DIR = str(Path(__file__).resolve().parent.parent / 'data' / 'chroma_db')
 COLLECTION = 'soc_knowledge'
 
 _retriever = None  # singleton
