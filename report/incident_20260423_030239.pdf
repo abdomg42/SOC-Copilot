@@ -1,0 +1,70 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 2369 >>
+stream
+BT /F1 26 Tf 50 782 Td 0.05 0.15 0.4 rg (SOC INCIDENT REPORT) Tj ET
+BT /F1 14 Tf 50 732 Td 0.2 0.4 0.7 rg (Severity: CRITICAL) Tj ET
+BT /F1 9 Tf 50 712 Td 0.4 0.4 0.4 rg (Generated) Tj ET
+BT /F1 9 Tf 210 712 Td 0 0 0 rg (2026-04-23 03:02) Tj ET
+BT /F1 9 Tf 50 698 Td 0.4 0.4 0.4 rg (Title) Tj ET
+BT /F1 9 Tf 210 698 Td 0 0 0 rg (Credential Access Attempt via Password Guessing) Tj ET
+BT /F1 9 Tf 50 684 Td 0.4 0.4 0.4 rg (Confidence) Tj ET
+BT /F1 9 Tf 210 684 Td 0 0 0 rg (85%) Tj ET
+BT /F1 14 Tf 50 632 Td 0.2 0.4 0.7 rg (Executive Summary) Tj ET
+BT /F1 10 Tf 50 612 Td 0 0 0 rg (A failed login attempt was detected on the target host, indicating an attempt to gain) Tj ET
+BT /F1 10 Tf 50 598 Td 0 0 0 rg (unauthorized access through password guessing.) Tj ET
+BT /F1 14 Tf 50 568 Td 0.2 0.4 0.7 rg (Indicators of Compromise) Tj ET
+BT /F1 9 Tf 50 548 Td (?) Tj ET
+BT /F1 9 Tf 65 548 Td (ip: 10.0.2.15) Tj ET
+BT /F1 14 Tf 50 490 Td 0.2 0.4 0.7 rg (Attack Timeline) Tj ET
+BT /F1 9 Tf 50 470 Td (?) Tj ET
+BT /F1 9 Tf 65 470 Td (Failed login attempt) Tj ET
+BT /F1 9 Tf 50 456 Td (?) Tj ET
+BT /F1 9 Tf 65 456 Td (Account lockout \(if applicable\)) Tj ET
+BT /F1 14 Tf 50 426 Td 0.2 0.4 0.7 rg (MITRE Context) Tj ET
+BT /F1 9 Tf 50 406 Td 0.4 0.4 0.4 rg (Technique) Tj ET
+BT /F1 9 Tf 210 406 Td 0 0 0 rg (T1110.001) Tj ET
+BT /F1 9 Tf 50 392 Td 0.4 0.4 0.4 rg (Tactic) Tj ET
+BT /F1 9 Tf 210 392 Td 0 0 0 rg (Credential Access) Tj ET
+BT /F1 14 Tf 50 368 Td 0.2 0.4 0.7 rg (IoC Details) Tj ET
+BT /F1 9 Tf 50 348 Td 0.1 0.2 0.6 rg (Type) Tj ET
+BT /F1 9 Tf 215 348 Td 0.1 0.2 0.6 rg (Value) Tj ET
+BT /F1 9 Tf 380 348 Td 0.1 0.2 0.6 rg (Context) Tj ET
+BT /F1 8 Tf 50 334 Td (ip) Tj ET
+BT /F1 8 Tf 215 334 Td (10.0.2.15) Tj ET
+BT /F1 8 Tf 380 334 Td (Source IP of the failed login attempt) Tj ET
+BT /F1 14 Tf 50 272 Td 0.2 0.4 0.7 rg (Remediation) Tj ET
+BT /F1 9 Tf 50 252 Td (?) Tj ET
+BT /F1 9 Tf 65 252 Td ([immediate] Unlock the affected account) Tj ET
+BT /F1 9 Tf 50 238 Td (?) Tj ET
+BT /F1 9 Tf 65 238 Td ([short_term] Investigate the failed login attempt for any signs of brute-force attacks or compromised credentials) Tj ET
+BT /F1 9 Tf 50 224 Td (?) Tj ET
+BT /F1 9 Tf 65 224 Td ([long_term] Implement multi-factor authentication for sensitive accounts) Tj ET
+BT /F1 8 Tf 50 176 Td 0 0 0 rg (This report is automatically generated and must be validated by a SOC analyst.) Tj ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 4 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+5 0 obj
+<< /Type /Catalog /Pages 4 0 R >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000002500 00000 n 
+0000002626 00000 n 
+0000002683 00000 n 
+trailer
+<< /Size 6 /Root 5 0 R >>
+startxref
+2732
+%%EOF

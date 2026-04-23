@@ -1,7 +1,7 @@
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-CHROMA_DIR = 'agent/data/chroma_db'
+CHROMA_DIR = '../data/chroma_db'
 COLLECTION = 'soc_knowledge'
 
 _retriever = None  # singleton

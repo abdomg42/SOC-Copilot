@@ -23,22 +23,58 @@ CONSTRAINTS:
 """
 
 REPORT_FORMAT_PROMPT = """
-Now generate the final incident report as strict JSON with EXACTLY these fields:
+You are a SOC incident analyzer.
+
+You MUST extract information ONLY from the provided logs below.
+Do NOT use external knowledge or generic examples.
+
+--------------------
+INPUT LOGS:
+{logs}
+--------------------
+
+TASK:
+Analyze the logs and generate a structured incident report.
+
+Return ONLY valid JSON with this schema:
+
 {
-  \"severity\": \"critical|high|medium|low\",
-  \"title\": \"short incident title\",
-  \"mitre_technique_id\": \"T1110.001\",
-  \"mitre_technique_name\": \"Password Guessing\",
-  \"mitre_tactic\": \"Credential Access\",
-  \"explanation\": \"2-3 sentences explaining what happened\",
-  \"attack_sequence\": [\"step 1\", \"step 2\"],
-  \"iocs\": [{\"type\": \"ip\", \"value\": \"x.x.x.x\", \"context\": \"...\"}],
-  \"remediation_steps\": [
-    {\"priority\": \"immediate\", \"action\": \"...\"},
-    {\"priority\": \"short_term\", \"action\": \"...\"},
-    {\"priority\": \"long_term\", \"action\": \"\"}
+  "severity": "critical | high | medium | low",
+  "title": "short incident title based on logs",
+
+  "mitre_technique_id": "extracted from logs if present, otherwise 'N/A'",
+  "mitre_technique_name": "from logs if present, otherwise 'N/A'",
+  "mitre_tactic": "from logs if present, otherwise 'N/A'",
+
+  "explanation": "2-3 sentences strictly based on observed log activity",
+
+  "attack_sequence": [
+    "step extracted from logs",
+    "step extracted from logs"
   ],
-  \"confidence\": 0.85
+
+  "iocs": [
+    {
+      "type": "ip | user | process | file | host | other",
+      "value": "value extracted from logs",
+      "context": "why it is relevant"
+    }
+  ],
+
+  "remediation_steps": [
+    {
+      "priority": "immediate | short_term | long_term",
+      "action": "based on detected behavior"
+    }
+  ],
+
+  "confidence": 0.0-1.0
 }
-Return ONLY the JSON, no markdown, no preamble.
+
+STRICT RULES:
+- Use ONLY information from INPUT LOGS
+- Do NOT invent MITRE techniques if not present
+- Do NOT use generic attack scenarios
+- If something is missing → use "N/A" or []
+- Always return valid JSON only
 """

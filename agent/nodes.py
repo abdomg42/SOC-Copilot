@@ -128,7 +128,7 @@ def enrich_context(state: AgentState) -> AgentState:
             model_kwargs={"device": "cpu"}
         )
         vs  = Chroma(
-            persist_directory="agent/data/chroma_db",
+            persist_directory="../data/chroma_db",
             collection_name="soc_knowledge",
             embedding_function=emb
         )
@@ -193,7 +193,7 @@ def rag_lookup(state: AgentState) -> AgentState:
             model_kwargs={"device": "cpu"}
         )
         vs   = Chroma(
-            persist_directory="agent/data/chroma_db",
+            persist_directory="../data/chroma_db",
             collection_name="soc_knowledge",
             embedding_function=emb
         )
@@ -334,14 +334,46 @@ def call_tool(state: AgentState) -> AgentState:
     return {"messages": messages, "tool_calls": []}
 
 
-# ── Node 6 : generate_report — JSON + ingest into Neo4j ─────────────────────
+# ── Node 6 : generate_report — JSON + ingest into Neo4j + PDF export ────────
 def generate_report(state: AgentState) -> AgentState:
     import re
+    from pathlib import Path
+    from datetime import datetime
     messages = list(state["messages"])
-    messages.append(HumanMessage(content=REPORT_FORMAT_PROMPT))
+    
+    alert = state.get("alert", {})
+    logs = state.get("wazuh_logs", [])
+    graph = state.get("graph_facts", {})
 
-    response = LLM.invoke(messages)  # no tools here
-    raw      = response.content
+    # ─────────────────────────────
+    # 2. Build unified input context
+    # ─────────────────────────────
+
+    input_payload = {
+        "alert": alert,
+        "related_logs": logs,
+        "graph_facts": graph
+    }
+
+    input_str = json.dumps(input_payload, indent=2)
+
+    # ─────────────────────────────
+    # 3. Inject into prompt
+    # ─────────────────────────────
+
+    full_prompt = f"""
+{REPORT_FORMAT_PROMPT}
+
+--------------------
+INPUT DATA (DO NOT IGNORE):
+{input_str}
+--------------------
+"""
+    messages = list(state["messages"])
+    messages.append(HumanMessage(content=full_prompt))
+
+    response = LLM.invoke(messages)
+    raw = response.content
 
     # Parse JSON — handle markdown code blocks
     match = re.search(r'\{[\s\S]*\}', raw)
@@ -357,4 +389,17 @@ def generate_report(state: AgentState) -> AgentState:
     except Exception as e:
         print(f"[Neo4j] ingest_alert warning: {e}")
 
-    return {"report": report}
+    # Generate professional PDF report
+    try:
+        from agent.report_generator import generate_incident_report
+        report_dir = Path(__file__).parent.parent / "report"
+        report_dir.mkdir(parents=True, exist_ok=True)
+        pdf_path = report_dir / f"incident_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        generate_incident_report(report, pdf_path)
+        print(f"[PDF] Report generated: {pdf_path.resolve()}")
+        report["pdf_path"] = str(pdf_path)
+    except Exception as e:
+        print(f"[PDF] Generation warning: {e}")
+
+    state["report"] = report
+    return state
