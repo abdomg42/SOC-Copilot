@@ -74,17 +74,17 @@ def load_nvd() -> list:
     return docs
 
 # ── 3. Runbooks (local Markdown files) ──────────────────────────────
-def load_runbooks() -> list:
-    docs = []
-    runbooks_dir = DATA / 'runbooks'
-    runbooks_dir.mkdir(exist_ok=True)
-    for f in runbooks_dir.glob('*.md'):
-        docs.append(Document(
-            page_content=f.read_text(encoding='utf-8'),
-            metadata={'source': 'runbook', 'filename': f.name}
-        ))
-    print(f'Runbooks: {len(docs)} files loaded')
-    return docs
+# def load_runbooks() -> list:
+#     docs = []
+#     runbooks_dir = DATA / 'runbooks'
+#     runbooks_dir.mkdir(exist_ok=True)
+#     for f in runbooks_dir.glob('*.md'):
+#         docs.append(Document(
+#             page_content=f.read_text(encoding='utf-8'),
+#             metadata={'source': 'runbook', 'filename': f.name}
+#         ))
+#     print(f'Runbooks: {len(docs)} files loaded')
+#     return docs
 
 # ── 4. Sigma Rules ──────────────────────────────────────────────────
 def load_sigma() -> list:
@@ -115,7 +115,7 @@ def load_sigma() -> list:
 
 # ── BUILD VECTOR STORE ───────────────────────────────────────────────
 def build():
-    all_docs = load_mitre() + load_nvd() + load_runbooks() + load_sigma()
+    all_docs = load_mitre() + load_nvd()  + load_sigma() # + load_runbooks()
     print(f'Total documents: {len(all_docs)}')
 
     splitter = RecursiveCharacterTextSplitter(
