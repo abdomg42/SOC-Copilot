@@ -37,27 +37,35 @@ from pathlib import Path
 #     "groups": ["sysmon", "sysmon_eid11_detections", "windows"]
 # }
 # Utilise exactement ton vrai log Windows Sysmon
-windows_alert = {
-    "alert_id":           "1775859573.5194324",
-    "timestamp":          "2026-04-10T23:19:33.588+0100",
-    "rule_id":            "92200",
-    "rule_level":         6,
-    "rule_description":   "Scripting file created under Windows Temp or User folder",
+alert = {
+    "alert_id":           "1775858038.781129",
+    "timestamp":          "2026-04-10T22:53:58.123+0100",
+    "rule_id":            "92213",
+    "rule_level":         15,
+    "rule_description":   "Executable file dropped in folder commonly used by malware",
     "agent_id":           "001",
     "agent_name":         "windows_agent1",
     "src_ip":             "10.0.2.15",
     "user":               "mossaabReverse",
     "os_type":            "windows",
-    "mitre_ids":          ["T1059", "T1105"],
-    "ml_severity":        "medium",
-    "ml_attack_category": "script_execution",
-    "ml_anomaly_score":   0.72,
-    "process_image":      "SDXHelper.exe",
-    "target_file":        "excel-copilot-strings.js",
+    "host":               "DESKTOP-80FLS88",
+    "mitre_ids":          ["T1105"],
+    "mitre_tactic":       "Command and Control",
+    "mitre_technique":    "Ingress Tool Transfer",
+    "ml_severity":        "critical",
+    "ml_attack_category": "malware_dropper",
+    "ml_anomaly_score":   0.96,
+    "process_image":      "cleanmgr.exe",
+    "process_id":         "6436",
+    "target_file":        "DismHost.exe",
+    "target_path":        "C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\A5615CAD-FA6C-4F21-9F37-000205B32E04\\DismHost.exe",
+    "file_creation_time": "2026-04-10 21:53:57.192",
+    "mail_alert":         True,
+    "groups":             ["sysmon", "sysmon_eid11_detections", "windows"],
 }
   
 initial_state = {
-    "alert":        windows_alert,
+    "alert":        alert,
     "graph_facts":  {},
     "rag_passages": [],
     "wazuh_logs":   [],

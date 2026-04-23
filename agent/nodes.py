@@ -11,7 +11,7 @@ LLM            = ChatOllama(model="mistral:7b", temperature=0)
 LLM_WITH_TOOLS = LLM.bind_tools(get_tools())
 
 
-# ── Node 1 : validate alert ──────────────────────────────────────────────────
+# Node 1 : validate alert
 def receive_alert(state: AgentState) -> AgentState:
     alert = state["alert"]
     # Ensure required fields
@@ -29,7 +29,7 @@ def receive_alert(state: AgentState) -> AgentState:
     return {"alert": alert}
 
 
-# ── Node 2 : enrich context — Neo4j + ChromaDB + Wazuh ──────────────────────
+# Node 2 : enrich context — (Neo4j + ChromaDB + Wazuh)
 def enrich_context(state: AgentState) -> AgentState:
     alert = state["alert"]
 
@@ -65,13 +65,13 @@ def enrich_context(state: AgentState) -> AgentState:
         }
 
         rag_passages = [
-            {"text": d.get("text", ""), "source": d.get("source", "?")}
+            {"text": d.get("text", ""), "source": d.get("source", "-")}
             for d in rag_docs
         ]
     except Exception as e:
         print(f"[Retriever] enrich_context warning: {e}")
 
-    # ── C. Wazuh : recent context logs from same IP ───────────────────────────
+    # Wazuh recent context logs from same IP 
     wazuh_logs = []
     # try:
     #     from agent.tools import _get_token
@@ -120,7 +120,7 @@ def rag_lookup(state: AgentState) -> AgentState:
         # Search specifically for runbook
         runbook_docs = retriever.invoke(f"{category} runbook response procedure")[:2]
         extra = [
-            {"text": d.page_content, "source": d.metadata.get("source", "?")}
+            {"text": d.page_content, "source": d.metadata.get("source", "-")}
             for d in runbook_docs
         ]
         # Merge with existing passages
@@ -130,9 +130,8 @@ def rag_lookup(state: AgentState) -> AgentState:
         return {}
 
 
-# ── Node 4 : reason — build unified prompt + LLM call ───────────────────────
+# ── Node 4 : reason — build unified prompt + LLM call
 def reason(state: AgentState) -> AgentState:
-    import os
     alert     = state["alert"]
     graph     = state.get("graph_facts",  {})
     rag       = state.get("rag_passages", [])
@@ -150,7 +149,7 @@ def reason(state: AgentState) -> AgentState:
                 f"attacks={graph['attack_count']}, past techniques: {techs}"
             )
             if chain:
-                steps = " → ".join(c.get("desc","?")[:30] for c in chain)
+                steps = " → ".join(c.get("desc","-")[:30] for c in chain)
                 ip_section += f"\n  KILL CHAIN DETECTED: {steps}"
         else:
             ip_section = "First time this IP is seen in our environment."

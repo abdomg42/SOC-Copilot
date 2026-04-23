@@ -1,19 +1,45 @@
 """
-Professional SOC Incident Report PDF generator
-Clean layout, human-like formatting, no noisy placeholders
+SOC Incident Report — PDF Generator
+Produces a clean, structured PDF from a structured report dictionary.
 """
 
+from __future__ import annotations
+
+from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 
-# ─────────────────────────────────────────────
-# 🛠 UTILS
-# ─────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+# Constants
+# ──────────────────────────────────────────────────────────────────────────────
 
-def _escape_pdf_text(text: str) -> str:
-    if not text:
-        return ""
+PAGE_WIDTH = 595
+PAGE_HEIGHT = 842
+
+MARGIN_LEFT = 50
+MARGIN_RIGHT = 50
+MARGIN_TOP = 60
+MARGIN_BOTTOM = 50
+
+LINE_HEIGHT = 14
+LINE_HEIGHT_LARGE = 28
+
+CHARS_PER_LINE = 90
+LABEL_COLUMN_OFFSET = 160
+
+DISCLAIMER = (
+    "This report is automatically generated and must be validated by a SOC analyst."
+)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Helpers
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _escape(text: str) -> str:
+    """Escape characters that are special in PDF string literals."""
     return (
         str(text)
         .replace("\\", "\\\\")
@@ -22,210 +48,116 @@ def _escape_pdf_text(text: str) -> str:
     )
 
 
-def _safe(value, default="--"):
-    """Standardized fallback for missing values."""
-    return value if value not in [None, "", "-", "*"] else default
+def _safe(value: Any, default: str = "--") -> str:
+    """Return *value* as a string, or *default* when the value is empty/missing."""
+    return str(value) if value not in (None, "", "-", "*") else default
 
 
-# ─────────────────────────────────────────────
-# 📄 PDF GENERATOR
-# ─────────────────────────────────────────────
+def _safe_float(value: Any, default: float = 0.0) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
 
-class PDFGenerator:
-    def __init__(self, title="SOC Incident Report"):
-        self.title = title
-        self.pages = []
-        self.current_page = []
 
-        self.page_width = 595
-        self.page_height = 842
+# ──────────────────────────────────────────────────────────────────────────────
+# Low-level PDF builder
+# ──────────────────────────────────────────────────────────────────────────────
 
-        self.margin_left = 50
-        self.margin_right = 50
-        self.margin_top = 60
-        self.margin_bottom = 50
+@dataclass
+class _PDFBuilder:
+    """
+    Minimal, dependency-free PDF-1.4 assembler.
 
-        self.current_y = self.page_height - self.margin_top
+    Manages pages, a cursor (*current_y*), and a list of raw PDF stream
+    operators.  Call ``build(path)`` to serialise everything to disk.
+    """
 
-        self.line = 14
-        self.line_big = 28
+    _pages: list[list[str]] = field(default_factory=list)
+    _current_page: list[str] = field(default_factory=list)
+    current_y: int = PAGE_HEIGHT - MARGIN_TOP
 
-    # ─────────────────────────────
-    # TEXT ELEMENTS
-    # ─────────────────────────────
+    # ── cursor helpers ───────────────────────────────────────────────────────
 
-    def add_heading1(self, text):
-        if self.current_y < self.margin_bottom + 60:
+    def _advance(self, amount: int) -> None:
+        self.current_y -= amount
+
+    def _ensure_space(self, needed: int) -> None:
+        """Start a new page when there is not enough vertical space left."""
+        if self.current_y < MARGIN_BOTTOM + needed:
             self._new_page()
 
-        self.current_page.append(
-            f"BT /F1 26 Tf {self.margin_left} {self.current_y} Td "
-            f"0.05 0.15 0.4 rg ({_escape_pdf_text(text)}) Tj ET"
-        )
-        self.current_y -= 40
+    def _new_page(self) -> None:
+        if self._current_page:
+            self._pages.append(self._current_page)
+        self._current_page = []
+        self.current_y = PAGE_HEIGHT - MARGIN_TOP
 
-    def add_heading2(self, text):
-        if self.current_y < self.margin_bottom + 40:
-            self._new_page()
+    # ── primitive drawing ────────────────────────────────────────────────────
 
-        self.current_y -= 10
-        self.current_page.append(
-            f"BT /F1 14 Tf {self.margin_left} {self.current_y} Td "
-            f"0.2 0.4 0.7 rg ({_escape_pdf_text(text)}) Tj ET"
-        )
-        self.current_y -= 20
-
-    def add_paragraph(self, text, size=10):
-        if self.current_y < self.margin_bottom + 40:
-            self._new_page()
-
-        text = _escape_pdf_text(_safe(text, "No information provided"))
-        words = text.split()
-        line = ""
-
-        for word in words:
-            if len(line) + len(word) > 90:
-                self._draw(line, size)
-                line = word
-            else:
-                line += (" " if line else "") + word
-
-        if line:
-            self._draw(line, size)
-
-        self.current_y -= 6
-
-    def _draw(self, text, size):
-        self.current_page.append(
-            f"BT /F1 {size} Tf {self.margin_left} {self.current_y} Td "
-            f"0 0 0 rg ({text}) Tj ET"
-        )
-        self.current_y -= self.line
-
-    # ─────────────────────────────
-    # STRUCTURED BLOCKS
-    # ─────────────────────────────
-
-    def add_key_value(self, label, value):
-        if self.current_y < self.margin_bottom + 20:
-            self._new_page()
-
-        label = _escape_pdf_text(_safe(label, "N/A"))
-        value = _escape_pdf_text(_safe(value, "Unknown"))
-
-        self.current_page.append(
-            f"BT /F1 9 Tf {self.margin_left} {self.current_y} Td "
-            f"0.4 0.4 0.4 rg ({label}) Tj ET"
+    def _text_op(
+        self,
+        text: str,
+        x: int,
+        y: int,
+        size: int,
+        r: float,
+        g: float,
+        b: float,
+    ) -> str:
+        return (
+            f"BT /F1 {size} Tf {x} {y} Td "
+            f"{r} {g} {b} rg ({_escape(text)}) Tj ET"
         )
 
-        self.current_page.append(
-            f"BT /F1 9 Tf {self.margin_left + 160} {self.current_y} Td "
-            f"0 0 0 rg ({value}) Tj ET"
-        )
+    def _emit(self, op: str) -> None:
+        self._current_page.append(op)
 
-        self.current_y -= self.line
+    # ── public drawing API ───────────────────────────────────────────────────
 
-    def add_list(self, items):
-        items = items or ["No data available"]
+    def draw_text(
+        self,
+        text: str,
+        x: int,
+        size: int,
+        r: float = 0.0,
+        g: float = 0.0,
+        b: float = 0.0,
+    ) -> None:
+        self._emit(self._text_op(text, x, self.current_y, size, r, g, b))
+        self._advance(LINE_HEIGHT)
 
-        for item in items:
-            if self.current_y < self.margin_bottom + 20:
-                self._new_page()
+    # ── serialisation ────────────────────────────────────────────────────────
 
-            item = _escape_pdf_text(_safe(item, "N/A"))
+    def build(self, path: Path) -> None:
+        """Write the PDF to *path*, creating parent directories as needed."""
+        if self._current_page:
+            self._pages.append(self._current_page)
 
-            self.current_page.append(
-                f"BT /F1 9 Tf {self.margin_left} {self.current_y} Td (•) Tj ET"
-            )
-            self.current_page.append(
-                f"BT /F1 9 Tf {self.margin_left + 15} {self.current_y} Td "
-                f"({item}) Tj ET"
-            )
+        objects: list[str] = []
 
-            self.current_y -= self.line
-
-        self.current_y -= 6
-
-    def add_table(self, headers, rows):
-        if self.current_y < self.margin_bottom + 80:
-            self._new_page()
-
-        col_width = (self.page_width - self.margin_left - self.margin_right) // len(headers)
-
-        # headers
-        for i, h in enumerate(headers):
-            x = self.margin_left + i * col_width
-            self.current_page.append(
-                f"BT /F1 9 Tf {x} {self.current_y} Td "
-                f"0.1 0.2 0.6 rg ({_escape_pdf_text(h)}) Tj ET"
-            )
-
-        self.current_y -= self.line
-
-        # rows
-        for row in rows:
-            if self.current_y < self.margin_bottom + 30:
-                self._new_page()
-
-            for i, cell in enumerate(row):
-                x = self.margin_left + i * col_width
-                cell = _escape_pdf_text(_safe(str(cell), "N/A"))
-
-                self.current_page.append(
-                    f"BT /F1 8 Tf {x} {self.current_y} Td "
-                    f"({cell}) Tj ET"
-                )
-
-            self.current_y -= self.line
-
-        self.current_y -= 10
-
-    # ─────────────────────────────
-    # PAGE CONTROL
-    # ─────────────────────────────
-
-    def add_section_space(self):
-        self.current_y -= self.line_big
-
-    def _new_page(self):
-        if self.current_page:
-            self.pages.append(self.current_page)
-
-        self.current_page = []
-        self.current_y = self.page_height - self.margin_top
-
-    # ─────────────────────────────
-    # PDF BUILD
-    # ─────────────────────────────
-
-    def generate_pdf(self, path: Path):
-        if self.current_page:
-            self.pages.append(self.current_page)
-
-        objects = []
-
-        def add_obj(content):
+        def add_obj(content: str) -> int:
             objects.append(content)
             return len(objects)
 
         font_id = add_obj("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>")
 
-        page_ids = []
-        content_ids = []
+        page_ids: list[int] = []
+        content_ids: list[int] = []
 
-        for page in self.pages:
+        for page in self._pages:
             stream = "\n".join(page)
-
+            encoded_len = len(stream.encode("latin-1", "replace"))
             content_id = add_obj(
-                f"<< /Length {len(stream.encode('latin-1','replace'))} >>\n"
-                f"stream\n{stream}\nendstream"
+                f"<< /Length {encoded_len} >>\nstream\n{stream}\nendstream"
             )
-
             content_ids.append(content_id)
-            page_ids.append(add_obj(""))
+            page_ids.append(add_obj(""))  # placeholder; filled in below
 
         kids = " ".join(f"{p} 0 R" for p in page_ids)
-        pages_id = add_obj(f"<< /Type /Pages /Kids [{kids}] /Count {len(page_ids)} >>")
+        pages_id = add_obj(
+            f"<< /Type /Pages /Kids [{kids}] /Count {len(page_ids)} >>"
+        )
 
         for i, pid in enumerate(page_ids):
             objects[pid - 1] = (
@@ -238,90 +170,247 @@ class PDFGenerator:
 
         catalog_id = add_obj(f"<< /Type /Catalog /Pages {pages_id} 0 R >>")
 
-        pdf = ["%PDF-1.4\n"]
-        offsets = [0]
+        parts: list[str] = ["%PDF-1.4\n"]
+        offsets: list[int] = [0]
 
         for i, obj in enumerate(objects, 1):
-            offsets.append(sum(len(p.encode("latin-1","replace")) for p in pdf))
-            pdf.append(f"{i} 0 obj\n{obj}\nendobj\n")
+            offsets.append(sum(len(p.encode("latin-1", "replace")) for p in parts))
+            parts.append(f"{i} 0 obj\n{obj}\nendobj\n")
 
-        xref = sum(len(p.encode("latin-1","replace")) for p in pdf)
-
-        pdf.append(f"xref\n0 {len(objects)+1}\n")
-        pdf.append("0000000000 65535 f \n")
-
+        xref_offset = sum(len(p.encode("latin-1", "replace")) for p in parts)
+        parts.append(f"xref\n0 {len(objects) + 1}\n")
+        parts.append("0000000000 65535 f \n")
         for off in offsets[1:]:
-            pdf.append(f"{off:010d} 00000 n \n")
+            parts.append(f"{off:010d} 00000 n \n")
 
-        pdf.append(
+        parts.append(
             "trailer\n"
-            f"<< /Size {len(objects)+1} /Root {catalog_id} 0 R >>\n"
-            f"startxref\n{xref}\n%%EOF"
+            f"<< /Size {len(objects) + 1} /Root {catalog_id} 0 R >>\n"
+            f"startxref\n{xref_offset}\n%%EOF"
         )
 
-        path.write_bytes("".join(pdf).encode("latin-1","replace"))
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes("".join(parts).encode("latin-1", "replace"))
 
 
-# ─────────────────────────────────────────────
-# 🚀 REPORT GENERATOR
-# ─────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+# High-level report renderer
+# ──────────────────────────────────────────────────────────────────────────────
 
-def generate_incident_report(report: dict, output_path: Path):
+class ReportRenderer:
+    """
+    Renders a structured SOC incident report onto a ``_PDFBuilder``.
 
-    pdf = PDFGenerator()
+    Each ``add_*`` method corresponds to a semantic document element
+    (heading, paragraph, key-value row, list, table).  Page-overflow
+    checks are centralised so individual methods stay focused on layout.
+    """
 
-    pdf.add_heading1("SOC INCIDENT REPORT")
+    def __init__(self) -> None:
+        self._pdf = _PDFBuilder()
 
-    severity = _safe(report.get("severity", "unknown")).upper()
-    pdf.add_heading2(f"Severity: {severity}")
+    # ── headings ─────────────────────────────────────────────────────────────
 
-    pdf.add_key_value("Generated", datetime.now().strftime("%Y-%m-%d %H:%M"))
-    pdf.add_key_value("Title", report.get("title"))
-    confidence = report.get("confidence", 0)
-    try:
-        confidence = float(confidence)
-    except:
-        confidence = 0.0
+    def add_heading1(self, text: str) -> None:
+        self._pdf._ensure_space(60)
+        self._pdf.draw_text(text, MARGIN_LEFT, size=26, r=0.05, g=0.15, b=0.4)
+        self._pdf._advance(14)  # extra gap after H1
 
-    pdf.add_key_value("Confidence", f"{confidence:.0%}")
+    def add_heading2(self, text: str) -> None:
+        self._pdf._ensure_space(40)
+        self._pdf._advance(10)  # pre-gap
+        self._pdf.draw_text(text, MARGIN_LEFT, size=14, r=0.2, g=0.4, b=0.7)
+        self._pdf._advance(6)   # post-gap
 
-    pdf.add_section_space()
+    # ── body text ─────────────────────────────────────────────────────────────
 
-    pdf.add_heading2("Executive Summary")
-    pdf.add_paragraph(report.get("explanation"))
+    def add_paragraph(self, text: str, size: int = 10) -> None:
+        """Word-wrap *text* and emit one draw call per line."""
+        self._pdf._ensure_space(40)
+        safe_text = _escape(_safe(text, "No information provided"))
 
-    pdf.add_heading2("Indicators of Compromise")
-    iocs = report.get("iocs", [])
-    pdf.add_list([f"{i.get('type','N/A')}: {i.get('value','N/A')}" for i in iocs])
+        line_buffer = ""
+        for word in safe_text.split():
+            if len(line_buffer) + len(word) > CHARS_PER_LINE:
+                self._pdf.draw_text(line_buffer, MARGIN_LEFT, size=size)
+                self._pdf._ensure_space(20)
+                line_buffer = word
+            else:
+                line_buffer += (" " if line_buffer else "") + word
 
-    pdf.add_section_space()
+        if line_buffer:
+            self._pdf.draw_text(line_buffer, MARGIN_LEFT, size=size)
 
-    pdf.add_heading2("Attack Timeline")
-    pdf.add_list(report.get("attack_sequence"))
+        self._pdf._advance(6)
 
-    pdf.add_heading2("MITRE Context")
-    pdf.add_key_value("Technique", report.get("mitre_technique_id"))
-    pdf.add_key_value("Tactic", report.get("mitre_tactic"))
+    # ── structured elements ───────────────────────────────────────────────────
+
+    def add_key_value(self, label: str, value: Any) -> None:
+        self._pdf._ensure_space(20)
+        safe_label = _escape(_safe(label, "N/A"))
+        safe_value = _escape(_safe(value, "Unknown"))
+
+        self._pdf._emit(
+            self._pdf._text_op(
+                safe_label, MARGIN_LEFT, self._pdf.current_y,
+                size=9, r=0.4, g=0.4, b=0.4,
+            )
+        )
+        self._pdf._emit(
+            self._pdf._text_op(
+                safe_value, MARGIN_LEFT + LABEL_COLUMN_OFFSET, self._pdf.current_y,
+                size=9, r=0.0, g=0.0, b=0.0,
+            )
+        )
+        self._pdf._advance(LINE_HEIGHT)
+
+    def add_list(self, items: list[str] | None) -> None:
+        for item in items or ["No data available"]:
+            self._pdf._ensure_space(20)
+            safe_item = _escape(_safe(item, "N/A"))
+
+            self._pdf._emit(
+                self._pdf._text_op(
+                    "•", MARGIN_LEFT, self._pdf.current_y,
+                    size=9, r=0.0, g=0.0, b=0.0,
+                )
+            )
+            self._pdf._emit(
+                self._pdf._text_op(
+                    safe_item, MARGIN_LEFT + 15, self._pdf.current_y,
+                    size=9, r=0.0, g=0.0, b=0.0,
+                )
+            )
+            self._pdf._advance(LINE_HEIGHT)
+
+        self._pdf._advance(6)
+
+    def add_table(self, headers: list[str], rows: list[list[Any]]) -> None:
+        self._pdf._ensure_space(80)
+        usable_width = PAGE_WIDTH - MARGIN_LEFT - MARGIN_RIGHT
+        col_width = usable_width // len(headers)
+
+        # Header row
+        for col_idx, header in enumerate(headers):
+            x = MARGIN_LEFT + col_idx * col_width
+            self._pdf._emit(
+                self._pdf._text_op(
+                    _escape(header), x, self._pdf.current_y,
+                    size=9, r=0.1, g=0.2, b=0.6,
+                )
+            )
+        self._pdf._advance(LINE_HEIGHT)
+
+        # Data rows
+        for row in rows:
+            self._pdf._ensure_space(30)
+            for col_idx, cell in enumerate(row):
+                x = MARGIN_LEFT + col_idx * col_width
+                self._pdf._emit(
+                    self._pdf._text_op(
+                        _escape(_safe(str(cell), "N/A")), x, self._pdf.current_y,
+                        size=8, r=0.0, g=0.0, b=0.0,
+                    )
+                )
+            self._pdf._advance(LINE_HEIGHT)
+
+        self._pdf._advance(10)
+
+    # ── spacing ───────────────────────────────────────────────────────────────
+
+    def add_section_break(self) -> None:
+        self._pdf._advance(LINE_HEIGHT_LARGE)
+
+    # ── finalisation ─────────────────────────────────────────────────────────
+
+    def save(self, path: Path) -> Path:
+        self._pdf.build(path)
+        return path
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Public entry point
+# ──────────────────────────────────────────────────────────────────────────────
+
+def generate_incident_report(report: dict, output_path: Path) -> Path:
+    """
+    Render *report* as a PDF and write it to *output_path*.
+
+    Parameters
+    ----------
+    report:
+        Dictionary with the following keys (all optional — missing values
+        are replaced with sensible defaults):
+
+        - ``title``            (str)
+        - ``severity``         (str)
+        - ``confidence``       (float | str)  0–1 scale
+        - ``explanation``      (str)
+        - ``iocs``             (list[dict])   each: ``type``, ``value``, ``context``
+        - ``attack_sequence``  (list[str])
+        - ``mitre_technique_id`` (str)
+        - ``mitre_tactic``     (str)
+        - ``remediation_steps`` (list[dict])  each: ``priority``, ``action``
+
+    output_path:
+        Destination ``.pdf`` file.  Parent directories are created
+        automatically.
+
+    Returns
+    -------
+    Path
+        The resolved *output_path* after the file has been written.
+    """
+    renderer = ReportRenderer()
+
+    # ── cover metadata ────────────────────────────────────────────────────────
+    renderer.add_heading1("SOC INCIDENT REPORT")
+    renderer.add_heading2(f"Severity: {_safe(report.get('severity'), 'UNKNOWN').upper()}")
+    renderer.add_key_value("Generated", datetime.now().strftime("%Y-%m-%d %H:%M"))
+    renderer.add_key_value("Title", report.get("title"))
+    confidence = _safe_float(report.get("confidence"))
+    renderer.add_key_value("Confidence", f"{confidence:.0%}")
+    renderer.add_section_break()
+
+    # ── narrative ─────────────────────────────────────────────────────────────
+    renderer.add_heading2("Executive Summary")
+    renderer.add_paragraph(report.get("explanation"))
+
+    # ── indicators ───────────────────────────────────────────────────────────
+    iocs: list[dict] = report.get("iocs") or []
+    renderer.add_heading2("Indicators of Compromise")
+    renderer.add_list(
+        [f"{i.get('type', 'N/A')}: {i.get('value', 'N/A')}" for i in iocs]
+    )
+    renderer.add_section_break()
+
+    # ── timeline & MITRE ─────────────────────────────────────────────────────
+    renderer.add_heading2("Attack Timeline")
+    renderer.add_list(report.get("attack_sequence"))
+
+    renderer.add_heading2("MITRE Context")
+    renderer.add_key_value("Technique", report.get("mitre_technique_id"))
+    renderer.add_key_value("Tactic", report.get("mitre_tactic"))
 
     if iocs:
-        pdf.add_heading2("IoC Details")
-        rows = [[i.get("type"), i.get("value"), i.get("context")] for i in iocs]
-        pdf.add_table(["Type", "Value", "Context"], rows)
+        renderer.add_heading2("IoC Details")
+        renderer.add_table(
+            headers=["Type", "Value", "Context"],
+            rows=[[i.get("type"), i.get("value"), i.get("context")] for i in iocs],
+        )
 
-    pdf.add_section_space()
+    renderer.add_section_break()
 
-    pdf.add_heading2("Remediation")
-    steps = report.get("remediation_steps", [])
-    pdf.add_list([f"[{s.get('priority','N/A')}] {s.get('action','N/A')}" for s in steps])
-
-    pdf.add_section_space()
-
-    pdf.add_paragraph(
-        "This report is automatically generated and must be validated by a SOC analyst.",
-        size=8
+    # ── remediation ───────────────────────────────────────────────────────────
+    renderer.add_heading2("Remediation")
+    steps: list[dict] = report.get("remediation_steps") or []
+    renderer.add_list(
+        [f"[{s.get('priority', 'N/A')}] {s.get('action', 'N/A')}" for s in steps]
     )
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    pdf.generate_pdf(output_path)
+    renderer.add_section_break()
 
-    return output_path
+    # ── footer disclaimer ─────────────────────────────────────────────────────
+    renderer.add_paragraph(DISCLAIMER, size=8)
+
+    return renderer.save(output_path)

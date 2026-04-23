@@ -79,7 +79,7 @@ def get_mitre_context(tid):
 def semantic_search(query):
     try:
         docs = get_retriever().invoke(query)
-        return [{'text': d.page_content, 'source': d.metadata.get('source','?')}
+        return [{'text': d.page_content, 'source': d.metadata.get('source','-')}
                 for d in docs]
     except Exception as e:
         print(f'[graph_retriever] ChromaDB error: {e}')
@@ -103,7 +103,7 @@ def retrieve_all(alert):
         'rag_docs':    rag_docs,       
     }
 
-# Build the LLM prompt : convirting the retrieve_all() output into clean prompt
+# Build LLM prompt
 def format_for_prompt(ctx):
     sections = []
     # IP history section
@@ -116,7 +116,7 @@ def format_for_prompt(ctx):
             f' attacks={ip["attack_count"]}, techniques={techs_str})'
         )
         if chain:
-            steps = ' -> '.join(c.get('desc','?')[:30] for c in chain)
+            steps = ' -> '.join(c.get('desc','-')[:30] for c in chain)
             ip_section += f'\nKILL CHAIN: {steps}'
     else:
         ip_section = 'First time this IP is seen in our environment.'
@@ -147,7 +147,7 @@ def format_for_prompt(ctx):
     if rag:
         rag_lines = []
         for doc in rag[:4]:
-            src = doc.get('source', '?').upper()
+            src = doc.get('source', '-').upper()
             txt = doc.get('text', '')[:250]
             rag_lines.append(f'  [{src}] {txt}')
         sections.append(f'[KNOWLEDGE BASE — CHROMADB]\n' + '\n'.join(rag_lines))

@@ -1,7 +1,7 @@
 # agent/api.py
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional, List
 import time
 from agent.graph import soc_agent
@@ -25,11 +25,11 @@ class AlertInput(BaseModel):
     ml_attack_category:  Optional[str] = None
     ml_anomaly_score:    Optional[float] = None
     agent_name:          Optional[str] = None
-    extra:               Optional[dict] = {}
+    extra:               dict = Field(default_factory=dict)
 
 class ChatInput(BaseModel):
     question:  str
-    history:   Optional[List[dict]] = []
+    history:   List[dict] = Field(default_factory=list)
 
 @app.get('/health')
 def health():
@@ -40,8 +40,9 @@ async def analyze_alert(alert: AlertInput):
     start = time.time()
     initial_state = {
         'alert':        alert.model_dump(),
-        'context_logs': [],
-        'rag_results':  [], 
+        'graph_facts':  {},
+        'rag_passages': [],
+        'wazuh_logs':   [],
         'messages':     [],
         'tool_calls':   [],
         'report':       None,
@@ -78,18 +79,17 @@ async def chat(data: ChatInput):
 
 @app.get('/alerts')
 async def get_alerts(hours: int = 24, severity: str = 'Toutes'):
-    """Fetch recent alerts from Elasticsearch for the dashboard."""
+    """Fetch recent alerts from OpenSearch/Wazuh for the dashboard."""
     try:
-        from ingestion.elastic_client import get_client
-        es = get_client()
-        query = {'range': {'timestamp': {'gte': f'now-{hours}h'}}}
+        from input.wazuh_client import create_client, get_recent_logs
+
+        client = create_client()
+        logs = get_recent_logs(client, minutes=max(1, hours * 60), limit=100)
+        alerts = [entry.get('_source', {}) for entry in logs]
+
         if severity != 'Toutes':
-            query = {'bool': {'must': [
-                query,
-                {'term': {'ml_severity': severity}}
-            ]}}
-        result = es.search(index='soc-alerts', query=query,
-                           size=100, sort=[{'timestamp': 'desc'}])
-        return {'alerts': [h['_source'] for h in result['hits']['hits']]}
-    except Exception:
-        return {'alerts': [], 'error': 'Elasticsearch not available'}
+            alerts = [a for a in alerts if str(a.get('ml_severity', '')).lower() == severity.lower()]
+
+        return {'alerts': alerts}
+    except Exception as e:
+        return {'alerts': [], 'error': f'OpenSearch/Wazuh not available: {e}'}

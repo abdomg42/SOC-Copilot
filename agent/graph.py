@@ -15,15 +15,15 @@ def build_graph():
 
     g.add_node("receive_alert",   receive_alert)
     g.add_node("enrich_context",  enrich_context)
-    g.add_node("rag_lookup",      rag_lookup)
+    # g.add_node("rag_lookup",      rag_lookup)
     g.add_node("reason",          reason)
     g.add_node("call_tool",       call_tool)
     g.add_node("generate_report", generate_report)
 
     g.set_entry_point("receive_alert")
     g.add_edge("receive_alert",  "enrich_context")
-    g.add_edge("enrich_context", "rag_lookup")
-    g.add_edge("rag_lookup",     "reason")
+    g.add_edge("enrich_context", "reason") #rag_lookup
+    # g.add_edge("rag_lookup",     "reason")
     g.add_conditional_edges(
         "reason", should_call_tool,
         {"call_tool": "call_tool", "generate_report": "generate_report"}

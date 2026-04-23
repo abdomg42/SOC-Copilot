@@ -16,7 +16,7 @@ EMBEDDINGS = HuggingFaceEmbeddings(
     model_kwargs={'device': 'cpu'}
 )
 
-# ── 1. MITRE ATT&CK ─────────────────────────────────────────────────
+# ── 1. MITRE ATT&CK 
 def load_mitre() -> list:
     path = DATA / 'mitre_attack.json'
     print(path)
