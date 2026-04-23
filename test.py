@@ -1,33 +1,46 @@
-from os import path
+# test_full_pipeline.py
+from agent.graph import soc_agent
+import json
 
-from neo4j import GraphDatabase
-import json, os 
-from pathlib import Path
-from dotenv import load_dotenv
-load_dotenv()
+# Utilise exactement ton vrai log Windows Sysmon
+windows_alert = {
+    "alert_id":           "1775859573.5194324",
+    "timestamp":          "2026-04-10T23:19:33.588+0100",
+    "rule_id":            "92200",
+    "rule_level":         6,
+    "rule_description":   "Scripting file created under Windows Temp or User folder",
+    "agent_id":           "001",
+    "agent_name":         "windows_agent1",
+    "src_ip":             "10.0.2.15",
+    "user":               "mossaabReverse",
+    "os_type":            "windows",
+    "mitre_ids":          ["T1059", "T1105"],
+    "ml_severity":        "medium",
+    "ml_attack_category": "script_execution",
+    "ml_anomaly_score":   0.72,
+    "process_image":      "SDXHelper.exe",
+    "target_file":        "excel-copilot-strings.js",
+}
 
+initial_state = {
+    "alert":        windows_alert,
+    "graph_facts":  {},
+    "rag_passages": [],
+    "wazuh_logs":   [],
+    "messages":     [],
+    "tool_calls":   [],
+    "report":       None,
+    "error":        None,
+}
 
-# _driver = None
-# def get_driver():
-#     global _driver
-#     if _driver is None:
-#         _driver = GraphDatabase.driver(
-#             os.getenv('NEO4J_URI'),
-#             auth=(os.getenv('NEO4J_USER'), os.getenv('NEO4J_PASSWORD'))
-#         )
-#     print(_driver)
-#     return _driver
+print("Running agent on Windows Sysmon log...")
+result = soc_agent.invoke(initial_state)
+print(json.dumps(result["report"], indent=2, ensure_ascii=False))
 
-# print(get_driver().verify_connectivity())
-
-# def return_all():
-#     with get_driver().session() as s :
-#         res = s.run("MATCH (n) RETURN n").data()
-#     print(res)
-
-# if __name__ == "__main__":
-    # return_all()
-path = "C:\\Users\\PC\\projects\\soc-copilot\\data\\d3fend\\d3fend.csv"
-with open(path ,encoding='utf-8') as f:
-            lines = f.readlines()
-            print(lines[5])
+# Verify Neo4j was updated
+from agent.graph_db import get_driver
+with get_driver().session() as s:
+    ip = s.run(
+        "MATCH (ip:IP {address:'10.0.2.15'}) RETURN ip.risk_score, ip.attack_count"
+    ).single()
+    print(f"\nNeo4j after analysis: {dict(ip) if ip else 'IP not found'}")

@@ -1,17 +1,12 @@
+# agent/state.py
 from typing import TypedDict, List, Optional, Any
 
 class AgentState(TypedDict):
-    # Input
-    alert: dict          # raw Wazuh alert (enriched by ML)
-
-    # Enrichment
-    context_logs: List[dict]    # related Elasticsearch logs
-    rag_results: List[str]     # relevant passages from vector store
-
-    # LLM conversation
-    messages: List[Any]     # LangChain message history
-    tool_calls: Optional[List]# pending tool calls from LLM
-
-    # Final output
-    report: Optional[dict]# structured JSON report
-    error: Optional[str] # error message if something failed
+    alert:        dict           # normalized Wazuh alert
+    graph_facts:  dict           # Neo4j results (ip history, d3fend, engage)
+    rag_passages: List[dict]     # ChromaDB passages [{text, source}]
+    wazuh_logs:   List[dict]     # recent Wazuh logs from same IP
+    messages:     List[Any]      # LangChain message history
+    tool_calls:   Optional[List] # pending tool calls
+    report:       Optional[dict] # final JSON report
+    error:        Optional[str]
