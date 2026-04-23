@@ -3,7 +3,8 @@ import json
 from pathlib import Path
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from graph_db import get_driver
+from agent.neo4j_ingest.connection import get_driver
+
 
 CHROMA_DIR = Path('../data/chroma_db')
 

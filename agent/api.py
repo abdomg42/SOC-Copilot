@@ -67,7 +67,7 @@ async def chat(data: ChatInput):
     from langchain_ollama import ChatOllama
     from langchain_core.messages import SystemMessage, HumanMessage
     from prompts import SYSTEM_PROMPT
-    llm = ChatOllama(model='mistral', temperature=0.3)
+    llm = ChatOllama(model='mistral:7b', temperature=0.3)
     messages = [SystemMessage(content=SYSTEM_PROMPT)]
     for m in data.history[-6:]:  # keep last 6 turns
         if m['role'] == 'user':

@@ -107,7 +107,7 @@ def get_ip_risk_from_graph(ip: str) -> str:
         JSON string with IP risk profile from the attack graph.
     """
     try:
-        from agent.graph_db import get_driver
+        from agent.neo4j_ingest.connection import get_driver
 
         with get_driver().session() as s:
             # Basic risk profile

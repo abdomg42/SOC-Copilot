@@ -38,7 +38,7 @@ result = soc_agent.invoke(initial_state)
 print(json.dumps(result["report"], indent=2, ensure_ascii=False))
 
 # Verify Neo4j was updated
-from agent.graph_db import get_driver
+from agent.neo4j_ingest.connection import get_driver
 with get_driver().session() as s:
     ip = s.run(
         "MATCH (ip:IP {address:'10.0.2.15'}) RETURN ip.risk_score, ip.attack_count"

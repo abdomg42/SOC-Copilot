@@ -5,7 +5,7 @@ from .state   import AgentState
 from .tools   import get_tools, execute_tool
 from .prompts import SYSTEM_PROMPT, REPORT_FORMAT_PROMPT
 
-LLM            = ChatOllama(model="mistral", temperature=0)
+LLM            = ChatOllama(model="mistral:7b", temperature=0)
 LLM_WITH_TOOLS = LLM.bind_tools(get_tools())
 
 
@@ -37,7 +37,7 @@ def enrich_context(state: AgentState) -> AgentState:
     # ── A. Neo4j : IP history + D3FEND defenses + Engage activities ──────────
     graph_facts = {}
     try:
-        from agent.graph_db import get_driver
+        from agent.neo4j_ingest.connection import get_driver
         with get_driver().session() as s:
 
             # IP risk profile
@@ -143,29 +143,29 @@ def enrich_context(state: AgentState) -> AgentState:
 
     # ── C. Wazuh : recent context logs from same IP ───────────────────────────
     wazuh_logs = []
-    try:
-        from agent.tools import _get_token
-        import requests
-        headers = {"Authorization": f"Bearer {_get_token()}"}
-        r = requests.get(
-            f"https://{os.getenv('WAZUH_HOST','192.168.56.30')}:{os.getenv('WAZUH_PORT','55000')}/alerts",
-            headers=headers,
-            params={"limit": 20, "sort": "-timestamp",
-                    "q": f"data.srcip={ip}"},
-            verify=False, timeout=15
-        )
-        if r.status_code == 200:
-            items = r.json().get("data", {}).get("affected_items", [])
-            wazuh_logs = [
-                {
-                    "timestamp":   a.get("timestamp"),
-                    "description": a.get("rule", {}).get("description", ""),
-                    "level":       a.get("rule", {}).get("level"),
-                }
-                for a in items[:10]
-            ]
-    except Exception as e:
-        print(f"[Wazuh] enrich_context warning: {e}")
+    # try:
+    #     from agent.tools import _get_token
+    #     import requests
+    #     headers = {"Authorization": f"Bearer {_get_token()}"}
+    #     r = requests.get(
+    #         f"https://{os.getenv('WAZUH_HOST','192.168.56.30')}:{os.getenv('WAZUH_PORT','55000')}/alerts",
+    #         headers=headers,
+    #         params={"limit": 20, "sort": "-timestamp",
+    #                 "q": f"data.srcip={ip}"},
+    #         verify=False, timeout=15
+    #     )
+    #     if r.status_code == 200:
+    #         items = r.json().get("data", {}).get("affected_items", [])
+    #         wazuh_logs = [
+    #             {
+    #                 "timestamp":   a.get("timestamp"),
+    #                 "description": a.get("rule", {}).get("description", ""),
+    #                 "level":       a.get("rule", {}).get("level"),
+    #             }
+    #             for a in items[:10]
+    #         ]
+    # except Exception as e:
+    #     print(f"[Wazuh] enrich_context warning: {e}")
 
     return {
         "graph_facts":  graph_facts,
@@ -352,7 +352,7 @@ def generate_report(state: AgentState) -> AgentState:
 
     # Ingest alert + report into Neo4j (grows the attack graph)
     try:
-        from agent.graph_db import ingest_alert
+        from agent.neo4j_ingest.runtime_alerts import ingest_alert
         ingest_alert(state["alert"], report)
     except Exception as e:
         print(f"[Neo4j] ingest_alert warning: {e}")
