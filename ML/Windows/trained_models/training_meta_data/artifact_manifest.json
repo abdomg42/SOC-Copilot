@@ -1,0 +1,34 @@
+{
+  "output_directory": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models",
+  "saved_models": {
+    "RandomForest": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_randomforest.pkl",
+    "LightGBM": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_lightgbm.pkl",
+    "XGBoost": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_xgboost.pkl",
+    "rf": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_rf.pkl",
+    "lgbm": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_lgbm.pkl",
+    "xgboost_clf": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_xgboost_clf.pkl",
+    "best_model": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_best_model.pkl"
+  },
+  "saved_objects": {
+    "preprocessor": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/preprocessor.pkl",
+    "var_filter": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/var_filter.pkl",
+    "label_encoder": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/label_encoder.pkl",
+    "inference_bundle": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/inference_bundle.pkl"
+  },
+  "files": [
+    "class_metadata.json",
+    "feature_metadata.json",
+    "inference_bundle.pkl",
+    "label_encoder.pkl",
+    "model_best_model.pkl",
+    "model_card.json",
+    "model_lgbm.pkl",
+    "model_lightgbm.pkl",
+    "model_randomforest.pkl",
+    "model_rf.pkl",
+    "model_xgboost.pkl",
+    "model_xgboost_clf.pkl",
+    "preprocessor.pkl",
+    "var_filter.pkl"
+  ]
+}
