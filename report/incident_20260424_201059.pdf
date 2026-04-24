@@ -1,0 +1,71 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 2965 >>
+stream
+BT /F1 26 Tf 50 782 Td 0.05 0.15 0.4 rg (SOC INCIDENT REPORT) Tj ET
+BT /F1 14 Tf 50 744 Td 0.2 0.4 0.7 rg (Severity: HIGH) Tj ET
+BT /F1 9 Tf 50 724 Td 0.4 0.4 0.4 rg (Generated) Tj ET
+BT /F1 9 Tf 210 724 Td 0.0 0.0 0.0 rg (2026-04-24 20:10) Tj ET
+BT /F1 9 Tf 50 710 Td 0.4 0.4 0.4 rg (Title) Tj ET
+BT /F1 9 Tf 210 710 Td 0.0 0.0 0.0 rg (Potential Account Discovery and Discovery Activity Executed) Tj ET
+BT /F1 9 Tf 50 696 Td 0.4 0.4 0.4 rg (Confidence) Tj ET
+BT /F1 9 Tf 210 696 Td 0.0 0.0 0.0 rg (80%) Tj ET
+BT /F1 14 Tf 50 644 Td 0.2 0.4 0.7 rg (Executive Summary) Tj ET
+BT /F1 10 Tf 50 624 Td 0.0 0.0 0.0 rg (The alert indicates an attempt to discover accounts using the net.exe command, which is) Tj ET
+BT /F1 10 Tf 50 610 Td 0.0 0.0 0.0 rg (associated with the MITRE technique T1087: Account Discovery. The attacker has also) Tj ET
+BT /F1 10 Tf 50 596 Td 0.0 0.0 0.0 rg (executed discovery activity, as indicated by the kill chain.) Tj ET
+BT /F1 14 Tf 50 566 Td 0.2 0.4 0.7 rg (Indicators of Compromise) Tj ET
+BT /F1 9 Tf 50 546 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 546 Td 0.0 0.0 0.0 rg (process: net.exe) Tj ET
+BT /F1 14 Tf 50 488 Td 0.2 0.4 0.7 rg (Attack Timeline) Tj ET
+BT /F1 9 Tf 50 468 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 468 Td 0.0 0.0 0.0 rg (Initiated a net.exe account discovery command) Tj ET
+BT /F1 9 Tf 50 454 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 454 Td 0.0 0.0 0.0 rg (Executed discovery activity) Tj ET
+BT /F1 14 Tf 50 424 Td 0.2 0.4 0.7 rg (MITRE Context) Tj ET
+BT /F1 9 Tf 50 404 Td 0.4 0.4 0.4 rg (Technique) Tj ET
+BT /F1 9 Tf 210 404 Td 0.0 0.0 0.0 rg (T1087) Tj ET
+BT /F1 9 Tf 50 390 Td 0.4 0.4 0.4 rg (Tactic) Tj ET
+BT /F1 9 Tf 210 390 Td 0.0 0.0 0.0 rg (Discovery) Tj ET
+BT /F1 14 Tf 50 366 Td 0.2 0.4 0.7 rg (IoC Details) Tj ET
+BT /F1 9 Tf 50 346 Td 0.1 0.2 0.6 rg (Type) Tj ET
+BT /F1 9 Tf 215 346 Td 0.1 0.2 0.6 rg (Value) Tj ET
+BT /F1 9 Tf 380 346 Td 0.1 0.2 0.6 rg (Context) Tj ET
+BT /F1 8 Tf 50 332 Td 0.0 0.0 0.0 rg (process) Tj ET
+BT /F1 8 Tf 215 332 Td 0.0 0.0 0.0 rg (net.exe) Tj ET
+BT /F1 8 Tf 380 332 Td 0.0 0.0 0.0 rg (The process was used to initiate the account discovery command.) Tj ET
+BT /F1 14 Tf 50 270 Td 0.2 0.4 0.7 rg (Remediation) Tj ET
+BT /F1 9 Tf 50 250 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 250 Td 0.0 0.0 0.0 rg ([immediate] Investigate the target host for signs of compromise and isolate it if necessary.) Tj ET
+BT /F1 9 Tf 50 236 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 236 Td 0.0 0.0 0.0 rg ([short_term] Review network traffic between the source IP and the target host for any suspicious patterns or communication with known malicious IPs.) Tj ET
+BT /F1 9 Tf 50 222 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 222 Td 0.0 0.0 0.0 rg ([long_term] Implement a security solution that can detect and prevent the use of Netsh Helper DLLs on the network.) Tj ET
+BT /F1 8 Tf 50 174 Td 0.0 0.0 0.0 rg (This report is automatically generated and must be validated by a SOC analyst.) Tj ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 4 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+5 0 obj
+<< /Type /Catalog /Pages 4 0 R >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000003096 00000 n 
+0000003222 00000 n 
+0000003279 00000 n 
+trailer
+<< /Size 6 /Root 5 0 R >>
+startxref
+3328
+%%EOF
