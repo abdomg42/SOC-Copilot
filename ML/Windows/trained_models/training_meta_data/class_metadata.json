@@ -1,0 +1,27 @@
+{
+  "n_classes": 10,
+  "class_names": [
+    "Benign/Unknown",
+    "Command and Control",
+    "Credential Access",
+    "Defense Evasion",
+    "Discovery",
+    "Execution",
+    "Impact",
+    "Lateral Movement",
+    "Persistence",
+    "Privilege Escalation"
+  ],
+  "label_encoder_classes": [
+    "Benign/Unknown",
+    "Command and Control",
+    "Credential Access",
+    "Defense Evasion",
+    "Discovery",
+    "Execution",
+    "Impact",
+    "Lateral Movement",
+    "Persistence",
+    "Privilege Escalation"
+  ]
+}

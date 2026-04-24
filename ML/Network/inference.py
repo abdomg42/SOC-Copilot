@@ -1,9 +1,5 @@
 """
 Run model inference on new CIC-IDS2017-style data using saved preprocessing artifacts.
-
-Adjust the paths in the CONFIG section for Kaggle:
-- Inputs usually live under /kaggle/input/<dataset-name>/...
-- Outputs you create should go under /kaggle/working/...
 """
 
 from pathlib import Path
