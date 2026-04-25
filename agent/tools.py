@@ -1,43 +1,17 @@
-import os, requests, json, time
-from functools import lru_cache
+import json
 from langchain_core.tools import tool
-from dotenv import load_dotenv
-load_dotenv()
+from input.wazuh_client import create_client
 
-WAZUH_HOST = os.getenv("WAZUH_HOST", "192.168.56.30")
-WAZUH_PORT = os.getenv("WAZUH_PORT", "55000")
-WAZUH_USER = os.getenv("WAZUH_USER", "admin")
-WAZUH_PASS = os.getenv("WAZUH_PASSWORD", "")
-BASE_URL   = f"https://{WAZUH_HOST}:{WAZUH_PORT}"
 
-# ── JWT token cache (expires after 14 min, Wazuh gives 15) ──────────────────
-_token_cache = {"token": None, "expires_at": 0}
-
-def _get_token() -> str:
-    now = time.time()
-    if _token_cache["token"] and now < _token_cache["expires_at"]:
-        return _token_cache["token"]
-    r = requests.post(
-        f"{BASE_URL}/security/user/authenticate",
-        auth=(WAZUH_USER, WAZUH_PASS),
-        verify=False, timeout=10
-    )
-    r.raise_for_status()
-    token = r.json()["data"]["token"]
-    _token_cache["token"]      = token
-    _token_cache["expires_at"] = now + 840  # 14 min
-    return token
-
-def _wazuh_get(endpoint: str, params: dict = None) -> dict:
-    headers = {"Authorization": f"Bearer {_get_token()}"}
-    r = requests.get(
-        f"{BASE_URL}{endpoint}",
-        headers=headers, params=params,
-        verify=False, timeout=20
-    )
-    if r.status_code == 200:
-        return r.json().get("data", {})
-    return {}
+def _search_alerts(query: dict, limit: int = 50) -> list[dict]:
+    client = create_client()
+    body = {
+        "size": limit,
+        "sort": [{"@timestamp": {"order": "desc"}}],
+        "query": query,
+    }
+    response = client.search(index="wazuh-alerts-*", body=body)
+    return response.get("hits", {}).get("hits", [])
 
 
 # ── Tool 1 : query recent alerts from Wazuh by source IP ────────────────────
@@ -56,21 +30,26 @@ def query_wazuh_logs(ip: str, minutes: int = 15) -> str:
         JSON string with list of recent alerts from that IP.
     """
     try:
-        # Wazuh query syntax: field:value
-        data = _wazuh_get("/alerts", params={
-            "limit":  50,
-            "sort":   "-timestamp",
-            "q":      f"data.srcip={ip}",
-            "pretty": False,
+        items = _search_alerts({
+            "bool": {
+                "should": [
+                    {"term": {"src_ip": ip}},
+                    {"term": {"agent.ip": ip}},
+                    {"term": {"data.srcip": ip}},
+                    {"term": {"data.win.eventdata.sourceIp": ip}},
+                    {"match": {"full_log": ip}},
+                ],
+                "minimum_should_match": 1,
+            }
         })
-        items = data.get("affected_items", [])
 
         # Normalize to useful fields only
         results = []
-        for alert in items:
-            rule    = alert.get("rule", {})
+        for item in items:
+            alert = item.get("_source", {})
+            rule = alert.get("rule", {})
             results.append({
-                "timestamp":   alert.get("timestamp"),
+                "timestamp":   alert.get("timestamp") or alert.get("@timestamp"),
                 "rule_id":     str(rule.get("id", "")),
                 "rule_level":  rule.get("level"),
                 "description": rule.get("description", ""),
@@ -192,23 +171,21 @@ def get_user_events(username: str) -> str:
         JSON string with recent events involving this user.
     """
     try:
-        # Query by destination user (auth logs)
-        data = _wazuh_get("/alerts", params={
-            "limit": 30,
-            "sort":  "-timestamp",
-            "q":     f"data.dstuser={username}",
+        items = _search_alerts({
+            "bool": {
+                "should": [
+                    {"term": {"data.dstuser": username}},
+                    {"term": {"data.srcuser": username}},
+                    {"term": {"data.win.eventdata.user": username}},
+                    {"term": {"data.win.eventdata.targetUserName": username}},
+                    {"term": {"data.win.eventdata.subjectUserName": username}},
+                    {"match": {"full_log": username}},
+                ],
+                "minimum_should_match": 1,
+            }
         })
-        items_dst = data.get("affected_items", [])
 
-        # Also query by source user
-        data2 = _wazuh_get("/alerts", params={
-            "limit": 30,
-            "sort":  "-timestamp",
-            "q":     f"data.srcuser={username}",
-        })
-        items_src = data2.get("affected_items", [])
-
-        all_items = items_dst + items_src
+        all_items = [item.get("_source", {}) for item in items]
 
         # Count event types
         failed_logins = sum(
@@ -228,7 +205,7 @@ def get_user_events(username: str) -> str:
         for a in all_items[:10]:
             rule = a.get("rule", {})
             recent.append({
-                "timestamp":   a.get("timestamp"),
+                "timestamp":   a.get("timestamp") or a.get("@timestamp"),
                 "description": rule.get("description", ""),
                 "level":       rule.get("level"),
                 "agent":       a.get("agent", {}).get("name"),
