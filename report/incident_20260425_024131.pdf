@@ -1,0 +1,82 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 3847 >>
+stream
+BT /F1 26 Tf 50 782 Td 0.05 0.15 0.4 rg (SOC INCIDENT REPORT) Tj ET
+BT /F1 14 Tf 50 744 Td 0.2 0.4 0.7 rg (Severity: HIGH) Tj ET
+BT /F1 9 Tf 50 724 Td 0.4 0.4 0.4 rg (Generated) Tj ET
+BT /F1 9 Tf 210 724 Td 0.0 0.0 0.0 rg (2026-04-25 02:41) Tj ET
+BT /F1 9 Tf 50 710 Td 0.4 0.4 0.4 rg (Title) Tj ET
+BT /F1 9 Tf 210 710 Td 0.0 0.0 0.0 rg (Potential Defense Evasion via Valid Accounts) Tj ET
+BT /F1 9 Tf 50 696 Td 0.4 0.4 0.4 rg (Confidence) Tj ET
+BT /F1 9 Tf 210 696 Td 0.0 0.0 0.0 rg (80%) Tj ET
+BT /F1 14 Tf 50 644 Td 0.2 0.4 0.7 rg (Executive Summary) Tj ET
+BT /F1 10 Tf 50 624 Td 0.0 0.0 0.0 rg (A successful Windows logon event was detected, indicating potential unauthorized access) Tj ET
+BT /F1 10 Tf 50 610 Td 0.0 0.0 0.0 rg (using a valid account. The source IP has a history of past techniques T1078 \\\(Valid) Tj ET
+BT /F1 10 Tf 50 596 Td 0.0 0.0 0.0 rg (Accounts\\\) and T1087 \\\(Account Discovery\\\), suggesting a possible attack sequence.) Tj ET
+BT /F1 14 Tf 50 566 Td 0.2 0.4 0.7 rg (Indicators of Compromise) Tj ET
+BT /F1 9 Tf 50 546 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 546 Td 0.0 0.0 0.0 rg (ip: 192.168.117.130) Tj ET
+BT /F1 9 Tf 50 532 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 532 Td 0.0 0.0 0.0 rg (user: SYSTEM) Tj ET
+BT /F1 14 Tf 50 474 Td 0.2 0.4 0.7 rg (Attack Timeline) Tj ET
+BT /F1 9 Tf 50 454 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 454 Td 0.0 0.0 0.0 rg (A net.exe account discovery command was initiated) Tj ET
+BT /F1 9 Tf 50 440 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 440 Td 0.0 0.0 0.0 rg (A net.exe account discovery command was initiated) Tj ET
+BT /F1 9 Tf 50 426 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 426 Td 0.0 0.0 0.0 rg (A net.exe account discovery command was initiated) Tj ET
+BT /F1 9 Tf 50 412 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 412 Td 0.0 0.0 0.0 rg (A net.exe account discovery command was initiated) Tj ET
+BT /F1 9 Tf 50 398 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 398 Td 0.0 0.0 0.0 rg (Windows logon success.) Tj ET
+BT /F1 14 Tf 50 368 Td 0.2 0.4 0.7 rg (MITRE Context) Tj ET
+BT /F1 9 Tf 50 348 Td 0.4 0.4 0.4 rg (Technique) Tj ET
+BT /F1 9 Tf 210 348 Td 0.0 0.0 0.0 rg (T1078) Tj ET
+BT /F1 9 Tf 50 334 Td 0.4 0.4 0.4 rg (Tactic) Tj ET
+BT /F1 9 Tf 210 334 Td 0.0 0.0 0.0 rg (Defense Evasion) Tj ET
+BT /F1 14 Tf 50 310 Td 0.2 0.4 0.7 rg (IoC Details) Tj ET
+BT /F1 9 Tf 50 290 Td 0.1 0.2 0.6 rg (Type) Tj ET
+BT /F1 9 Tf 215 290 Td 0.1 0.2 0.6 rg (Value) Tj ET
+BT /F1 9 Tf 380 290 Td 0.1 0.2 0.6 rg (Context) Tj ET
+BT /F1 8 Tf 50 276 Td 0.0 0.0 0.0 rg (ip) Tj ET
+BT /F1 8 Tf 215 276 Td 0.0 0.0 0.0 rg (192.168.117.130) Tj ET
+BT /F1 8 Tf 380 276 Td 0.0 0.0 0.0 rg (Known attacker with a risk score of 0.2 and 10 past attacks) Tj ET
+BT /F1 8 Tf 50 262 Td 0.0 0.0 0.0 rg (user) Tj ET
+BT /F1 8 Tf 215 262 Td 0.0 0.0 0.0 rg (SYSTEM) Tj ET
+BT /F1 8 Tf 380 262 Td 0.0 0.0 0.0 rg (User involved in the successful Windows logon event) Tj ET
+BT /F1 14 Tf 50 200 Td 0.2 0.4 0.7 rg (Remediation) Tj ET
+BT /F1 9 Tf 50 180 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 180 Td 0.0 0.0 0.0 rg ([immediate] Investigate the user account involved in the logon event to determine if it has been compromised or if the account is being used for unauthorized activities.) Tj ET
+BT /F1 9 Tf 50 166 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 166 Td 0.0 0.0 0.0 rg ([short_term] Review and update the logon scripts on the affected host to ensure they do not provide an avenue for attackers to establish persistence.) Tj ET
+BT /F1 9 Tf 50 152 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 152 Td 0.0 0.0 0.0 rg ([long_term] Implement multi-factor authentication \\\(MFA\\\) for all critical user accounts to enhance account security and reduce the risk of unauthorized access.) Tj ET
+BT /F1 8 Tf 50 104 Td 0.0 0.0 0.0 rg (This report is automatically generated and must be validated by a SOC analyst.) Tj ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 4 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+5 0 obj
+<< /Type /Catalog /Pages 4 0 R >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000003978 00000 n 
+0000004104 00000 n 
+0000004161 00000 n 
+trailer
+<< /Size 6 /Root 5 0 R >>
+startxref
+4210
+%%EOF

@@ -309,12 +309,17 @@ INPUT DATA (DO NOT IGNORE):
     # Generate professional PDF report
     try:
         from agent.report_generator import generate_incident_report
+        from agent.email_notifier import send_incident_email
         report_dir = Path(__file__).parent.parent / "report"
         report_dir.mkdir(parents=True, exist_ok=True)
         pdf_path = report_dir / f"incident_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
         generate_incident_report(report, pdf_path)
         print(f"[PDF] Report generated: {pdf_path.resolve()}")
         report["pdf_path"] = str(pdf_path)
+
+        email_status = send_incident_email(report, pdf_path, alert)
+        report["email_status"] = email_status
+        print(f"[EMAIL] {email_status}")
     except Exception as e:
         print(f"[PDF] Generation warning: {e}")
 
