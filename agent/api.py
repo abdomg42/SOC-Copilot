@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 from typing import Optional, List
 import time
 from agent.graph import soc_agent
+from agent.knowledge_base import warm_up_retriever
 
 app = FastAPI(
     title='SOC Copilot Agent API',
@@ -15,6 +16,11 @@ app = FastAPI(
 app.add_middleware(CORSMiddleware,
     allow_origins=['*'], allow_methods=['*'], allow_headers=['*']
 )
+
+
+@app.on_event('startup')
+def preload_models() -> None:
+    warm_up_retriever()
 
 class AlertInput(BaseModel):
     rule_description:    str

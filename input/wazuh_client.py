@@ -19,7 +19,7 @@ def get_recent_logs(client, minutes=15, limit=100):
     since = (datetime.utcnow() - timedelta(minutes=minutes)).isoformat() + "Z"
 
     query = {
-        "_source": ["@timestamp", "src_ip", "dst_ip", "protocol"],
+        "_source": ["@timestamp", "src_ip", "dst_ip", "protocol","rule.description", "rule.level","agent.ip","agent.name"],
         "size": limit,
         "query": {
             "range": {
@@ -39,7 +39,7 @@ def get_logs_by_ip(client, ip, minutes=15, limit=100):
     since = (datetime.utcnow() - timedelta(minutes=minutes)).isoformat() + "Z"
 
     query = {
-        "_source": ["@timestamp", "src_ip", "dst_ip", "protocol"],
+        "_source": ["@timestamp", "src_ip", "dst_ip", "protocol","rule.description", "agent.name"],
         "size": limit,
         "query": {
             "bool": {

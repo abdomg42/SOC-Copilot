@@ -1,0 +1,68 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 2656 >>
+stream
+BT /F1 26 Tf 50 782 Td 0.05 0.15 0.4 rg (SOC INCIDENT REPORT) Tj ET
+BT /F1 14 Tf 50 744 Td 0.2 0.4 0.7 rg (Severity: HIGH) Tj ET
+BT /F1 9 Tf 50 724 Td 0.4 0.4 0.4 rg (Generated) Tj ET
+BT /F1 9 Tf 210 724 Td 0.0 0.0 0.0 rg (2026-04-26 12:34) Tj ET
+BT /F1 9 Tf 50 710 Td 0.4 0.4 0.4 rg (Title) Tj ET
+BT /F1 9 Tf 210 710 Td 0.0 0.0 0.0 rg (Possible SSH Brute-Force Attempt) Tj ET
+BT /F1 9 Tf 50 696 Td 0.4 0.4 0.4 rg (Confidence) Tj ET
+BT /F1 9 Tf 210 696 Td 0.0 0.0 0.0 rg (87%) Tj ET
+BT /F1 14 Tf 50 644 Td 0.2 0.4 0.7 rg (Executive Summary) Tj ET
+BT /F1 10 Tf 50 624 Td 0.0 0.0 0.0 rg (A high-severity alert for potential SSH brute-force activity was detected from IP address) Tj ET
+BT /F1 10 Tf 50 610 Td 0.0 0.0 0.0 rg (192.168.56.22 on the host wazuh-agent-linux-01.) Tj ET
+BT /F1 14 Tf 50 580 Td 0.2 0.4 0.7 rg (Indicators of Compromise) Tj ET
+BT /F1 9 Tf 50 560 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 560 Td 0.0 0.0 0.0 rg (ip: 192.168.56.22) Tj ET
+BT /F1 14 Tf 50 502 Td 0.2 0.4 0.7 rg (Attack Timeline) Tj ET
+BT /F1 9 Tf 50 482 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 482 Td 0.0 0.0 0.0 rg (An unauthorized user attempted multiple SSH login attempts with varying credentials.) Tj ET
+BT /F1 14 Tf 50 452 Td 0.2 0.4 0.7 rg (MITRE Context) Tj ET
+BT /F1 9 Tf 50 432 Td 0.4 0.4 0.4 rg (Technique) Tj ET
+BT /F1 9 Tf 210 432 Td 0.0 0.0 0.0 rg (N/A) Tj ET
+BT /F1 9 Tf 50 418 Td 0.4 0.4 0.4 rg (Tactic) Tj ET
+BT /F1 9 Tf 210 418 Td 0.0 0.0 0.0 rg (N/A) Tj ET
+BT /F1 14 Tf 50 394 Td 0.2 0.4 0.7 rg (IoC Details) Tj ET
+BT /F1 9 Tf 50 374 Td 0.1 0.2 0.6 rg (Type) Tj ET
+BT /F1 9 Tf 215 374 Td 0.1 0.2 0.6 rg (Value) Tj ET
+BT /F1 9 Tf 380 374 Td 0.1 0.2 0.6 rg (Context) Tj ET
+BT /F1 8 Tf 50 360 Td 0.0 0.0 0.0 rg (ip) Tj ET
+BT /F1 8 Tf 215 360 Td 0.0 0.0 0.0 rg (192.168.56.22) Tj ET
+BT /F1 8 Tf 380 360 Td 0.0 0.0 0.0 rg (The source IP of the potential attacker) Tj ET
+BT /F1 14 Tf 50 298 Td 0.2 0.4 0.7 rg (Remediation) Tj ET
+BT /F1 9 Tf 50 278 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 278 Td 0.0 0.0 0.0 rg ([immediate] Investigate the source IP and block it if necessary.) Tj ET
+BT /F1 9 Tf 50 264 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 264 Td 0.0 0.0 0.0 rg ([short_term] Update the SSH server to the latest version and apply relevant configurations to secure it against brute-force attacks.) Tj ET
+BT /F1 9 Tf 50 250 Td 0.0 0.0 0.0 rg (?) Tj ET
+BT /F1 9 Tf 65 250 Td 0.0 0.0 0.0 rg ([short_term] Implement rate limiting and lockout policies for SSH login attempts to further protect against brute-force attacks.) Tj ET
+BT /F1 8 Tf 50 202 Td 0.0 0.0 0.0 rg (This report is automatically generated and must be validated by a SOC analyst.) Tj ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 4 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+5 0 obj
+<< /Type /Catalog /Pages 4 0 R >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000002787 00000 n 
+0000002913 00000 n 
+0000002970 00000 n 
+trailer
+<< /Size 6 /Root 5 0 R >>
+startxref
+3019
+%%EOF

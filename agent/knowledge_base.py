@@ -1,3 +1,4 @@
+from functools import lru_cache
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from pathlib import Path
@@ -5,13 +6,8 @@ from pathlib import Path
 CHROMA_DIR = str(Path(__file__).resolve().parent.parent / 'data' / 'chroma_db')
 COLLECTION = 'soc_knowledge'
 
-_retriever = None  # singleton
-
+@lru_cache(maxsize=1)
 def get_retriever():
-    global _retriever
-    if _retriever is not None:
-        return _retriever
-
     embeddings = HuggingFaceEmbeddings(
         model_name='sentence-transformers/all-MiniLM-L6-v2',
         model_kwargs={'device': 'cpu'}
@@ -21,8 +17,12 @@ def get_retriever():
         collection_name=COLLECTION,
         embedding_function=embeddings,
     )
-    _retriever = vectorstore.as_retriever(
+    return vectorstore.as_retriever(
         search_type='similarity',
         search_kwargs={'k': 4}   # top-4 most similar chunks
     )
-    return _retriever
+
+
+def warm_up_retriever() -> None:
+    """Load the embedding model and Chroma index once during server startup."""
+    get_retriever()
