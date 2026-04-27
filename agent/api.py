@@ -4,8 +4,46 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from typing import Optional, List
 import time
+from langchain_ollama import ChatOllama
+from langchain_core.messages import SystemMessage, HumanMessage
 from agent.graph import soc_agent
 from agent.knowledge_base import warm_up_retriever
+from agent.prompts import CHAT_SYSTEM_PROMPT
+
+
+CHAT_LLM = ChatOllama(
+    model='mistral:7b',
+    temperature=0.2,
+    num_predict=180,
+    num_ctx=2048,
+    keep_alive='30m',
+)
+
+
+def _is_small_talk(question: str) -> bool:
+    text = question.strip().lower()
+    if not text:
+        return True
+
+    greetings = {
+        'hi', 'hey', 'heyy', 'hello', 'hiya', 'yo', 'sup', 'good morning',
+        'good afternoon', 'good evening', 'thanks', 'thank you', 'bye', 'ok',
+        'okay'
+    }
+    if text in greetings:
+        return True
+
+    compact = text.replace('!', '').replace('?', '').replace('.', '')
+    if compact in greetings:
+        return True
+
+    return len(text.split()) <= 2 and not any(
+        keyword in text for keyword in (
+            'alert', 'incident', 'attack', 'malware', 'ioc', 'mitre', 'wazuh',
+            'log', 'contain', 'remed', 'phish', 'lateral', 'brute', 'ransom',
+            'engagement', 'engage'
+        )
+    )
 
 app = FastAPI(
     title='SOC Copilot Agent API',
@@ -21,6 +59,14 @@ app.add_middleware(CORSMiddleware,
 @app.on_event('startup')
 def preload_models() -> None:
     warm_up_retriever()
+    # Warm the chat model once so first user message is not cold-started.
+    try:
+        CHAT_LLM.invoke([
+            SystemMessage(content='You are a SOC assistant.'),
+            HumanMessage(content='Reply with: ready'),
+        ])
+    except Exception as e:
+        print(f'[startup] chat warmup warning: {e}')
 
 class AlertInput(BaseModel):
     rule_description:    str
@@ -71,17 +117,25 @@ async def analyze_alert(alert: AlertInput):
 @app.post('/chat')
 async def chat(data: ChatInput):
     """Free-form chat with the SOC agent for ad-hoc analysis."""
-    from langchain_ollama import ChatOllama
-    from langchain_core.messages import SystemMessage, HumanMessage
-    from agent.prompts import SYSTEM_PROMPT
-    llm = ChatOllama(model='mistral:7b', temperature=0.3)
-    messages = [SystemMessage(content=SYSTEM_PROMPT)]
-    for m in data.history[-6:]:  # keep last 6 turns
-        if m['role'] == 'user':
-            messages.append(HumanMessage(content=m['content']))
+    start = time.time()
+
+    if _is_small_talk(data.question):
+        return {
+            'answer': "Hey! What would you like to look into?",
+            'latency_s': round(time.time() - start, 2),
+        }
+
+    messages = [SystemMessage(content=CHAT_SYSTEM_PROMPT)]
+    # Keep a short rolling context to reduce prompt size and response time.
+    for m in data.history[-4:]:
+        role = m.get('role', '')
+        content = m.get('content', '')
+        if role == 'user':
+            messages.append(HumanMessage(content=content))
     messages.append(HumanMessage(content=data.question))
-    response = llm.invoke(messages)
-    return {'answer': response.content}
+    response = CHAT_LLM.invoke(messages)
+    print(round(time.time() - start, 2))
+    return {'answer': response.content, 'latency_s': round(time.time() - start, 2)}
 
 @app.get('/alerts')
 async def get_alerts(hours: int = 24, severity: str = 'Toutes'):

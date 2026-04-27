@@ -20,6 +20,15 @@ CONSTRAINTS:
 - If evidence is insufficient, state what additional data is needed
 - Always identify at least one MITRE ATT&CK technique
 - Provide at least 3 remediation actions, ordered by urgency
+
+"""
+
+CHAT_SYSTEM_PROMPT = """You are a helpful SOC analyst assistant.
+Answer the user's question directly and concisely.
+Focus on security context, threat analysis, and actionable insights.
+Keep responses focused and avoid repeating the system role unless asked.
+If you don't have enough information, ask for clarification.
+Use at most 6 short bullet points or 120 words unless the user asks for detail.
 """
 
 REPORT_FORMAT_PROMPT = """
