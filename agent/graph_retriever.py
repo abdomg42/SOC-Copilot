@@ -103,55 +103,6 @@ def retrieve_all(alert):
         'rag_docs':    rag_docs,       
     }
 
-# Build LLM prompt
-def format_for_prompt(ctx):
-    sections = []
-    # IP history section
-    ip = ctx.get('ip_context', {})
-    if ip.get('known'):
-        techs_str = ', '.join(t['tid'] for t in ip.get('techniques', []))
-        chain = ip.get('kill_chain', [])
-        ip_section = (
-            f'KNOWN ATTACKER (risk={ip["risk_score"]:.2f},'
-            f' attacks={ip["attack_count"]}, techniques={techs_str})'
-        )
-        if chain:
-            steps = ' -> '.join(c.get('desc','-')[:30] for c in chain)
-            ip_section += f'\nKILL CHAIN: {steps}'
-    else:
-        ip_section = 'First time this IP is seen in our environment.'
-    sections.append(f'[IP HISTORY]\n{ip_section}')
 
-    # MITRE context from graph
-    mc = ctx.get('mitre_ctx', {})
-    if mc.get('name'):
-        mitre_section = (
-            f'{mc["name"]} — tactics: {", ".join(mc.get("tactics", []))}\n'
-            f'Platforms: {", ".join(mc.get("platforms", []))}\n'
-            f'{mc.get("desc", "")[:200]}'
-        )
-        if mc.get('parent_name'):
-            mitre_section += f'\nParent technique: {mc["parent_tid"]} {mc["parent_name"]}'
-        sections.append(f'[MITRE TECHNIQUE DETAILS]\n{mitre_section}')
-
-    # D3FEND defenses from graph
-    d3 = ctx.get('d3fend', [])
-    if d3:
-        d3_lines = '\n'.join(
-            f'  - {d["defense"]} (defends {d["attack_technique"]})'
-            for d in d3[:5]
-        )
-        sections.append(f'[D3FEND DEFENSES FROM GRAPH]\n{d3_lines}')
-    # RAG semantic passages
-    rag = ctx.get('rag_docs', [])
-    if rag:
-        rag_lines = []
-        for doc in rag[:4]:
-            src = doc.get('source', '-').upper()
-            txt = doc.get('text', '')[:250]
-            rag_lines.append(f'  [{src}] {txt}')
-        sections.append(f'[KNOWLEDGE BASE — CHROMADB]\n' + '\n'.join(rag_lines))
-
-    return '\n\n'.join(sections)
 
 
