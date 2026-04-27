@@ -45,7 +45,7 @@ if question:
         st.markdown(question)
 
     with st.chat_message("assistant"):
-        with st.spinner("Querying SOC backend..."):
+        with st.spinner("Building response...."):
             try:
                 response = client.chat(question=question, history=history_snapshot)
                 answer = response.get("answer", "No answer returned by backend.")
