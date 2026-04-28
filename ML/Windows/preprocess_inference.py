@@ -356,15 +356,30 @@ def load_artifacts(artifacts_dir: str | Path) -> dict:
         log.warning("feature_metadata.json not found — schema validation skipped.")
         artifacts["feature_metadata"] = None
 
-    # ── Optional: load model (any model_*.pkl) ────────────────────────────────
-    model_file =  "/home/yassine/Documents/S4_IAGI/Projet Metier/SOC-Copilot/ML/Windows/trained_models/model_best_model.pkl"
-    if model_file:
-        artifacts["model"] = joblib.load(model_file)
-        log.info(f"  ✓ Model loaded")
-    else:
-        artifacts["model"] = None
-        log.warning("No model_*.pkl found — artifacts['model'] is None. "
-                    "Load the model manually if needed.")
+    # ── Optional: load model from the repo bundle ────────────────────────────
+    model_candidates = [
+        artifacts_dir.parent / "model_best_model.pkl",
+        artifacts_dir / "model_best_model.pkl",
+        artifacts_dir / "inference_bundle.pkl",
+    ]
+
+    artifacts["model"] = None
+    for model_file in model_candidates:
+        if model_file.exists():
+            bundle = joblib.load(model_file)
+            if isinstance(bundle, dict) and {"model", "preprocessor", "var_filter", "label_encoder"} <= set(bundle):
+                artifacts.update(bundle)
+                log.info(f"  ✓ inference bundle loaded: {model_file.name}")
+            else:
+                artifacts["model"] = bundle
+                log.info(f"  ✓ Model loaded: {model_file.name}")
+            break
+
+    if artifacts["model"] is None:
+        log.warning(
+            "No model_*.pkl or inference_bundle.pkl found — artifacts['model'] is None. "
+            "Load the model manually if needed."
+        )
 
     return artifacts
 

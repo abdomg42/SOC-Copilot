@@ -35,6 +35,28 @@ def get_recent_logs(client, minutes=15, limit=100):
     return response["hits"]["hits"]
 
 
+def get_recent_logs_raw(client, minutes=15, limit=100):
+    """Fetch recent Wazuh alerts with full _source payload (for ML features)."""
+    since = (datetime.utcnow() - timedelta(minutes=minutes)).isoformat() + "Z"
+
+    query = {
+        "_source": True,
+        "size": limit,
+        "sort": [{"@timestamp": {"order": "desc"}}],
+        "query": {
+            "range": {
+                "@timestamp": {
+                    "gte": since,
+                    "lte": "now"
+                }
+            }
+        }
+    }
+
+    response = client.search(index="wazuh-alerts-*", body=query)
+    return response["hits"]["hits"]
+
+
 def get_logs_by_ip(client, ip, minutes=15, limit=100):
     since = (datetime.utcnow() - timedelta(minutes=minutes)).isoformat() + "Z"
 

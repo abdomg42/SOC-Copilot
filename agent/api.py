@@ -85,6 +85,10 @@ class ChatInput(BaseModel):
     question:  str
     history:   List[dict] = Field(default_factory=list)
 
+class PredictInput(BaseModel):
+    records: List[dict] = Field(default_factory=list)
+    artifacts_dir: Optional[str] = None
+
 @app.get('/health')
 def health():
     return {'status': 'ok', 'agent': 'SOC Copilot v1.0'}
@@ -185,6 +189,21 @@ async def chat(data: ChatInput):
     response = CHAT_LLM.invoke(messages)
     print(round(time.time() - start, 2))
     return {'answer': response.content, 'latency_s': round(time.time() - start, 2)}
+
+@app.post('/ml/predict')
+async def ml_predict(data: PredictInput):
+    if not data.records:
+        raise HTTPException(status_code=400, detail='No records provided')
+
+    try:
+        import pandas as pd
+        from agent.ml_predictor import get_artifacts, predict_with_original_data
+
+        df_raw = pd.DataFrame(data.records)
+        df_out = predict_with_original_data(df_raw, get_artifacts(data.artifacts_dir))
+        return {'predictions': df_out.to_dict(orient='records')}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get('/alerts')
 async def get_alerts(hours: int = 24, severity: str = 'Toutes'):

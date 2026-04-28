@@ -243,6 +243,22 @@ python test/run_demo.py
 jupyter notebook main.ipynb
 ```
 
+### Run the Windows ML predictor
+
+The portable helper lives in [agent/ml_predictor.py](agent/ml_predictor.py) and uses the checked-in artifact bundle at `ML/Windows/trained_models/training_meta_data` by default.
+
+```bash
+python -m agent.ml_predictor --input combined_3000.csv --output enriched_alerts.csv
+```
+
+If your artifacts live elsewhere, point the script at them with:
+
+```bash
+set SOC_ML_ARTIFACTS_DIR=C:\path\to\training_meta_data
+```
+
+On the Wazuh side, the usual pattern is to export the alert data to CSV/JSON, run this script, then send the enriched result to the agent API.
+
 ---
 
 ## Production Deployment
