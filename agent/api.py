@@ -9,15 +9,13 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from agent.graph import soc_agent
 from agent.knowledge_base import warm_up_retriever
 from agent.prompts import CHAT_SYSTEM_PROMPT
-from agent.graph_retriever import semantic_search, get_ip_context, get_mitre_context
-import re
 
 
 CHAT_LLM = ChatOllama(
     model='mistral:7b',
     temperature=0.2,
-    num_predict=1000,
-    num_ctx=4096,
+    num_predict=180,
+    num_ctx=2048,
     keep_alive='30m',
 )
 
@@ -85,10 +83,6 @@ class ChatInput(BaseModel):
     question:  str
     history:   List[dict] = Field(default_factory=list)
 
-class PredictInput(BaseModel):
-    records: List[dict] = Field(default_factory=list)
-    artifacts_dir: Optional[str] = None
-
 @app.get('/health')
 def health():
     return {'status': 'ok', 'agent': 'SOC Copilot v1.0'}
@@ -132,78 +126,15 @@ async def chat(data: ChatInput):
         }
 
     messages = [SystemMessage(content=CHAT_SYSTEM_PROMPT)]
-    # Retrieve RAG passages relevant to the question
-    try:
-        rag_docs = semantic_search(data.question)
-    except Exception:
-        rag_docs = []
-
-    extra_context_parts = []
-    if rag_docs:
-        lines = []
-        for d in rag_docs[:4]:
-            src = d.get('source', '-')
-            txt = d.get('text', '')[:400].replace('\n', ' ')
-            lines.append(f'[{src}] {txt}')
-        extra_context_parts.append('KNOWLEDGE_BASE (Chroma):\n' + '\n'.join(lines))
-
-    # Detect IP addresses in the question and fetch Neo4j context
-    ip_match = re.search(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", data.question)
-    if ip_match:
-        ip = ip_match.group(0)
-        try:
-            ip_ctx = get_ip_context(ip)
-            extra_context_parts.append('IP_CONTEXT (Neo4j):\n' + str(ip_ctx))
-        except Exception:
-            pass
-
-    # Detect MITRE technique IDs (e.g. T1059) and fetch MITRE context
-    mitre_match = re.search(r"\bT\d{4}\b", data.question.upper())
-    if mitre_match:
-        tid = mitre_match.group(0)
-        try:
-            mitre_ctx = get_mitre_context(tid)
-            extra_context_parts.append('MITRE_CONTEXT (Neo4j):\n' + str(mitre_ctx))
-        except Exception:
-            pass
-
-    if extra_context_parts:
-        messages.append(SystemMessage(
-            content='Retrieved context (for understanding only, DO NOT answer directly):\n' + '\n\n'.join(extra_context_parts)
-        ))
     # Keep a short rolling context to reduce prompt size and response time.
-#   for m in data.history[-4:]:
-#       role = m.get('role', '')
-#       content = m.get('content', '')
-#       if role == 'user':
-#           messages.append(HumanMessage(content=content))
-    if data.history:
-        context_text = "\n".join(
-            [f"{m['role']}: {m['content']}" for m in data.history[-4:]]
-        )
-
-        messages.append(SystemMessage(
-            content=f"Conversation context (for understanding only, DO NOT answer it):\n{context_text}"
-        ))
+    for m in data.history[-4:]:
+        role = m.get('role', '')
+        content = m.get('content', '')
+        if role == 'user':
+            messages.append(HumanMessage(content=content))
     messages.append(HumanMessage(content=data.question))
     response = CHAT_LLM.invoke(messages)
-    print(round(time.time() - start, 2))
     return {'answer': response.content, 'latency_s': round(time.time() - start, 2)}
-
-@app.post('/ml/predict')
-async def ml_predict(data: PredictInput):
-    if not data.records:
-        raise HTTPException(status_code=400, detail='No records provided')
-
-    try:
-        import pandas as pd
-        from agent.ml_predictor import get_artifacts, predict_with_original_data
-
-        df_raw = pd.DataFrame(data.records)
-        df_out = predict_with_original_data(df_raw, get_artifacts(data.artifacts_dir))
-        return {'predictions': df_out.to_dict(orient='records')}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
 
 @app.get('/alerts')
 async def get_alerts(hours: int = 24, severity: str = 'Toutes'):

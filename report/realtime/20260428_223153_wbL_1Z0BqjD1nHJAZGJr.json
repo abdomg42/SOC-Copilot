@@ -1,0 +1,202 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.28",
+    "_id": "wbL_1Z0BqjD1nHJAZGJr",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "param3": "demand start",
+            "param4": "BITS",
+            "param1": "Background Intelligent Transfer Service",
+            "param2": "auto start"
+          },
+          "system": {
+            "eventID": "7040",
+            "eventSourceName": "Service Control Manager",
+            "keywords": "0x8080000000000000",
+            "providerGuid": "{555908d1-a6d7-4695-8e1e-26931d2012f4}",
+            "level": "4",
+            "channel": "System",
+            "opcode": "0",
+            "message": "\"The start type of the Background Intelligent Transfer Service service was changed from auto start to demand start.\"",
+            "version": "0",
+            "systemTime": "2026-04-28T21:29:31.4532144Z",
+            "eventRecordID": "4535",
+            "threadID": "5360",
+            "computer": "DESKTOP-80FLS88",
+            "task": "0",
+            "processID": "676",
+            "severityValue": "INFORMATION",
+            "providerName": "Service Control Manager"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 2,
+        "mail": false,
+        "level": 3,
+        "pci_dss": [
+          "10.6"
+        ],
+        "hipaa": [
+          "164.312.b"
+        ],
+        "tsc": [
+          "CC6.1",
+          "CC6.8",
+          "CC7.2",
+          "CC7.3"
+        ],
+        "description": "Service startup type was changed",
+        "groups": [
+          "windows",
+          "windows_system",
+          "policy_changed"
+        ],
+        "id": "61104",
+        "nist_800_53": [
+          "AU.6"
+        ],
+        "info": "This does not appear to be logged on Windows 2000",
+        "gdpr": [
+          "IV_35.7.d"
+        ]
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-28T21:29:28.865Z",
+      "location": "EventChannel",
+      "id": "1777411768.1339205",
+      "timestamp": "2026-04-28T22:29:28.865+0100"
+    },
+    "sort": [
+      1777411768865
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.param3": "demand start",
+        "_source.data.win.eventdata.param4": "BITS",
+        "_source.data.win.eventdata.param1": "Background Intelligent Transfer Service",
+        "_source.data.win.eventdata.param2": "auto start",
+        "_source.data.win.system.eventID": "7040",
+        "_source.data.win.system.eventSourceName": "Service Control Manager",
+        "_source.data.win.system.keywords": "0x8080000000000000",
+        "_source.data.win.system.providerGuid": "{555908d1-a6d7-4695-8e1e-26931d2012f4}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "System",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"The start type of the Background Intelligent Transfer Service service was changed from auto start to demand start.\"",
+        "_source.data.win.system.version": "0",
+        "_source.data.win.system.systemTime": "2026-04-28T21:29:31.4532144Z",
+        "_source.data.win.system.eventRecordID": "4535",
+        "_source.data.win.system.threadID": "5360",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "0",
+        "_source.data.win.system.processID": "676",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Service Control Manager",
+        "_source.rule.firedtimes": 2,
+        "_source.rule.mail": false,
+        "_source.rule.level": 3,
+        "_source.rule.pci_dss": [
+          "10.6"
+        ],
+        "_source.rule.hipaa": [
+          "164.312.b"
+        ],
+        "_source.rule.tsc": [
+          "CC6.1",
+          "CC6.8",
+          "CC7.2",
+          "CC7.3"
+        ],
+        "_source.rule.description": "Service startup type was changed",
+        "_source.rule.groups": [
+          "windows",
+          "windows_system",
+          "policy_changed"
+        ],
+        "_source.rule.id": "61104",
+        "_source.rule.nist_800_53": [
+          "AU.6"
+        ],
+        "_source.rule.info": "This does not appear to be logged on Windows 2000",
+        "_source.rule.gdpr": [
+          "IV_35.7.d"
+        ],
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-28T21:29:28.865Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777411768.1339205",
+        "_source.timestamp": "2026-04-28T22:29:28.865+0100",
+        "ML_prediction": "Benign/Unknown"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "severity": "medium",
+      "title": "Service Startup Type Change on windows_agent1",
+      "mitre_technique_id": "N/A",
+      "mitre_technique_name": "N/A",
+      "mitre_tactic": "Initial Access",
+      "explanation": "The alert indicates a change in service startup type on the target host 'windows_agent1' by the source IP '10.0.2.15'. Although the ML category is marked as 'Benign/Unknown', the MITRE technique T1007: System Service Discovery can be inferred from the knowledge base.",
+      "attack_sequence": [
+        "An unauthorized user attempted to change the service startup type on the target host.",
+        "The change was detected by Wazuh SIEM."
+      ],
+      "iocs": [
+        {
+          "type": "ip",
+          "value": "10.0.2.15",
+          "context": "Source IP of the alert"
+        },
+        {
+          "type": "host",
+          "value": "DESKTOP-80FLS88",
+          "context": "Target host of the alert"
+        }
+      ],
+      "remediation_steps": [
+        {
+          "priority": "immediate",
+          "action": "Investigate the registry keys mentioned in the RAG (Rapid7 Attack Graph) for any unusual activity related to service startup changes."
+        },
+        {
+          "priority": "short_term",
+          "action": "Monitor the target host for any further changes in service startup type."
+        },
+        {
+          "priority": "long_term",
+          "action": "Enrich the Neo4j attack graph with the new IP address to track its future activities."
+        }
+      ],
+      "confidence": 0.6,
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260428_223150.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 32.96,
+    "alert_id": "1777411768.1339205"
+  }
+}

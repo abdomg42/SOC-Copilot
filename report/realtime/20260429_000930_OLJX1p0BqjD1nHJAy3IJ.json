@@ -1,0 +1,196 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.28",
+    "_id": "OLJX1p0BqjD1nHJAy3IJ",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "image": "C:\\\\Windows\\\\system32\\\\svchost.exe",
+            "targetObject": "HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Schedule\\\\TaskCache\\\\Tree\\\\Microsoft\\\\Windows\\\\UpdateOrchestrator\\\\Schedule Work\\\\Index",
+            "processGuid": "{de1afa58-24c7-69f1-1a00-000000003800}",
+            "processId": "1248",
+            "utcTime": "2026-04-28 23:05:30.958",
+            "ruleName": "technique_id=T1053,technique_name=Scheduled Task",
+            "details": "DWORD (0x00000003)",
+            "eventType": "SetValue",
+            "user": "NT AUTHORITY\\\\SYSTEM"
+          },
+          "system": {
+            "eventID": "13",
+            "keywords": "0x8000000000000000",
+            "providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "level": "4",
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "opcode": "0",
+            "message": "\"Registry value set:\r\nRuleName: technique_id=T1053,technique_name=Scheduled Task\r\nEventType: SetValue\r\nUtcTime: 2026-04-28 23:05:30.958\r\nProcessGuid: {de1afa58-24c7-69f1-1a00-000000003800}\r\nProcessId: 1248\r\nImage: C:\\Windows\\system32\\svchost.exe\r\nTargetObject: HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\Microsoft\\Windows\\UpdateOrchestrator\\Schedule Work\\Index\r\nDetails: DWORD (0x00000003)\r\nUser: NT AUTHORITY\\SYSTEM\"",
+            "version": "2",
+            "systemTime": "2026-04-28T23:05:30.9804233Z",
+            "eventRecordID": "172257",
+            "threadID": "4236",
+            "computer": "DESKTOP-80FLS88",
+            "task": "13",
+            "processID": "3144",
+            "severityValue": "INFORMATION",
+            "providerName": "Microsoft-Windows-Sysmon"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 3,
+        "mail": false,
+        "level": 10,
+        "description": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "groups": [
+          "windows",
+          "sysmon"
+        ],
+        "mitre": {
+          "technique": [
+            "Scheduled Task/Job"
+          ],
+          "id": [
+            "T1053"
+          ],
+          "tactic": [
+            "Execution",
+            "Persistence",
+            "Privilege Escalation"
+          ]
+        },
+        "id": "115001"
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "full_log": "{\"win\":{\"system\":{\"providerName\":\"Microsoft-Windows-Sysmon\",\"providerGuid\":\"{5770385f-c22a-43e0-bf4c-06f5698ffbd9}\",\"eventID\":\"13\",\"version\":\"2\",\"level\":\"4\",\"task\":\"13\",\"opcode\":\"0\",\"keywords\":\"0x8000000000000000\",\"systemTime\":\"2026-04-28T23:05:30.9804233Z\",\"eventRecordID\":\"172257\",\"processID\":\"3144\",\"threadID\":\"4236\",\"channel\":\"Microsoft-Windows-Sysmon/Operational\",\"computer\":\"DESKTOP-80FLS88\",\"severityValue\":\"INFORMATION\",\"message\":\"\\\"Registry value set:\\r\\nRuleName: technique_id=T1053,technique_name=Scheduled Task\\r\\nEventType: SetValue\\r\\nUtcTime: 2026-04-28 23:05:30.958\\r\\nProcessGuid: {de1afa58-24c7-69f1-1a00-000000003800}\\r\\nProcessId: 1248\\r\\nImage: C:\\\\Windows\\\\system32\\\\svchost.exe\\r\\nTargetObject: HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Schedule\\\\TaskCache\\\\Tree\\\\Microsoft\\\\Windows\\\\UpdateOrchestrator\\\\Schedule Work\\\\Index\\r\\nDetails: DWORD (0x00000003)\\r\\nUser: NT AUTHORITY\\\\SYSTEM\\\"\"},\"eventdata\":{\"ruleName\":\"technique_id=T1053,technique_name=Scheduled Task\",\"eventType\":\"SetValue\",\"utcTime\":\"2026-04-28 23:05:30.958\",\"processGuid\":\"{de1afa58-24c7-69f1-1a00-000000003800}\",\"processId\":\"1248\",\"image\":\"C:\\\\\\\\Windows\\\\\\\\system32\\\\\\\\svchost.exe\",\"targetObject\":\"HKLM\\\\\\\\SOFTWARE\\\\\\\\Microsoft\\\\\\\\Windows NT\\\\\\\\CurrentVersion\\\\\\\\Schedule\\\\\\\\TaskCache\\\\\\\\Tree\\\\\\\\Microsoft\\\\\\\\Windows\\\\\\\\UpdateOrchestrator\\\\\\\\Schedule Work\\\\\\\\Index\",\"details\":\"DWORD (0x00000003)\",\"user\":\"NT AUTHORITY\\\\\\\\SYSTEM\"}}}",
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-28T23:06:03.241Z",
+      "location": "EventChannel",
+      "id": "1777417563.10039",
+      "timestamp": "2026-04-29T00:06:03.241+0100"
+    },
+    "sort": [
+      1777417563241
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.image": "C:\\\\Windows\\\\system32\\\\svchost.exe",
+        "_source.data.win.eventdata.targetObject": "HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Schedule\\\\TaskCache\\\\Tree\\\\Microsoft\\\\Windows\\\\UpdateOrchestrator\\\\Schedule Work\\\\Index",
+        "_source.data.win.eventdata.processGuid": "{de1afa58-24c7-69f1-1a00-000000003800}",
+        "_source.data.win.eventdata.processId": "1248",
+        "_source.data.win.eventdata.utcTime": "2026-04-28 23:05:30.958",
+        "_source.data.win.eventdata.ruleName": "technique_id=T1053,technique_name=Scheduled Task",
+        "_source.data.win.eventdata.details": "DWORD (0x00000003)",
+        "_source.data.win.eventdata.eventType": "SetValue",
+        "_source.data.win.eventdata.user": "NT AUTHORITY\\\\SYSTEM",
+        "_source.data.win.system.eventID": "13",
+        "_source.data.win.system.keywords": "0x8000000000000000",
+        "_source.data.win.system.providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "Microsoft-Windows-Sysmon/Operational",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"Registry value set:\r\nRuleName: technique_id=T1053,technique_name=Scheduled Task\r\nEventType: SetValue\r\nUtcTime: 2026-04-28 23:05:30.958\r\nProcessGuid: {de1afa58-24c7-69f1-1a00-000000003800}\r\nProcessId: 1248\r\nImage: C:\\Windows\\system32\\svchost.exe\r\nTargetObject: HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Schedule\\TaskCache\\Tree\\Microsoft\\Windows\\UpdateOrchestrator\\Schedule Work\\Index\r\nDetails: DWORD (0x00000003)\r\nUser: NT AUTHORITY\\SYSTEM\"",
+        "_source.data.win.system.version": "2",
+        "_source.data.win.system.systemTime": "2026-04-28T23:05:30.9804233Z",
+        "_source.data.win.system.eventRecordID": "172257",
+        "_source.data.win.system.threadID": "4236",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "13",
+        "_source.data.win.system.processID": "3144",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Microsoft-Windows-Sysmon",
+        "_source.rule.firedtimes": 3,
+        "_source.rule.mail": false,
+        "_source.rule.level": 10,
+        "_source.rule.description": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "_source.rule.groups": [
+          "windows",
+          "sysmon"
+        ],
+        "_source.rule.mitre.technique": [
+          "Scheduled Task/Job"
+        ],
+        "_source.rule.mitre.id": [
+          "T1053"
+        ],
+        "_source.rule.mitre.tactic": [
+          "Execution",
+          "Persistence",
+          "Privilege Escalation"
+        ],
+        "_source.rule.id": "115001",
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.full_log": "{\"win\":{\"system\":{\"providerName\":\"Microsoft-Windows-Sysmon\",\"providerGuid\":\"{5770385f-c22a-43e0-bf4c-06f5698ffbd9}\",\"eventID\":\"13\",\"version\":\"2\",\"level\":\"4\",\"task\":\"13\",\"opcode\":\"0\",\"keywords\":\"0x8000000000000000\",\"systemTime\":\"2026-04-28T23:05:30.9804233Z\",\"eventRecordID\":\"172257\",\"processID\":\"3144\",\"threadID\":\"4236\",\"channel\":\"Microsoft-Windows-Sysmon/Operational\",\"computer\":\"DESKTOP-80FLS88\",\"severityValue\":\"INFORMATION\",\"message\":\"\\\"Registry value set:\\r\\nRuleName: technique_id=T1053,technique_name=Scheduled Task\\r\\nEventType: SetValue\\r\\nUtcTime: 2026-04-28 23:05:30.958\\r\\nProcessGuid: {de1afa58-24c7-69f1-1a00-000000003800}\\r\\nProcessId: 1248\\r\\nImage: C:\\\\Windows\\\\system32\\\\svchost.exe\\r\\nTargetObject: HKLM\\\\SOFTWARE\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Schedule\\\\TaskCache\\\\Tree\\\\Microsoft\\\\Windows\\\\UpdateOrchestrator\\\\Schedule Work\\\\Index\\r\\nDetails: DWORD (0x00000003)\\r\\nUser: NT AUTHORITY\\\\SYSTEM\\\"\"},\"eventdata\":{\"ruleName\":\"technique_id=T1053,technique_name=Scheduled Task\",\"eventType\":\"SetValue\",\"utcTime\":\"2026-04-28 23:05:30.958\",\"processGuid\":\"{de1afa58-24c7-69f1-1a00-000000003800}\",\"processId\":\"1248\",\"image\":\"C:\\\\\\\\Windows\\\\\\\\system32\\\\\\\\svchost.exe\",\"targetObject\":\"HKLM\\\\\\\\SOFTWARE\\\\\\\\Microsoft\\\\\\\\Windows NT\\\\\\\\CurrentVersion\\\\\\\\Schedule\\\\\\\\TaskCache\\\\\\\\Tree\\\\\\\\Microsoft\\\\\\\\Windows\\\\\\\\UpdateOrchestrator\\\\\\\\Schedule Work\\\\\\\\Index\",\"details\":\"DWORD (0x00000003)\",\"user\":\"NT AUTHORITY\\\\\\\\SYSTEM\"}}}",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-28T23:06:03.241Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777417563.10039",
+        "_source.timestamp": "2026-04-29T00:06:03.241+0100",
+        "ML_prediction": "Persistence"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "severity": "critical",
+      "title": "Scheduled Task Execution by Known Attacker",
+      "mitre_technique_id": "T1053",
+      "mitre_technique_name": "Scheduled Task/Job",
+      "mitre_tactic": "Execution",
+      "explanation": "A newly scheduled task has been detected on the target host 'windows_agent1' by a known attacker with a high risk score of 1.0 and a history of using various MITRE ATT&CK techniques.",
+      "attack_sequence": [
+        "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "The attacker has used the technique 'Scheduled Task/Job' (T1053)"
+      ],
+      "iocs": [
+        {
+          "type": "ip",
+          "value": "10.0.2.15",
+          "context": "Known attacker with a high risk score and a history of using various MITRE ATT&CK techniques"
+        },
+        {
+          "type": "process",
+          "value": "C:\\\\Windows\\\\system32\\\\svchost.exe",
+          "context": "Process used to create the scheduled task"
+        }
+      ],
+      "remediation_steps": [
+        {
+          "priority": "immediate",
+          "action": "Investigate the scheduled task further to understand its purpose and whether it is malicious."
+        },
+        {
+          "priority": "immediate",
+          "action": "Block the IP '10.0.2.15' at the network level to prevent any further attacks."
+        },
+        {
+          "priority": "short_term",
+          "action": "Review and update the Sigma rule 'Scheduled Task/Job At' to improve its detection capabilities for this type of attack."
+        }
+      ],
+      "confidence": 0.9,
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260429_000928.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 23.26,
+    "alert_id": "1777417563.10039"
+  }
+}

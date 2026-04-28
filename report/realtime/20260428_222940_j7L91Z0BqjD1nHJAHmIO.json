@@ -1,0 +1,220 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.28",
+    "_id": "j7L91Z0BqjD1nHJAHmIO",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "originalFileName": "PowerShell.EXE",
+            "image": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+            "product": "Microsoft® Windows® Operating System",
+            "parentProcessGuid": "{de1afa58-252c-69f1-a700-000000003800}",
+            "description": "Windows PowerShell",
+            "logonGuid": "{de1afa58-24d8-69f1-f867-040000000000}",
+            "parentCommandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\"",
+            "processGuid": "{de1afa58-262d-69f1-9101-000000003800}",
+            "logonId": "0x467f8",
+            "parentProcessId": "4540",
+            "processId": "5304",
+            "currentDirectory": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\",
+            "utcTime": "2026-04-28 21:27:09.449",
+            "hashes": "SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6",
+            "parentImage": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+            "ruleName": "technique_id=T1083,technique_name=File and Directory Discovery",
+            "company": "Microsoft Corporation",
+            "commandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\" &amp; {if (Test-Path \\\\\\\"\\\"C:\\\\AtomicRedTeam\\\\atomics\\\\..\\\\ExternalPayloads\\\\plink.exe\\\\\\\"\\\") {exit 0} else {exit 1}}",
+            "integrityLevel": "High",
+            "fileVersion": "10.0.19041.3996 (WinBuild.160101.0800)",
+            "user": "DESKTOP-80FLS88\\\\mossaabReverse",
+            "terminalSessionId": "1",
+            "parentUser": "DESKTOP-80FLS88\\\\mossaabReverse"
+          },
+          "system": {
+            "eventID": "1",
+            "keywords": "0x8000000000000000",
+            "providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "level": "4",
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "opcode": "0",
+            "message": "\"Process Create:\r\nRuleName: technique_id=T1083,technique_name=File and Directory Discovery\r\nUtcTime: 2026-04-28 21:27:09.449\r\nProcessGuid: {de1afa58-262d-69f1-9101-000000003800}\r\nProcessId: 5304\r\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\r\nDescription: Windows PowerShell\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: PowerShell.EXE\r\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" & {if (Test-Path \\\"\"C:\\AtomicRedTeam\\atomics\\..\\ExternalPayloads\\plink.exe\\\"\") {exit 0} else {exit 1}} \r\nCurrentDirectory: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\\r\nUser: DESKTOP-80FLS88\\mossaabReverse\r\nLogonGuid: {de1afa58-24d8-69f1-f867-040000000000}\r\nLogonId: 0x467F8\r\nTerminalSessionId: 1\r\nIntegrityLevel: High\r\nHashes: SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\r\nParentProcessGuid: {de1afa58-252c-69f1-a700-000000003800}\r\nParentProcessId: 4540\r\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nParentCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" \r\nParentUser: DESKTOP-80FLS88\\mossaabReverse\"",
+            "version": "5",
+            "systemTime": "2026-04-28T21:27:09.4578690Z",
+            "eventRecordID": "164392",
+            "threadID": "4236",
+            "computer": "DESKTOP-80FLS88",
+            "task": "1",
+            "processID": "3144",
+            "severityValue": "INFORMATION",
+            "providerName": "Microsoft-Windows-Sysmon"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 28,
+        "mail": false,
+        "level": 4,
+        "description": "Powershell process spawned powershell instance",
+        "groups": [
+          "sysmon",
+          "sysmon_eid1_detections",
+          "windows"
+        ],
+        "mitre": {
+          "technique": [
+            "PowerShell"
+          ],
+          "id": [
+            "T1059.001"
+          ],
+          "tactic": [
+            "Execution"
+          ]
+        },
+        "id": "92027"
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-28T21:27:05.635Z",
+      "location": "EventChannel",
+      "id": "1777411625.1154906",
+      "timestamp": "2026-04-28T22:27:05.635+0100"
+    },
+    "sort": [
+      1777411625635
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.originalFileName": "PowerShell.EXE",
+        "_source.data.win.eventdata.image": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+        "_source.data.win.eventdata.product": "Microsoft® Windows® Operating System",
+        "_source.data.win.eventdata.parentProcessGuid": "{de1afa58-252c-69f1-a700-000000003800}",
+        "_source.data.win.eventdata.description": "Windows PowerShell",
+        "_source.data.win.eventdata.logonGuid": "{de1afa58-24d8-69f1-f867-040000000000}",
+        "_source.data.win.eventdata.parentCommandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\"",
+        "_source.data.win.eventdata.processGuid": "{de1afa58-262d-69f1-9101-000000003800}",
+        "_source.data.win.eventdata.logonId": "0x467f8",
+        "_source.data.win.eventdata.parentProcessId": "4540",
+        "_source.data.win.eventdata.processId": "5304",
+        "_source.data.win.eventdata.currentDirectory": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\",
+        "_source.data.win.eventdata.utcTime": "2026-04-28 21:27:09.449",
+        "_source.data.win.eventdata.hashes": "SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6",
+        "_source.data.win.eventdata.parentImage": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+        "_source.data.win.eventdata.ruleName": "technique_id=T1083,technique_name=File and Directory Discovery",
+        "_source.data.win.eventdata.company": "Microsoft Corporation",
+        "_source.data.win.eventdata.commandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\" &amp; {if (Test-Path \\\\\\\"\\\"C:\\\\AtomicRedTeam\\\\atomics\\\\..\\\\ExternalPayloads\\\\plink.exe\\\\\\\"\\\") {exit 0} else {exit 1}}",
+        "_source.data.win.eventdata.integrityLevel": "High",
+        "_source.data.win.eventdata.fileVersion": "10.0.19041.3996 (WinBuild.160101.0800)",
+        "_source.data.win.eventdata.user": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.eventdata.terminalSessionId": "1",
+        "_source.data.win.eventdata.parentUser": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.system.eventID": "1",
+        "_source.data.win.system.keywords": "0x8000000000000000",
+        "_source.data.win.system.providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "Microsoft-Windows-Sysmon/Operational",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"Process Create:\r\nRuleName: technique_id=T1083,technique_name=File and Directory Discovery\r\nUtcTime: 2026-04-28 21:27:09.449\r\nProcessGuid: {de1afa58-262d-69f1-9101-000000003800}\r\nProcessId: 5304\r\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\r\nDescription: Windows PowerShell\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: PowerShell.EXE\r\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" & {if (Test-Path \\\"\"C:\\AtomicRedTeam\\atomics\\..\\ExternalPayloads\\plink.exe\\\"\") {exit 0} else {exit 1}} \r\nCurrentDirectory: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\\r\nUser: DESKTOP-80FLS88\\mossaabReverse\r\nLogonGuid: {de1afa58-24d8-69f1-f867-040000000000}\r\nLogonId: 0x467F8\r\nTerminalSessionId: 1\r\nIntegrityLevel: High\r\nHashes: SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\r\nParentProcessGuid: {de1afa58-252c-69f1-a700-000000003800}\r\nParentProcessId: 4540\r\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nParentCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" \r\nParentUser: DESKTOP-80FLS88\\mossaabReverse\"",
+        "_source.data.win.system.version": "5",
+        "_source.data.win.system.systemTime": "2026-04-28T21:27:09.4578690Z",
+        "_source.data.win.system.eventRecordID": "164392",
+        "_source.data.win.system.threadID": "4236",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "1",
+        "_source.data.win.system.processID": "3144",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Microsoft-Windows-Sysmon",
+        "_source.rule.firedtimes": 28,
+        "_source.rule.mail": false,
+        "_source.rule.level": 4,
+        "_source.rule.description": "Powershell process spawned powershell instance",
+        "_source.rule.groups": [
+          "sysmon",
+          "sysmon_eid1_detections",
+          "windows"
+        ],
+        "_source.rule.mitre.technique": [
+          "PowerShell"
+        ],
+        "_source.rule.mitre.id": [
+          "T1059.001"
+        ],
+        "_source.rule.mitre.tactic": [
+          "Execution"
+        ],
+        "_source.rule.id": "92027",
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-28T21:27:05.635Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777411625.1154906",
+        "_source.timestamp": "2026-04-28T22:27:05.635+0100",
+        "ML_prediction": "Execution"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "severity": "low",
+      "title": "Powershell Execution Detected",
+      "mitre_technique_id": "T1059.001",
+      "mitre_technique_name": "PowerShell",
+      "mitre_tactic": "Execution",
+      "explanation": "A Powershell process was spawned on the target host 'windows_agent1' from the source IP '10.0.2.15'. This activity is associated with the MITRE ATT&CK technique T1059.001: PowerShell.",
+      "attack_sequence": [
+        "Powershell process spawned on target host",
+        "Powershell instance executed from source IP"
+      ],
+      "iocs": [
+        {
+          "type": "ip",
+          "value": "10.0.2.15",
+          "context": "Source IP of the Powershell process"
+        },
+        {
+          "type": "process",
+          "value": "Powershell",
+          "context": "Process executed on the target host"
+        }
+      ],
+      "remediation_steps": [
+        {
+          "priority": "immediate",
+          "action": "Investigate the purpose of the Powershell command"
+        },
+        {
+          "priority": "short_term",
+          "action": "Monitor the source IP for further suspicious activity"
+        },
+        {
+          "priority": "long_term",
+          "action": "Implement host-based intrusion detection systems"
+        }
+      ],
+      "confidence": 0.8,
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260428_222937.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 31.5,
+    "alert_id": "1777411625.1154906"
+  }
+}

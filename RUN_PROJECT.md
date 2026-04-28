@@ -259,6 +259,46 @@ set SOC_ML_ARTIFACTS_DIR=C:\path\to\training_meta_data
 
 On the Wazuh side, the usual pattern is to export the alert data to CSV/JSON, run this script, then send the enriched result to the agent API.
 
+### Realtime end-to-end test (Wazuh -> ML -> Agent -> Report)
+
+Use the realtime bridge script at `test/run_realtime_wazuh_pipeline.py`.
+
+1. Start backend API:
+
+```bash
+uvicorn agent.api:app --host 0.0.0.0 --port 8000 --reload
+```
+
+2. In another terminal, run the realtime pipeline:
+
+```bash
+python test/run_realtime_wazuh_pipeline.py --api http://127.0.0.1:8000 --windows-only --minutes-window 2 --poll-seconds 5
+```
+
+3. Trigger an attack event on a monitored endpoint (for example SSH brute force, suspicious PowerShell, or port scan) so Wazuh emits an alert.
+
+4. Pipeline behavior per new alert:
+  - Pull full raw alert from OpenSearch (`wazuh-alerts-*`)
+  - Call `POST /ml/predict`
+  - Inject ML prediction into alert payload
+  - Call `POST /analyze`
+  - Save output JSON into `report/realtime/`
+
+5. Check generated artifacts:
+  - JSON bundle per alert in `report/realtime/`
+  - PDF path in `analyze_response.report.pdf_path` (if PDF generation is enabled)
+  - Email status in `analyze_response.report.email_status`
+
+Useful flags:
+
+```bash
+# run one cycle only
+python test/run_realtime_wazuh_pipeline.py --once
+
+# custom ML artifact directory
+python test/run_realtime_wazuh_pipeline.py --artifacts-dir C:\path\to\training_meta_data
+```
+
 ---
 
 ## Production Deployment

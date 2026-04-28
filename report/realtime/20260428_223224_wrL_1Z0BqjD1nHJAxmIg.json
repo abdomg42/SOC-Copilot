@@ -1,0 +1,185 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.28",
+    "_id": "wrL_1Z0BqjD1nHJAxmIg",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "originalFileName": "PowerShell.EXE",
+            "image": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+            "product": "Microsoft® Windows® Operating System",
+            "parentProcessGuid": "{de1afa58-252c-69f1-a700-000000003800}",
+            "description": "Windows PowerShell",
+            "logonGuid": "{de1afa58-24d8-69f1-f867-040000000000}",
+            "parentCommandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\"",
+            "processGuid": "{de1afa58-26d2-69f1-c701-000000003800}",
+            "logonId": "0x467f8",
+            "parentProcessId": "4540",
+            "processId": "3752",
+            "currentDirectory": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\",
+            "utcTime": "2026-04-28 21:29:54.674",
+            "hashes": "SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6",
+            "parentImage": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+            "ruleName": "technique_id=T1083,technique_name=File and Directory Discovery",
+            "company": "Microsoft Corporation",
+            "commandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\" &amp; {if (Get-Command sqlcmd 2&gt;$null) {exit 0} else {exit 1}}",
+            "integrityLevel": "High",
+            "fileVersion": "10.0.19041.3996 (WinBuild.160101.0800)",
+            "user": "DESKTOP-80FLS88\\\\mossaabReverse",
+            "terminalSessionId": "1",
+            "parentUser": "DESKTOP-80FLS88\\\\mossaabReverse"
+          },
+          "system": {
+            "eventID": "1",
+            "keywords": "0x8000000000000000",
+            "providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "level": "4",
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "opcode": "0",
+            "message": "\"Process Create:\r\nRuleName: technique_id=T1083,technique_name=File and Directory Discovery\r\nUtcTime: 2026-04-28 21:29:54.674\r\nProcessGuid: {de1afa58-26d2-69f1-c701-000000003800}\r\nProcessId: 3752\r\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\r\nDescription: Windows PowerShell\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: PowerShell.EXE\r\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" & {if (Get-Command sqlcmd 2>$null) {exit 0} else {exit 1}} \r\nCurrentDirectory: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\\r\nUser: DESKTOP-80FLS88\\mossaabReverse\r\nLogonGuid: {de1afa58-24d8-69f1-f867-040000000000}\r\nLogonId: 0x467F8\r\nTerminalSessionId: 1\r\nIntegrityLevel: High\r\nHashes: SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\r\nParentProcessGuid: {de1afa58-252c-69f1-a700-000000003800}\r\nParentProcessId: 4540\r\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nParentCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" \r\nParentUser: DESKTOP-80FLS88\\mossaabReverse\"",
+            "version": "5",
+            "systemTime": "2026-04-28T21:29:54.6784945Z",
+            "eventRecordID": "164894",
+            "threadID": "4236",
+            "computer": "DESKTOP-80FLS88",
+            "task": "1",
+            "processID": "3144",
+            "severityValue": "INFORMATION",
+            "providerName": "Microsoft-Windows-Sysmon"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 39,
+        "mail": false,
+        "level": 4,
+        "description": "Powershell process spawned powershell instance",
+        "groups": [
+          "sysmon",
+          "sysmon_eid1_detections",
+          "windows"
+        ],
+        "mitre": {
+          "technique": [
+            "PowerShell"
+          ],
+          "id": [
+            "T1059.001"
+          ],
+          "tactic": [
+            "Execution"
+          ]
+        },
+        "id": "92027"
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-28T21:29:57.803Z",
+      "location": "EventChannel",
+      "id": "1777411797.1341036",
+      "timestamp": "2026-04-28T22:29:57.803+0100"
+    },
+    "sort": [
+      1777411797803
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.originalFileName": "PowerShell.EXE",
+        "_source.data.win.eventdata.image": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+        "_source.data.win.eventdata.product": "Microsoft® Windows® Operating System",
+        "_source.data.win.eventdata.parentProcessGuid": "{de1afa58-252c-69f1-a700-000000003800}",
+        "_source.data.win.eventdata.description": "Windows PowerShell",
+        "_source.data.win.eventdata.logonGuid": "{de1afa58-24d8-69f1-f867-040000000000}",
+        "_source.data.win.eventdata.parentCommandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\"",
+        "_source.data.win.eventdata.processGuid": "{de1afa58-26d2-69f1-c701-000000003800}",
+        "_source.data.win.eventdata.logonId": "0x467f8",
+        "_source.data.win.eventdata.parentProcessId": "4540",
+        "_source.data.win.eventdata.processId": "3752",
+        "_source.data.win.eventdata.currentDirectory": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\",
+        "_source.data.win.eventdata.utcTime": "2026-04-28 21:29:54.674",
+        "_source.data.win.eventdata.hashes": "SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6",
+        "_source.data.win.eventdata.parentImage": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+        "_source.data.win.eventdata.ruleName": "technique_id=T1083,technique_name=File and Directory Discovery",
+        "_source.data.win.eventdata.company": "Microsoft Corporation",
+        "_source.data.win.eventdata.commandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\" &amp; {if (Get-Command sqlcmd 2&gt;$null) {exit 0} else {exit 1}}",
+        "_source.data.win.eventdata.integrityLevel": "High",
+        "_source.data.win.eventdata.fileVersion": "10.0.19041.3996 (WinBuild.160101.0800)",
+        "_source.data.win.eventdata.user": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.eventdata.terminalSessionId": "1",
+        "_source.data.win.eventdata.parentUser": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.system.eventID": "1",
+        "_source.data.win.system.keywords": "0x8000000000000000",
+        "_source.data.win.system.providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "Microsoft-Windows-Sysmon/Operational",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"Process Create:\r\nRuleName: technique_id=T1083,technique_name=File and Directory Discovery\r\nUtcTime: 2026-04-28 21:29:54.674\r\nProcessGuid: {de1afa58-26d2-69f1-c701-000000003800}\r\nProcessId: 3752\r\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nFileVersion: 10.0.19041.3996 (WinBuild.160101.0800)\r\nDescription: Windows PowerShell\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: PowerShell.EXE\r\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" & {if (Get-Command sqlcmd 2>$null) {exit 0} else {exit 1}} \r\nCurrentDirectory: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\\r\nUser: DESKTOP-80FLS88\\mossaabReverse\r\nLogonGuid: {de1afa58-24d8-69f1-f867-040000000000}\r\nLogonId: 0x467F8\r\nTerminalSessionId: 1\r\nIntegrityLevel: High\r\nHashes: SHA1=801262E122DB6A2E758962896F260B55BBD0136A,MD5=2E5A8590CF6848968FC23DE3FA1E25F1,SHA256=9785001B0DCF755EDDB8AF294A373C0B87B2498660F724E76C4D53F9C217C7A3,IMPHASH=3D08F4848535206D772DE145804FF4B6\r\nParentProcessGuid: {de1afa58-252c-69f1-a700-000000003800}\r\nParentProcessId: 4540\r\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nParentCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" \r\nParentUser: DESKTOP-80FLS88\\mossaabReverse\"",
+        "_source.data.win.system.version": "5",
+        "_source.data.win.system.systemTime": "2026-04-28T21:29:54.6784945Z",
+        "_source.data.win.system.eventRecordID": "164894",
+        "_source.data.win.system.threadID": "4236",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "1",
+        "_source.data.win.system.processID": "3144",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Microsoft-Windows-Sysmon",
+        "_source.rule.firedtimes": 39,
+        "_source.rule.mail": false,
+        "_source.rule.level": 4,
+        "_source.rule.description": "Powershell process spawned powershell instance",
+        "_source.rule.groups": [
+          "sysmon",
+          "sysmon_eid1_detections",
+          "windows"
+        ],
+        "_source.rule.mitre.technique": [
+          "PowerShell"
+        ],
+        "_source.rule.mitre.id": [
+          "T1059.001"
+        ],
+        "_source.rule.mitre.tactic": [
+          "Execution"
+        ],
+        "_source.rule.id": "92027",
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-28T21:29:57.803Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777411797.1341036",
+        "_source.timestamp": "2026-04-28T22:29:57.803+0100",
+        "ML_prediction": "Execution"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "raw": " {\n  \"severity\": \"low\",\n  \"title\": \"Powershell Execution Detected\",\n\n  \"mitre_technique_id\": \"T1059.001\",\n  \"mitre_technique_name\": \"Command and Scripting Interpreter\",\n  \"mitre_tactic\": \"Execution\",\n\n  \"explanation\": \"A Powershell process was spawned on the target host windows\\_agent1 by the source IP 10.0.2.15, which has a high risk score and a history of using various MITRE ATT&CK techniques.\",\n\n  \"attack_sequence\": [\n    \"Powershell process spawned on windows\\_agent1\",\n    \"Powershell instance executed\"\n  ],\n\n  \"iocs\": [\n    {\n      \"type\": \"ip\",\n      \"value\": \"10.0.2.15\",\n      \"context\": \"Source IP of the detected activity\"\n    },\n    {\n      \"type\": \"user\",\n      \"value\": \"DESKTOP-80FLS88\\\\\\\\mossaabReverse\",\n      \"context\": \"User associated with the detected activity\"\n    },\n    {\n      \"type\": \"host\",\n      \"value\": \"DESKTOP-80FLS88\",\n      \"context\": \"Target host of the detected activity\"\n    }\n  ],\n\n  \"remediation_steps\": [\n    {\n      \"priority\": \"immediate\",\n      \"action\": \"Investigate the source IP and user accounts involved in the incident to determine the scope and impact.\"\n    },\n    {\n      \"priority\": \"short_term\",\n      \"action\": \"Implement host-based intrusion detection systems (HIDS) to monitor for Powershell activity.\"\n    },\n    {\n      \"priority\": \"long_term\",\n      \"action\": \"Update and enforce least privilege principles for user accounts to minimize the potential impact of compromised credentials.\"\n    }\n  ],\n\n  \"confidence\": 0.8\n}",
+      "parse_error": true,
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260428_223221.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 29.21,
+    "alert_id": "1777411797.1341036"
+  }
+}

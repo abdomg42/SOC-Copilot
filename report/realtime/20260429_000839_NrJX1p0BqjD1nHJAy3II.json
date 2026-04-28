@@ -1,0 +1,272 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.28",
+    "_id": "NrJX1p0BqjD1nHJAy3II",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "originalFileName": "taskschd.dll",
+            "image": "C:\\\\Windows\\\\System32\\\\taskhostw.exe",
+            "product": "Microsoft® Windows® Operating System",
+            "signature": "Microsoft Windows",
+            "imageLoaded": "C:\\\\Windows\\\\System32\\\\taskschd.dll",
+            "description": "Task Scheduler COM API",
+            "signed": "true",
+            "signatureStatus": "Valid",
+            "processGuid": "{de1afa58-3d36-69f1-0106-000000003800}",
+            "processId": "6956",
+            "utcTime": "2026-04-28 23:05:28.538",
+            "hashes": "SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B",
+            "ruleName": "technique_id=T1053,technique_name=Scheduled Task",
+            "company": "Microsoft Corporation",
+            "fileVersion": "10.0.19041.3636 (WinBuild.160101.0800)",
+            "user": "DESKTOP-80FLS88\\\\mossaabReverse"
+          },
+          "system": {
+            "eventID": "7",
+            "keywords": "0x8000000000000000",
+            "providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "level": "4",
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "opcode": "0",
+            "message": "\"Image loaded:\r\nRuleName: technique_id=T1053,technique_name=Scheduled Task\r\nUtcTime: 2026-04-28 23:05:28.538\r\nProcessGuid: {de1afa58-3d36-69f1-0106-000000003800}\r\nProcessId: 6956\r\nImage: C:\\Windows\\System32\\taskhostw.exe\r\nImageLoaded: C:\\Windows\\System32\\taskschd.dll\r\nFileVersion: 10.0.19041.3636 (WinBuild.160101.0800)\r\nDescription: Task Scheduler COM API\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: taskschd.dll\r\nHashes: SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B\r\nSigned: true\r\nSignature: Microsoft Windows\r\nSignatureStatus: Valid\r\nUser: DESKTOP-80FLS88\\mossaabReverse\"",
+            "version": "3",
+            "systemTime": "2026-04-28T23:05:28.5432343Z",
+            "eventRecordID": "172255",
+            "threadID": "4236",
+            "computer": "DESKTOP-80FLS88",
+            "task": "7",
+            "processID": "3144",
+            "severityValue": "INFORMATION",
+            "providerName": "Microsoft-Windows-Sysmon"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 1,
+        "mail": false,
+        "level": 10,
+        "description": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "groups": [
+          "windows",
+          "sysmon"
+        ],
+        "mitre": {
+          "technique": [
+            "Scheduled Task/Job"
+          ],
+          "id": [
+            "T1053"
+          ],
+          "tactic": [
+            "Execution",
+            "Persistence",
+            "Privilege Escalation"
+          ]
+        },
+        "id": "115001"
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "full_log": "{\"win\":{\"system\":{\"providerName\":\"Microsoft-Windows-Sysmon\",\"providerGuid\":\"{5770385f-c22a-43e0-bf4c-06f5698ffbd9}\",\"eventID\":\"7\",\"version\":\"3\",\"level\":\"4\",\"task\":\"7\",\"opcode\":\"0\",\"keywords\":\"0x8000000000000000\",\"systemTime\":\"2026-04-28T23:05:28.5432343Z\",\"eventRecordID\":\"172255\",\"processID\":\"3144\",\"threadID\":\"4236\",\"channel\":\"Microsoft-Windows-Sysmon/Operational\",\"computer\":\"DESKTOP-80FLS88\",\"severityValue\":\"INFORMATION\",\"message\":\"\\\"Image loaded:\\r\\nRuleName: technique_id=T1053,technique_name=Scheduled Task\\r\\nUtcTime: 2026-04-28 23:05:28.538\\r\\nProcessGuid: {de1afa58-3d36-69f1-0106-000000003800}\\r\\nProcessId: 6956\\r\\nImage: C:\\\\Windows\\\\System32\\\\taskhostw.exe\\r\\nImageLoaded: C:\\\\Windows\\\\System32\\\\taskschd.dll\\r\\nFileVersion: 10.0.19041.3636 (WinBuild.160101.0800)\\r\\nDescription: Task Scheduler COM API\\r\\nProduct: Microsoft® Windows® Operating System\\r\\nCompany: Microsoft Corporation\\r\\nOriginalFileName: taskschd.dll\\r\\nHashes: SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B\\r\\nSigned: true\\r\\nSignature: Microsoft Windows\\r\\nSignatureStatus: Valid\\r\\nUser: DESKTOP-80FLS88\\\\mossaabReverse\\\"\"},\"eventdata\":{\"ruleName\":\"technique_id=T1053,technique_name=Scheduled Task\",\"utcTime\":\"2026-04-28 23:05:28.538\",\"processGuid\":\"{de1afa58-3d36-69f1-0106-000000003800}\",\"processId\":\"6956\",\"image\":\"C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\taskhostw.exe\",\"imageLoaded\":\"C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\taskschd.dll\",\"fileVersion\":\"10.0.19041.3636 (WinBuild.160101.0800)\",\"description\":\"Task Scheduler COM API\",\"product\":\"Microsoft® Windows® Operating System\",\"company\":\"Microsoft Corporation\",\"originalFileName\":\"taskschd.dll\",\"hashes\":\"SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B\",\"signed\":\"true\",\"signature\":\"Microsoft Windows\",\"signatureStatus\":\"Valid\",\"user\":\"DESKTOP-80FLS88\\\\\\\\mossaabReverse\"}}}",
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-28T23:06:01.178Z",
+      "location": "EventChannel",
+      "id": "1777417561.856",
+      "timestamp": "2026-04-29T00:06:01.178+0100"
+    },
+    "sort": [
+      1777417561178
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.originalFileName": "taskschd.dll",
+        "_source.data.win.eventdata.image": "C:\\\\Windows\\\\System32\\\\taskhostw.exe",
+        "_source.data.win.eventdata.product": "Microsoft® Windows® Operating System",
+        "_source.data.win.eventdata.signature": "Microsoft Windows",
+        "_source.data.win.eventdata.imageLoaded": "C:\\\\Windows\\\\System32\\\\taskschd.dll",
+        "_source.data.win.eventdata.description": "Task Scheduler COM API",
+        "_source.data.win.eventdata.signed": "true",
+        "_source.data.win.eventdata.signatureStatus": "Valid",
+        "_source.data.win.eventdata.processGuid": "{de1afa58-3d36-69f1-0106-000000003800}",
+        "_source.data.win.eventdata.processId": "6956",
+        "_source.data.win.eventdata.utcTime": "2026-04-28 23:05:28.538",
+        "_source.data.win.eventdata.hashes": "SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B",
+        "_source.data.win.eventdata.ruleName": "technique_id=T1053,technique_name=Scheduled Task",
+        "_source.data.win.eventdata.company": "Microsoft Corporation",
+        "_source.data.win.eventdata.fileVersion": "10.0.19041.3636 (WinBuild.160101.0800)",
+        "_source.data.win.eventdata.user": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.system.eventID": "7",
+        "_source.data.win.system.keywords": "0x8000000000000000",
+        "_source.data.win.system.providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "Microsoft-Windows-Sysmon/Operational",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"Image loaded:\r\nRuleName: technique_id=T1053,technique_name=Scheduled Task\r\nUtcTime: 2026-04-28 23:05:28.538\r\nProcessGuid: {de1afa58-3d36-69f1-0106-000000003800}\r\nProcessId: 6956\r\nImage: C:\\Windows\\System32\\taskhostw.exe\r\nImageLoaded: C:\\Windows\\System32\\taskschd.dll\r\nFileVersion: 10.0.19041.3636 (WinBuild.160101.0800)\r\nDescription: Task Scheduler COM API\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: taskschd.dll\r\nHashes: SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B\r\nSigned: true\r\nSignature: Microsoft Windows\r\nSignatureStatus: Valid\r\nUser: DESKTOP-80FLS88\\mossaabReverse\"",
+        "_source.data.win.system.version": "3",
+        "_source.data.win.system.systemTime": "2026-04-28T23:05:28.5432343Z",
+        "_source.data.win.system.eventRecordID": "172255",
+        "_source.data.win.system.threadID": "4236",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "7",
+        "_source.data.win.system.processID": "3144",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Microsoft-Windows-Sysmon",
+        "_source.rule.firedtimes": 1,
+        "_source.rule.mail": false,
+        "_source.rule.level": 10,
+        "_source.rule.description": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "_source.rule.groups": [
+          "windows",
+          "sysmon"
+        ],
+        "_source.rule.mitre.technique": [
+          "Scheduled Task/Job"
+        ],
+        "_source.rule.mitre.id": [
+          "T1053"
+        ],
+        "_source.rule.mitre.tactic": [
+          "Execution",
+          "Persistence",
+          "Privilege Escalation"
+        ],
+        "_source.rule.id": "115001",
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.full_log": "{\"win\":{\"system\":{\"providerName\":\"Microsoft-Windows-Sysmon\",\"providerGuid\":\"{5770385f-c22a-43e0-bf4c-06f5698ffbd9}\",\"eventID\":\"7\",\"version\":\"3\",\"level\":\"4\",\"task\":\"7\",\"opcode\":\"0\",\"keywords\":\"0x8000000000000000\",\"systemTime\":\"2026-04-28T23:05:28.5432343Z\",\"eventRecordID\":\"172255\",\"processID\":\"3144\",\"threadID\":\"4236\",\"channel\":\"Microsoft-Windows-Sysmon/Operational\",\"computer\":\"DESKTOP-80FLS88\",\"severityValue\":\"INFORMATION\",\"message\":\"\\\"Image loaded:\\r\\nRuleName: technique_id=T1053,technique_name=Scheduled Task\\r\\nUtcTime: 2026-04-28 23:05:28.538\\r\\nProcessGuid: {de1afa58-3d36-69f1-0106-000000003800}\\r\\nProcessId: 6956\\r\\nImage: C:\\\\Windows\\\\System32\\\\taskhostw.exe\\r\\nImageLoaded: C:\\\\Windows\\\\System32\\\\taskschd.dll\\r\\nFileVersion: 10.0.19041.3636 (WinBuild.160101.0800)\\r\\nDescription: Task Scheduler COM API\\r\\nProduct: Microsoft® Windows® Operating System\\r\\nCompany: Microsoft Corporation\\r\\nOriginalFileName: taskschd.dll\\r\\nHashes: SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B\\r\\nSigned: true\\r\\nSignature: Microsoft Windows\\r\\nSignatureStatus: Valid\\r\\nUser: DESKTOP-80FLS88\\\\mossaabReverse\\\"\"},\"eventdata\":{\"ruleName\":\"technique_id=T1053,technique_name=Scheduled Task\",\"utcTime\":\"2026-04-28 23:05:28.538\",\"processGuid\":\"{de1afa58-3d36-69f1-0106-000000003800}\",\"processId\":\"6956\",\"image\":\"C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\taskhostw.exe\",\"imageLoaded\":\"C:\\\\\\\\Windows\\\\\\\\System32\\\\\\\\taskschd.dll\",\"fileVersion\":\"10.0.19041.3636 (WinBuild.160101.0800)\",\"description\":\"Task Scheduler COM API\",\"product\":\"Microsoft® Windows® Operating System\",\"company\":\"Microsoft Corporation\",\"originalFileName\":\"taskschd.dll\",\"hashes\":\"SHA1=633C92F5A5000CDE3235C7FDC306B2B04C501C48,MD5=84F942C1A4BD60C94EBEC6643E0216C9,SHA256=BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2,IMPHASH=B7A4477FA36E2E5287EE76AC4AFCB05B\",\"signed\":\"true\",\"signature\":\"Microsoft Windows\",\"signatureStatus\":\"Valid\",\"user\":\"DESKTOP-80FLS88\\\\\\\\mossaabReverse\"}}}",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-28T23:06:01.178Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777417561.856",
+        "_source.timestamp": "2026-04-29T00:06:01.178+0100",
+        "ML_prediction": "Credential Access"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "severity": "critical",
+      "title": "Scheduled Task Execution by Potential Attacker",
+      "mitre_technique_id": "T1053",
+      "mitre_technique_name": "Scheduled Task/Job",
+      "mitre_technique_description": "The adversary creates or modifies a scheduled task to execute a malicious payload at a later time.",
+      "host": "DESKTOP-80FLS88",
+      "user": "DESKTOP-80FLS88\\\\mossaabReverse",
+      "event_id": "7",
+      "process_id": "6956",
+      "image": "C:\\\\Windows\\\\System32\\\\taskhostw.exe",
+      "image_loaded": "C:\\\\Windows\\\\System32\\\\taskschd.dll",
+      "hashes": {
+        "SHA1": "633C92F5A5000CDE3235C7FDC306B2B04C501C48",
+        "MD5": "84F942C1A4BD60C94EBEC6643E0216C9",
+        "SHA256": "BBE733452E6CE871D5D2064948847AAB2A71F7FEDA2C962BA4002F64E2D198F2",
+        "IMPHASH": "B7A4477FA36E2E5287EE76AC4AFCB05B"
+      },
+      "signature": "Microsoft Windows",
+      "signature_status": "Valid",
+      "related_logs": [],
+      "graph_facts": {
+        "ip_known": true,
+        "risk_score": 1.0,
+        "attack_count": 2412,
+        "past_techniques": [
+          {
+            "tid": "T1053",
+            "name": "Scheduled Task/Job"
+          },
+          {
+            "tid": "T1059",
+            "name": "Command and Scripting Interpreter"
+          },
+          {
+            "tid": "T1105",
+            "name": "Ingress Tool Transfer"
+          },
+          {
+            "tid": "T1110.001",
+            "name": "Password Guessing"
+          },
+          {
+            "tid": "T1543.003",
+            "name": "Windows Service"
+          },
+          {
+            "tid": "T1570",
+            "name": "Lateral Tool Transfer"
+          },
+          {
+            "tid": "T1021.006",
+            "name": "Windows Remote Management"
+          },
+          {
+            "tid": "T1059.003",
+            "name": "Windows Command Shell"
+          },
+          {
+            "tid": "T1087",
+            "name": "Account Discovery"
+          },
+          {
+            "tid": "T1078",
+            "name": "Valid Accounts"
+          },
+          {
+            "tid": "T1484",
+            "name": "Domain or Tenant Policy Modification"
+          },
+          {
+            "tid": "T1210",
+            "name": "Exploitation of Remote Services"
+          }
+        ],
+        "kill_chain": [
+          {
+            "sev": "critical",
+            "desc": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88"
+          },
+          {
+            "sev": "critical",
+            "desc": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88"
+          },
+          {
+            "sev": "critical",
+            "desc": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88"
+          },
+          {
+            "sev": "critical",
+            "desc": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88"
+          },
+          {
+            "sev": "critical",
+            "desc": "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88"
+          }
+        ],
+        "d3fend": [],
+        "engage": []
+      },
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260429_000836.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 35.23,
+    "alert_id": "1777417561.856"
+  }
+}
