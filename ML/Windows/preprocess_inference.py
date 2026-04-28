@@ -331,17 +331,6 @@ def load_artifacts(artifacts_dir: str | Path) -> dict:
 
     artifacts: dict = {}
 
-    # ── Try single inference bundle first ────────────────────────────────────
-    # bundle_path = artifacts_dir / "inference_bundle.pkl"
-    # if bundle_path.exists():
-    #     log.info(f"Loading inference bundle: {bundle_path}")
-    #     bundle = joblib.load(bundle_path)
-    #     artifacts["preprocessor"]  = bundle["preprocessor"]
-    #     artifacts["var_filter"]    = bundle["var_filter"]
-    #     artifacts["label_encoder"] = bundle["label_encoder"]
-    #     log.info("  ✓ preprocessor, var_filter, label_encoder loaded from bundle")
-    # else:
-        # ── Load individual pkl files ─────────────────────────────────────────
     for key, fname in [
         ("preprocessor",  "preprocessor.pkl"),
         ("var_filter",    "var_filter.pkl"),
@@ -416,15 +405,22 @@ def preprocess(
 
     log.info(f"Preprocessing {len(df_raw):,} events ...")
 
-    # ── Step 0: Safety audits ─────────────────────────────────────────────────
+    # ── Step 0: Safety audits & data cleaning ──────────────────────────────────
+    # Create a working copy to avoid modifying the original
+    df_work = df_raw.copy()
+    
     if run_leakage_audit:
-        audit_leakage(df_raw)
+        leakage_cols = audit_leakage(df_work)
+        if leakage_cols:
+            df_work = df_work.drop(columns=leakage_cols, errors="ignore")
+            log.info(f"  ✓ Dropped {len(leakage_cols)} leakage column(s)")
+    
     if run_column_audit:
-        audit_missing_columns(df_raw)
+        audit_missing_columns(df_work)
 
     # ── Step 1: Feature engineering ───────────────────────────────────────────
     log.info("Step 1/3 — Feature engineering (build_features) ...")
-    X_feats = build_features(df_raw)
+    X_feats = build_features(df_work)
     validate_feature_schema(X_feats, artifacts.get("feature_metadata"))
 
     # ── Step 2: ColumnTransformer (impute + scale/encode) ─────────────────────

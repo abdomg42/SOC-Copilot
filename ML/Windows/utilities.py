@@ -74,17 +74,21 @@ LEAKAGE_PATTERNS: list[str] = [
 
 
 
-def audit_leakage(df: pd.DataFrame) -> None:
-    """Raise a ValueError if any leakage column is present in the DataFrame."""
+def audit_leakage(df: pd.DataFrame) -> list[str]:
+    """Detect leakage columns in the DataFrame and return their names.
+    
+    Returns a list of column names that match leakage patterns.
+    These columns should be dropped before inference.
+    """
     def is_leakage(col: str) -> bool:
         return any(pattern in col for pattern in LEAKAGE_PATTERNS)
 
     found = [c for c in df.columns if is_leakage(c)]
     if found:
-        raise ValueError(
-            f"Leakage columns detected in inference input — these must NEVER "
-            f"be passed to the model:\n  {found}"
+        log.warning(
+            f"Leakage columns detected in input — dropping {len(found)} column(s):\n  {found}"
         )
+    return found
 
 
 def audit_missing_columns(df: pd.DataFrame) -> list[str]:
