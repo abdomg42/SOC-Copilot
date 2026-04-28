@@ -1,6 +1,7 @@
-from preprocess_inference import load_artifacts, preprocess
-
 from __future__ import annotations
+
+from .preprocess_inference import load_artifacts, preprocess
+
 
 import ast
 import json
@@ -14,7 +15,7 @@ import numpy as np
 import pandas as pd
 import joblib
 
-from preprocess_inference import _parse_args , predict
+from .preprocess_inference import _parse_args , predict
 
 warnings.filterwarnings("ignore")
 
@@ -26,7 +27,7 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 ARTIFACTS_DIR = Path(
-    "trained_models/training_meta_data"
+    "/home/yassine/Documents/S4_IAGI/Projet Metier/SOC-Copilot/ML/Windows/trained_models/training_meta_data"
 )
 
 def main():

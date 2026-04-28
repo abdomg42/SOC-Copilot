@@ -41,7 +41,7 @@ import numpy as np
 import pandas as pd
 import joblib
 
-from utilities import audit_leakage, audit_missing_columns, validate_feature_schema
+from .utilities import audit_leakage, audit_missing_columns, validate_feature_schema
 
 warnings.filterwarnings("ignore")
 
@@ -61,49 +61,6 @@ log = logging.getLogger(__name__)
 # (missing ones are handled gracefully with df.get(), but you should
 #  surface any absent columns as a warning).
 # ---------------------------------------------------------------------------
-
-REQUIRED_RAW_COLUMNS: list[str] = [
-    # Process / Image
-    "_source.data.win.eventdata.image",
-    "_source.data.win.eventdata.parentImage",
-    # Command line
-    "_source.data.win.eventdata.commandLine",
-    # Logon / Authentication
-    "_source.data.win.eventdata.logonType",
-    # Integrity / Privilege
-    "_source.data.win.eventdata.integrityLevel",
-    "_source.data.win.eventdata.elevatedToken",
-    # Event taxonomy
-    "_source.data.win.system.eventID",
-    # Network
-    "_source.data.win.eventdata.destinationPort",
-    "_source.data.win.eventdata.sourcePort",
-    "_source.data.win.eventdata.destinationIp",
-    # Rule severity
-    "_source.rule.level",
-    "_source.rule.firedtimes",
-    # Temporal
-    "_source.@timestamp",
-    # Categorical
-    "_source.data.win.system.channel",
-    "_source.decoder.name",
-    "_source.data.win.system.severityValue",
-    "_source.agent.name",
-    "_source.data.win.system.providerName",
-]
-
-# Columns that must NEVER be present at inference (label leakage).
-LEAKAGE_PATTERNS: list[str] = [
-    "rule.mitre", "rule.id", "rule.description", "rule.groups",
-    "full_log",   "rule.pci",  "rule.hipaa",    "rule.tsc",
-    "rule.nist",  "rule.gpg",  "rule.gdpr",     "rule.cis",
-    "rule.frequency", "rule.mail", "rule.info",
-    "_index", "_id", "_version", "_score",
-    "sca.check.compliance", "rule.mitre_tactics",
-    "rule.mitre_techniques", "rule.mitre_mitigations",
-    "rule.soc", "rule.cis_csc", "sca.policy_id",
-]
-
 
 # ---------------------------------------------------------------------------
 # 2. FEATURE ENGINEERING  (exact replica of Section 6 in the notebook)
@@ -375,29 +332,29 @@ def load_artifacts(artifacts_dir: str | Path) -> dict:
     artifacts: dict = {}
 
     # ── Try single inference bundle first ────────────────────────────────────
-    bundle_path = artifacts_dir / "inference_bundle.pkl"
-    if bundle_path.exists():
-        log.info(f"Loading inference bundle: {bundle_path}")
-        bundle = joblib.load(bundle_path)
-        artifacts["preprocessor"]  = bundle["preprocessor"]
-        artifacts["var_filter"]    = bundle["var_filter"]
-        artifacts["label_encoder"] = bundle["label_encoder"]
-        log.info("  ✓ preprocessor, var_filter, label_encoder loaded from bundle")
-    else:
+    # bundle_path = artifacts_dir / "inference_bundle.pkl"
+    # if bundle_path.exists():
+    #     log.info(f"Loading inference bundle: {bundle_path}")
+    #     bundle = joblib.load(bundle_path)
+    #     artifacts["preprocessor"]  = bundle["preprocessor"]
+    #     artifacts["var_filter"]    = bundle["var_filter"]
+    #     artifacts["label_encoder"] = bundle["label_encoder"]
+    #     log.info("  ✓ preprocessor, var_filter, label_encoder loaded from bundle")
+    # else:
         # ── Load individual pkl files ─────────────────────────────────────────
-        for key, fname in [
-            ("preprocessor",  "preprocessor.pkl"),
-            ("var_filter",    "var_filter.pkl"),
-            ("label_encoder", "label_encoder.pkl"),
-        ]:
-            fpath = artifacts_dir / fname
-            if not fpath.exists():
-                raise FileNotFoundError(
-                    f"Required artifact not found: {fpath}\n"
-                    "Run Section 13 of the training notebook to generate it."
-                )
-            artifacts[key] = joblib.load(fpath)
-            log.info(f"  ✓ {fname} loaded")
+    for key, fname in [
+        ("preprocessor",  "preprocessor.pkl"),
+        ("var_filter",    "var_filter.pkl"),
+        ("label_encoder", "label_encoder.pkl"),
+    ]:
+        fpath = artifacts_dir / fname
+        if not fpath.exists():
+            raise FileNotFoundError(
+                f"Required artifact not found: {fpath}\n"
+                "Run Section 13 of the training notebook to generate it."
+            )
+        artifacts[key] = joblib.load(fpath)
+        log.info(f"  ✓ {fname} loaded")
 
     # ── Feature metadata ──────────────────────────────────────────────────────
     meta_path = artifacts_dir / "feature_metadata.json"
@@ -411,10 +368,10 @@ def load_artifacts(artifacts_dir: str | Path) -> dict:
         artifacts["feature_metadata"] = None
 
     # ── Optional: load model (any model_*.pkl) ────────────────────────────────
-    model_file =  "trained_models/model_best_model.pkl"
+    model_file =  "/home/yassine/Documents/S4_IAGI/Projet Metier/SOC-Copilot/ML/Windows/trained_models/model_best_model.pkl"
     if model_file:
         artifacts["model"] = joblib.load(model_file)
-        log.info(f"  ✓ Model loaded: {model_file.name}")
+        log.info(f"  ✓ Model loaded")
     else:
         artifacts["model"] = None
         log.warning("No model_*.pkl found — artifacts['model'] is None. "

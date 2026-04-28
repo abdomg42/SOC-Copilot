@@ -15,10 +15,8 @@ from typing import Optional
 
 import numpy as np
 import pandas as pd
-import joblib
 
 
-from preprocess_inference import LEAKAGE_PATTERNS , REQUIRED_RAW_COLUMNS
 
 warnings.filterwarnings("ignore")
 
@@ -30,6 +28,49 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 
+
+
+REQUIRED_RAW_COLUMNS: list[str] = [
+    # Process / Image
+    "_source.data.win.eventdata.image",
+    "_source.data.win.eventdata.parentImage",
+    # Command line
+    "_source.data.win.eventdata.commandLine",
+    # Logon / Authentication
+    "_source.data.win.eventdata.logonType",
+    # Integrity / Privilege
+    "_source.data.win.eventdata.integrityLevel",
+    "_source.data.win.eventdata.elevatedToken",
+    # Event taxonomy
+    "_source.data.win.system.eventID",
+    # Network
+    "_source.data.win.eventdata.destinationPort",
+    "_source.data.win.eventdata.sourcePort",
+    "_source.data.win.eventdata.destinationIp",
+    # Rule severity
+    "_source.rule.level",
+    "_source.rule.firedtimes",
+    # Temporal
+    "_source.@timestamp",
+    # Categorical
+    "_source.data.win.system.channel",
+    "_source.decoder.name",
+    "_source.data.win.system.severityValue",
+    "_source.agent.name",
+    "_source.data.win.system.providerName",
+]
+
+# Columns that must NEVER be present at inference (label leakage).
+LEAKAGE_PATTERNS: list[str] = [
+    "rule.mitre", "rule.id", "rule.description", "rule.groups",
+    "full_log",   "rule.pci",  "rule.hipaa",    "rule.tsc",
+    "rule.nist",  "rule.gpg",  "rule.gdpr",     "rule.cis",
+    "rule.frequency", "rule.mail", "rule.info",
+    "_index", "_id", "_version", "_score",
+    "sca.check.compliance", "rule.mitre_tactics",
+    "rule.mitre_techniques", "rule.mitre_mitigations",
+    "rule.soc", "rule.cis_csc", "sca.policy_id",
+]
 
 
 
