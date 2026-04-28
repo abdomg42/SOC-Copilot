@@ -87,6 +87,32 @@ html, body, [class*="css"] {
   margin-top: 0.25rem;
 }
 
+.soc-feed {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.soc-feed-item {
+  border: 1px solid var(--soc-border);
+  border-radius: 12px;
+  padding: 0.6rem 0.75rem;
+  background: var(--soc-panel);
+  display: grid;
+  grid-template-columns: 140px 96px 1fr;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.soc-feed-title {
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.soc-feed-meta {
+  color: var(--soc-muted);
+  font-size: 0.78rem;
+}
+
 .soc-severity {
   display: inline-flex;
   align-items: center;
@@ -138,6 +164,10 @@ button[kind="primary"]:hover {
   .soc-hero {
     border-radius: 14px;
     padding: 0.9rem;
+  }
+
+  .soc-feed-item {
+    grid-template-columns: 1fr;
   }
 }
 </style>

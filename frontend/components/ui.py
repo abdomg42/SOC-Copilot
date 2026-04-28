@@ -50,61 +50,6 @@ def severity_badge(severity: Any) -> str:
     )
 
 
-def _to_text(value: Any) -> str:
-    if value is None:
-        return ""
-    if isinstance(value, list):
-        return ", ".join(str(x) for x in value)
-    return str(value)
-
-
-def render_report(report: Dict[str, Any]) -> None:
-    if not report:
-        st.info("No report available yet.")
-        return
-
-    severity = report.get("severity", "N/A")
-    title = report.get("title", "Untitled incident")
-
-    left, right = st.columns([5, 2])
-    with left:
-        st.subheader(title)
-    with right:
-        st.markdown(severity_badge(severity), unsafe_allow_html=True)
-
-    explanation = report.get("explanation")
-    if explanation:
-        st.write(explanation)
-
-    c1, c2, c3 = st.columns(3)
-    c1.metric("MITRE Technique", _to_text(report.get("mitre_technique_id", "N/A")))
-    c2.metric("Technique Name", _to_text(report.get("mitre_technique_name", "N/A")))
-    c3.metric("Tactic", _to_text(report.get("mitre_tactic", "N/A")))
-
-    attack_sequence = report.get("attack_sequence", [])
-    if attack_sequence:
-        st.markdown("### Attack Sequence")
-        for step in attack_sequence:
-            st.markdown(f"- {step}")
-
-    iocs = report.get("iocs", [])
-    if iocs:
-        st.markdown("### Indicators")
-        ioc_frame = pd.DataFrame(iocs)
-        st.dataframe(ioc_frame, use_container_width=True, hide_index=True)
-
-    remediations = report.get("remediation_steps", [])
-    if remediations:
-        st.markdown("### Remediation Plan")
-        rem_frame = pd.DataFrame(remediations)
-        st.dataframe(rem_frame, use_container_width=True, hide_index=True)
-
-    confidence = report.get("confidence")
-    if isinstance(confidence, (int, float)):
-        bounded = max(0.0, min(float(confidence), 1.0))
-        st.progress(bounded, text=f"Confidence: {bounded:.2f}")
-
-
 def _drill(item: Dict[str, Any], path: str) -> Any:
     current: Any = item
     for part in path.split("."):
@@ -184,29 +129,3 @@ def alerts_to_dataframe(alerts: Sequence[Dict[str, Any]]) -> pd.DataFrame:
     return frame
 
 
-def alert_to_payload(alert: Dict[str, Any]) -> Dict[str, Any]:
-    rule_level = pick_value(alert, ["rule_level", "rule.level"], default=0)
-    try:
-        normalized_rule_level = int(float(rule_level))
-    except (TypeError, ValueError):
-        normalized_rule_level = 0
-
-    payload = {
-        "rule_description": pick_value(alert, ["rule_description", "rule.description"], default="N/A"),
-        "src_ip": pick_value(
-            alert,
-            ["src_ip", "srcip", "data.srcip", "eventdata.srcip", "event.srcip"],
-            default="N/A",
-        ),
-        "timestamp": pick_value(alert, ["timestamp", "@timestamp"], default=""),
-        "rule_level": normalized_rule_level,
-        "ml_severity": pick_value(alert, ["ml_severity"], default=None),
-        "ml_attack_category": pick_value(alert, ["ml_attack_category"], default=None),
-        "ml_anomaly_score": pick_value(alert, ["ml_anomaly_score"], default=None),
-        "agent_name": pick_value(alert, ["agent_name", "agent.name"], default=None),
-        "extra": {
-            "rule_id": pick_value(alert, ["rule.id"], default="N/A"),
-            "raw_alert": alert,
-        },
-    }
-    return payload

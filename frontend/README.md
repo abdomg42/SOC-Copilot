@@ -4,12 +4,9 @@ This frontend is fully isolated in the `frontend` folder and does not modify bac
 
 ## Features
 
-- Multi-page Streamlit app aligned with FastAPI contracts in `agent/api.py`
-- Alert Analyzer page for `POST /analyze`
-- Alerts Inventory page for `GET /alerts`
+- Streamlined two-page Streamlit app aligned with FastAPI contracts in `agent/api.py`
+- SOC Dashboard page for `GET /alerts` (summary cards, alert feed, trend charts)
 - SOC Chat page for `POST /chat`
-- Knowledge Base page for local runbooks + ATT&CK/ENGAGE/D3FEND mappings
-- System Health page for runtime probes and smoke checks
 
 ## Folder Layout
 
@@ -23,15 +20,10 @@ frontend/
     api_client.py
     state.py
     theme.py
-    data_loaders.py
   components/
     ui.py
   pages/
-    1_Alert_Analyzer.py
-    2_Alerts_Inventory.py
     3_SOC_Chat.py
-    4_Knowledge_Base.py
-    5_System_Health.py
 ```
 
 ## Run Locally
@@ -62,4 +54,3 @@ streamlit run frontend/app.py
 
 - The app expects the FastAPI backend to be available.
 - When `/alerts` is unavailable, the UI keeps working and surfaces backend warning messages.
-- The Knowledge Base page reads local files from `data/runbooks`, `data/engage`, and `data/d3fend`.

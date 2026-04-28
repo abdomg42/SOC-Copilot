@@ -1,15 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from pathlib import Path
 import os
-
-PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DATA_DIR = PROJECT_ROOT / "data"
-RUNBOOK_DIR = DATA_DIR / "runbooks"
-ENGAGE_MAPPING_FILE = DATA_DIR / "engage" / "attack_mapping.json"
-D3FEND_FULL_MAPPING_FILE = DATA_DIR / "d3fend" / "d3fend-full-mappings.csv"
-D3FEND_TACTICS_FILE = DATA_DIR / "d3fend" / "d3fend.csv"
 
 
 @dataclass(frozen=True)

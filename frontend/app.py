@@ -1,7 +1,12 @@
 from __future__ import annotations
 
 from collections import Counter
+from datetime import datetime, timezone
+import html
+from typing import Any, Dict, List
 
+import pandas as pd
+import plotly.express as px
 import streamlit as st
 
 from components.ui import alerts_to_dataframe, render_hero, render_stat_cards, severity_badge
@@ -11,8 +16,8 @@ from core.state import get_api_client, init_session_state
 from core.theme import apply_theme
 
 st.set_page_config(
-    page_title="SOC Copilot Frontend",
-    page_icon=":shield:",
+    page_title="SOC Dashboard",
+    page_icon=":bar_chart:",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -22,85 +27,191 @@ init_session_state()
 cfg = load_config()
 client = get_api_client()
 
+CACHE_KEY = "dashboard_alerts_cache"
+FILTER_KEY = "dashboard_filters"
+
+
+def _fetch_alerts(hours: int) -> Dict[str, Any]:
+    """Fetch alerts with a consistent response shape for caching."""
+    timestamp = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    try:
+        payload = client.get_alerts(hours=hours, severity="Toutes")
+        return {
+            "alerts": payload.get("alerts", []),
+            "error": payload.get("error", ""),
+            "fetched_at": timestamp,
+        }
+    except APIError as exc:
+        return {"alerts": [], "error": str(exc), "fetched_at": timestamp}
+
+
+def _count_resolved(alerts: List[Dict[str, Any]]) -> int:
+    """Best-effort resolved count based on common status fields."""
+    resolved_markers = {"resolved", "closed", "done", "mitigated", "fixed"}
+    keys = ("status", "alert_status", "state", "resolution", "resolved")
+    count = 0
+    for alert in alerts:
+        if not isinstance(alert, dict):
+            continue
+        value = None
+        for key in keys:
+            if key in alert:
+                value = alert.get(key)
+                break
+        if value is None:
+            continue
+        if str(value).strip().lower() in resolved_markers:
+            count += 1
+    return count
+
+
+def _build_alert_feed(frame: pd.DataFrame, max_items: int = 8) -> None:
+    """Render a compact alert feed with severity badges."""
+    if frame.empty:
+        st.info("No alerts available for the selected window.")
+        return
+
+    view = frame.copy()
+    view["timestamp_parsed"] = pd.to_datetime(view["timestamp"], errors="coerce", utc=True)
+    view = view.sort_values("timestamp_parsed", ascending=False).head(max_items)
+
+    cards: List[str] = []
+    for _, row in view.iterrows():
+        timestamp = html.escape(str(row.get("timestamp", "N/A")))
+        severity_html = severity_badge(row.get("severity", "na"))
+        description = html.escape(str(row.get("rule_description", "N/A")))
+        if len(description) > 120:
+            description = description[:117] + "..."
+        src_ip = html.escape(str(row.get("src_ip", "N/A")))
+        agent = html.escape(str(row.get("agent_name", "N/A")))
+
+        cards.append(
+            f"""
+<div class="soc-feed-item">
+  <div class="soc-feed-meta">{timestamp}</div>
+  <div>{severity_html}</div>
+  <div>
+    <div class="soc-feed-title">{description}</div>
+    <div class="soc-feed-meta">{src_ip} | {agent}</div>
+  </div>
+</div>
+            """
+        )
+
+    st.markdown("<div class='soc-feed'>" + "".join(cards) + "</div>", unsafe_allow_html=True)
+
+
+if CACHE_KEY not in st.session_state:
+    st.session_state[CACHE_KEY] = {"alerts": [], "error": "", "fetched_at": "N/A"}
+if FILTER_KEY not in st.session_state:
+    st.session_state[FILTER_KEY] = {"hours": cfg.default_alert_window_h}
+
+# Sidebar controls for the dashboard window and refresh.
 st.sidebar.title("SOC Copilot")
-st.sidebar.caption("Incident triage cockpit")
+st.sidebar.caption("Unified dashboard + chat")
 st.sidebar.markdown(f"API base: {cfg.api_base_url}")
-st.sidebar.markdown("Use the pages below to investigate alerts and generate reports.")
 
-health_label = "Offline"
-agent_label = "N/A"
-health_detail = "Backend did not respond"
+hours = st.sidebar.slider(
+    "Lookback window (hours)",
+    min_value=1,
+    max_value=72,
+    value=int(st.session_state[FILTER_KEY]["hours"]),
+)
+refresh = st.sidebar.button("Refresh alerts", type="primary", use_container_width=True)
 
-try:
-    health = client.health()
-    health_label = health.get("status", "unknown").upper()
-    agent_label = health.get("agent", "N/A")
-    health_detail = "FastAPI endpoint reachable"
-except APIError as exc:
-    health_detail = str(exc)
+filters_changed = st.session_state[FILTER_KEY]["hours"] != hours
+if refresh or filters_changed or not st.session_state[CACHE_KEY]["alerts"]:
+    st.session_state[FILTER_KEY] = {"hours": hours}
+    with st.spinner("Fetching alerts from backend..."):
+        st.session_state[CACHE_KEY] = _fetch_alerts(hours)
 
-st.sidebar.markdown("### Backend Status")
-st.sidebar.markdown(severity_badge("low" if health_label == "OK" else "high"), unsafe_allow_html=True)
-st.sidebar.caption(f"{health_label} - {agent_label}")
+cache = st.session_state[CACHE_KEY]
+alerts: List[Dict[str, Any]] = cache.get("alerts", [])
+error = cache.get("error", "")
+fetched_at = cache.get("fetched_at", "N/A")
 
 render_hero(
-    "SOC Copilot Mission Console",
-    "A multi-page Streamlit cockpit for triage, report generation, and knowledge correlation.",
+    "SOC Dashboard",
+    "Live alert telemetry with fast summaries and trend highlights for quick triage.",
 )
 
-alerts = []
-alerts_error = ""
-try:
-    alerts_payload = client.get_alerts(hours=cfg.default_alert_window_h, severity="Toutes")
-    alerts = alerts_payload.get("alerts", [])
-    alerts_error = alerts_payload.get("error", "")
-except APIError as exc:
-    alerts_error = str(exc)
+if error:
+    st.warning(f"Backend warning: {error}")
 
 frame = alerts_to_dataframe(alerts)
 sev_counts = Counter(frame["severity"].tolist()) if not frame.empty else Counter()
+resolved_alerts = _count_resolved(alerts)
+
+# Summary widgets keep the critical counts visible at a glance.
+if frame.empty:
+    render_stat_cards(
+        [
+            ("Alerts (window)", "0"),
+            ("Alerts today", "0"),
+            ("Critical", "0"),
+            ("High", "0"),
+            ("Resolved", str(resolved_alerts)),
+        ]
+    )
+    st.info("No alerts found for the selected window.")
+    st.caption(f"Last fetch: {fetched_at}")
+    st.stop()
+
+frame["timestamp_parsed"] = pd.to_datetime(frame["timestamp"], errors="coerce", utc=True)
+now_utc = pd.Timestamp.now(tz="UTC")
+alerts_today = int((frame["timestamp_parsed"] >= now_utc.normalize()).sum())
 
 render_stat_cards(
     [
-        ("Backend", health_label),
-        ("Agent", agent_label),
-        ("Alerts Loaded", str(len(alerts))),
-        (
-            "Critical/High",
-            str(int(sev_counts.get("critical", 0) + sev_counts.get("high", 0))),
-        ),
+        ("Alerts (window)", str(len(frame))),
+        ("Alerts today", str(alerts_today)),
+        ("Critical", str(sev_counts.get("critical", 0))),
+        ("High", str(sev_counts.get("high", 0))),
+        ("Resolved", str(resolved_alerts)),
     ]
 )
 
-if alerts_error:
-    st.warning(f"Alerts endpoint warning: {alerts_error}")
-
-col1, col2 = st.columns([1.2, 1])
-with col1:
-    st.markdown("### Workflow")
-    st.markdown("1. Open Alerts Inventory to review recent logs.")
-    st.markdown("2. Send suspicious events to Alert Analyzer for structured incident reports.")
-    st.markdown("3. Use SOC Chat for ad-hoc questions and investigative iterations.")
-    st.markdown("4. Correlate findings with runbooks and ATT&CK/D3FEND mappings.")
-
-    st.page_link("pages/2_Alerts_Inventory.py", label="Open Alerts Inventory")
-    st.page_link("pages/1_Alert_Analyzer.py", label="Open Alert Analyzer")
-    st.page_link("pages/3_SOC_Chat.py", label="Open SOC Chat")
-
-with col2:
-    st.markdown("### Live Signal Snapshot")
-    if frame.empty:
-        st.info("No alert data available yet. Check API connectivity from the System Health page.")
+# Main layout: live feed on the left, trend on the right.
+feed_col, trend_col = st.columns([1.35, 1])
+with feed_col:
+    st.markdown("### Recent Alert Feed")
+    _build_alert_feed(frame)
+with trend_col:
+    st.markdown("### Alert Trend")
+    trend = frame.dropna(subset=["timestamp_parsed"]).copy()
+    if trend.empty:
+        st.info("No timestamps available for trend charting.")
     else:
-        preview = frame[[
-            "timestamp",
-            "severity",
-            "rule_level",
-            "rule_description",
-            "src_ip",
-            "agent_name",
-        ]].head(8)
-        st.dataframe(preview, use_container_width=True, hide_index=True)
+        trend["hour"] = trend["timestamp_parsed"].dt.floor("H")
+        per_hour = trend.groupby("hour", as_index=False).size().rename(columns={"size": "count"})
+        fig_trend = px.line(
+            per_hour,
+            x="hour",
+            y="count",
+            markers=True,
+            title="Alerts per hour",
+        )
+        fig_trend.update_layout(height=320, margin=dict(l=20, r=20, t=60, b=20))
+        st.plotly_chart(fig_trend, use_container_width=True)
 
-st.divider()
-st.caption(health_detail)
+    # Severity distribution keeps overall risk profile visible.
+st.markdown("### Severity Breakdown")
+sev_series = frame["severity"].value_counts().rename_axis("severity").reset_index(name="count")
+fig_severity = px.bar(
+    sev_series,
+    x="severity",
+    y="count",
+    color="severity",
+    color_discrete_map={
+        "critical": "#8f1520",
+        "high": "#b33121",
+        "medium": "#d58a2f",
+        "low": "#2f7b4b",
+        "na": "#76706a",
+    },
+    title="Severity distribution",
+)
+fig_severity.update_layout(showlegend=False, height=300, margin=dict(l=20, r=20, t=60, b=20))
+st.plotly_chart(fig_severity, use_container_width=True)
+
+st.caption(f"Last fetch: {fetched_at}")
