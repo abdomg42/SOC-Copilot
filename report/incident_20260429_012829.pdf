@@ -1,0 +1,97 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 4821 >>
+stream
+0.050 0.150 0.400 rg 0 792.0 595.0 50 re f
+BT /F1 9 Tf 50.0 820.0 Td 1.000 1.000 1.000 rg (SOC INCIDENT REPORT) Tj ET
+BT /F1 8 Tf 495.0 820.0 Td 0.700 0.800 0.950 rg (Page 1 of 1) Tj ET
+0.050 0.150 0.400 rg 0.0 746.0 595.0 40.0 re f
+BT /F1 20 Tf 50.0 762.0 Td 1.000 1.000 1.000 rg (Executable File Drop by Scheduled Task) Tj ET
+0.700 0.100 0.100 rg 50.0 724.0 127.6 17.0 re f
+BT /F1 9 Tf 50.0 730.0 Td 1.000 1.000 1.000 rg (  Severity: CRITICAL  ) Tj ET
+0.880 0.920 0.970 rg 50.0 656.0 495.0 56.0 re f
+0.40 w 0.200 0.400 0.700 RG 50.0 712.0 m 545.0 712.0 l S
+0.40 w 0.200 0.400 0.700 RG 50.0 656.0 m 545.0 656.0 l S
+BT /F1 9 Tf 58.0 696.0 Td 0.400 0.400 0.400 rg (Generated) Tj ET
+BT /F1 9 Tf 218.0 696.0 Td 0.000 0.000 0.000 rg (2026-04-29 01:28) Tj ET
+BT /F1 9 Tf 58.0 682.0 Td 0.400 0.400 0.400 rg (Confidence) Tj ET
+BT /F1 9 Tf 218.0 682.0 Td 0.000 0.000 0.000 rg (100%) Tj ET
+BT /F1 9 Tf 58.0 668.0 Td 0.400 0.400 0.400 rg (Severity) Tj ET
+BT /F1 9 Tf 218.0 668.0 Td 0.000 0.000 0.000 rg (CRITICAL) Tj ET
+BT /F1 13 Tf 50.0 604.0 Td 0.200 0.400 0.700 rg (Executive Summary) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 592.0 m 545.0 592.0 l S
+BT /F1 10 Tf 50.0 582.0 Td 0.000 0.000 0.000 rg (An executable file was dropped in a folder commonly used by malware on the host) Tj ET
+BT /F1 10 Tf 50.0 568.0 Td 0.000 0.000 0.000 rg (DESKTOP-80FLS88, likely as a result of a newly scheduled task.) Tj ET
+BT /F1 13 Tf 50.0 536.0 Td 0.200 0.400 0.700 rg (Indicators of Compromise) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 524.0 m 545.0 524.0 l S
+BT /F1 12 Tf 54.0 514.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 514.0 Td 0.000 0.000 0.000 rg (ip: 10.0.2.15) Tj ET
+BT /F1 12 Tf 54.0 500.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 500.0 Td 0.000 0.000 0.000 rg (host: DESKTOP-80FLS88) Tj ET
+BT /F1 13 Tf 50.0 468.0 Td 0.200 0.400 0.700 rg (IoC Details) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 456.0 m 545.0 456.0 l S
+0.050 0.150 0.400 rg 50.0 442.0 495.0 20.0 re f
+BT /F1 9 Tf 54.0 446.0 Td 1.000 1.000 1.000 rg (Type) Tj ET
+BT /F1 9 Tf 219.0 446.0 Td 1.000 1.000 1.000 rg (Value) Tj ET
+BT /F1 9 Tf 384.0 446.0 Td 1.000 1.000 1.000 rg (Context) Tj ET
+0.880 0.920 0.970 rg 50.0 421.0 495.0 16.0 re f
+BT /F1 8 Tf 54.0 424.0 Td 0.000 0.000 0.000 rg (ip) Tj ET
+BT /F1 8 Tf 219.0 424.0 Td 0.000 0.000 0.000 rg (10.0.2.15) Tj ET
+BT /F1 8 Tf 384.0 424.0 Td 0.000 0.000 0.000 rg (Source IP of the alert) Tj ET
+0.30 w 0.800 0.840 0.900 RG 50.0 412.0 m 545.0 412.0 l S
+BT /F1 8 Tf 54.0 410.0 Td 0.000 0.000 0.000 rg (host) Tj ET
+BT /F1 8 Tf 219.0 410.0 Td 0.000 0.000 0.000 rg (DESKTOP-80FLS88) Tj ET
+BT /F1 8 Tf 384.0 410.0 Td 0.000 0.000 0.000 rg (Target host of the alert) Tj ET
+0.30 w 0.800 0.840 0.900 RG 50.0 398.0 m 545.0 398.0 l S
+BT /F1 13 Tf 50.0 344.0 Td 0.200 0.400 0.700 rg (Attack Timeline) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 332.0 m 545.0 332.0 l S
+BT /F1 12 Tf 54.0 322.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 322.0 Td 0.000 0.000 0.000 rg (A Newly Scheduled Task has been Detected on DESKTOP-80FLS88) Tj ET
+BT /F1 12 Tf 54.0 308.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 308.0 Td 0.000 0.000 0.000 rg (An executable file was dropped in a folder commonly used by malware on DESKTOP-80FLS88) Tj ET
+BT /F1 13 Tf 50.0 276.0 Td 0.200 0.400 0.700 rg (MITRE ATT&CK Context) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 264.0 m 545.0 264.0 l S
+0.880 0.920 0.970 rg 50.0 220.0 495.0 42.0 re f
+0.40 w 0.200 0.400 0.700 RG 50.0 262.0 m 545.0 262.0 l S
+0.40 w 0.200 0.400 0.700 RG 50.0 220.0 m 545.0 220.0 l S
+BT /F1 9 Tf 58.0 246.0 Td 0.400 0.400 0.400 rg (Technique ID) Tj ET
+BT /F1 9 Tf 218.0 246.0 Td 0.000 0.000 0.000 rg (T1053) Tj ET
+BT /F1 9 Tf 58.0 232.0 Td 0.400 0.400 0.400 rg (Tactic) Tj ET
+BT /F1 9 Tf 218.0 232.0 Td 0.000 0.000 0.000 rg (Initial Access) Tj ET
+BT /F1 13 Tf 50.0 168.0 Td 0.200 0.400 0.700 rg (Remediation Steps) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 156.0 m 545.0 156.0 l S
+BT /F1 12 Tf 54.0 146.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 146.0 Td 0.000 0.000 0.000 rg ([immediate] Investigate the dropped executable file to determine its purpose and potential malicious intent.) Tj ET
+BT /F1 12 Tf 54.0 132.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 132.0 Td 0.000 0.000 0.000 rg ([immediate] Review the scheduled tasks on the affected host to identify and remove any suspicious or malicious tasks.) Tj ET
+BT /F1 12 Tf 54.0 118.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 118.0 Td 0.000 0.000 0.000 rg ([short_term] Implement network segmentation to isolate the affected host from other critical systems to prevent further spread of the malware.) Tj ET
+0.50 w 0.050 0.150 0.400 RG 50.0 52.0 m 545.0 52.0 l S
+BT /F1 7 Tf 50.0 40.0 Td 0.400 0.400 0.400 rg (This report is automatically generated and must be validated by a SOC analyst.) Tj ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 4 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+5 0 obj
+<< /Type /Catalog /Pages 4 0 R >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000004952 00000 n 
+0000005078 00000 n 
+0000005135 00000 n 
+trailer
+<< /Size 6 /Root 5 0 R >>
+startxref
+5184
+%%EOF

@@ -1,0 +1,225 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.29",
+    "_id": "d7Kf1p0BqjD1nHJAQnQu",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "originalFileName": "Cmd.Exe",
+            "image": "C:\\\\Windows\\\\System32\\\\cmd.exe",
+            "product": "Microsoft® Windows® Operating System",
+            "parentProcessGuid": "{de1afa58-498e-69f1-a606-000000003800}",
+            "description": "Windows Command Processor",
+            "logonGuid": "{de1afa58-24d8-69f1-f867-040000000000}",
+            "parentCommandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\"",
+            "processGuid": "{de1afa58-4f98-69f1-0108-000000003800}",
+            "logonId": "0x467f8",
+            "parentProcessId": "828",
+            "processId": "2576",
+            "currentDirectory": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\",
+            "utcTime": "2026-04-29 00:23:52.423",
+            "hashes": "SHA1=DF79C86FDD11B9CCB89148458E509F879C72566C,MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18",
+            "parentImage": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+            "ruleName": "technique_id=T1059.003,technique_name=Windows Command Shell",
+            "company": "Microsoft Corporation",
+            "commandLine": "\\\"cmd.exe\\\" /c",
+            "integrityLevel": "High",
+            "fileVersion": "10.0.19041.4355 (WinBuild.160101.0800)",
+            "user": "DESKTOP-80FLS88\\\\mossaabReverse",
+            "terminalSessionId": "1",
+            "parentUser": "DESKTOP-80FLS88\\\\mossaabReverse"
+          },
+          "system": {
+            "eventID": "1",
+            "keywords": "0x8000000000000000",
+            "providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "level": "4",
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "opcode": "0",
+            "message": "\"Process Create:\r\nRuleName: technique_id=T1059.003,technique_name=Windows Command Shell\r\nUtcTime: 2026-04-29 00:23:52.423\r\nProcessGuid: {de1afa58-4f98-69f1-0108-000000003800}\r\nProcessId: 2576\r\nImage: C:\\Windows\\System32\\cmd.exe\r\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\r\nDescription: Windows Command Processor\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: Cmd.Exe\r\nCommandLine: \"cmd.exe\" /c \r\nCurrentDirectory: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\\r\nUser: DESKTOP-80FLS88\\mossaabReverse\r\nLogonGuid: {de1afa58-24d8-69f1-f867-040000000000}\r\nLogonId: 0x467F8\r\nTerminalSessionId: 1\r\nIntegrityLevel: High\r\nHashes: SHA1=DF79C86FDD11B9CCB89148458E509F879C72566C,MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\r\nParentProcessGuid: {de1afa58-498e-69f1-a606-000000003800}\r\nParentProcessId: 828\r\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nParentCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" \r\nParentUser: DESKTOP-80FLS88\\mossaabReverse\"",
+            "version": "5",
+            "systemTime": "2026-04-29T00:23:52.4271442Z",
+            "eventRecordID": "174439",
+            "threadID": "4236",
+            "computer": "DESKTOP-80FLS88",
+            "task": "1",
+            "processID": "3144",
+            "severityValue": "INFORMATION",
+            "providerName": "Microsoft-Windows-Sysmon"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 4,
+        "mail": false,
+        "level": 4,
+        "description": "Windows command prompt started by an abnormal process",
+        "groups": [
+          "sysmon",
+          "sysmon_eid1_detections",
+          "windows"
+        ],
+        "mitre": {
+          "technique": [
+            "Windows Command Shell"
+          ],
+          "id": [
+            "T1059.003"
+          ],
+          "tactic": [
+            "Execution"
+          ]
+        },
+        "id": "92052"
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-29T00:24:06.261Z",
+      "location": "EventChannel",
+      "id": "1777422246.1834086",
+      "timestamp": "2026-04-29T01:24:06.261+0100"
+    },
+    "sort": [
+      1777422246261
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.originalFileName": "Cmd.Exe",
+        "_source.data.win.eventdata.image": "C:\\\\Windows\\\\System32\\\\cmd.exe",
+        "_source.data.win.eventdata.product": "Microsoft® Windows® Operating System",
+        "_source.data.win.eventdata.parentProcessGuid": "{de1afa58-498e-69f1-a606-000000003800}",
+        "_source.data.win.eventdata.description": "Windows Command Processor",
+        "_source.data.win.eventdata.logonGuid": "{de1afa58-24d8-69f1-f867-040000000000}",
+        "_source.data.win.eventdata.parentCommandLine": "\\\"C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe\\\"",
+        "_source.data.win.eventdata.processGuid": "{de1afa58-4f98-69f1-0108-000000003800}",
+        "_source.data.win.eventdata.logonId": "0x467f8",
+        "_source.data.win.eventdata.parentProcessId": "828",
+        "_source.data.win.eventdata.processId": "2576",
+        "_source.data.win.eventdata.currentDirectory": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\",
+        "_source.data.win.eventdata.utcTime": "2026-04-29 00:23:52.423",
+        "_source.data.win.eventdata.hashes": "SHA1=DF79C86FDD11B9CCB89148458E509F879C72566C,MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18",
+        "_source.data.win.eventdata.parentImage": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+        "_source.data.win.eventdata.ruleName": "technique_id=T1059.003,technique_name=Windows Command Shell",
+        "_source.data.win.eventdata.company": "Microsoft Corporation",
+        "_source.data.win.eventdata.commandLine": "\\\"cmd.exe\\\" /c",
+        "_source.data.win.eventdata.integrityLevel": "High",
+        "_source.data.win.eventdata.fileVersion": "10.0.19041.4355 (WinBuild.160101.0800)",
+        "_source.data.win.eventdata.user": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.eventdata.terminalSessionId": "1",
+        "_source.data.win.eventdata.parentUser": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.system.eventID": "1",
+        "_source.data.win.system.keywords": "0x8000000000000000",
+        "_source.data.win.system.providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "Microsoft-Windows-Sysmon/Operational",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"Process Create:\r\nRuleName: technique_id=T1059.003,technique_name=Windows Command Shell\r\nUtcTime: 2026-04-29 00:23:52.423\r\nProcessGuid: {de1afa58-4f98-69f1-0108-000000003800}\r\nProcessId: 2576\r\nImage: C:\\Windows\\System32\\cmd.exe\r\nFileVersion: 10.0.19041.4355 (WinBuild.160101.0800)\r\nDescription: Windows Command Processor\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: Cmd.Exe\r\nCommandLine: \"cmd.exe\" /c \r\nCurrentDirectory: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\\r\nUser: DESKTOP-80FLS88\\mossaabReverse\r\nLogonGuid: {de1afa58-24d8-69f1-f867-040000000000}\r\nLogonId: 0x467F8\r\nTerminalSessionId: 1\r\nIntegrityLevel: High\r\nHashes: SHA1=DF79C86FDD11B9CCB89148458E509F879C72566C,MD5=2B40C98ED0F7A1D3B091A3E8353132DC,SHA256=BADF4752413CB0CBDC03FB95820CA167F0CDC63B597CCDB5EF43111180E088B0,IMPHASH=272245E2988E1E430500B852C4FB5E18\r\nParentProcessGuid: {de1afa58-498e-69f1-a606-000000003800}\r\nParentProcessId: 828\r\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nParentCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" \r\nParentUser: DESKTOP-80FLS88\\mossaabReverse\"",
+        "_source.data.win.system.version": "5",
+        "_source.data.win.system.systemTime": "2026-04-29T00:23:52.4271442Z",
+        "_source.data.win.system.eventRecordID": "174439",
+        "_source.data.win.system.threadID": "4236",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "1",
+        "_source.data.win.system.processID": "3144",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Microsoft-Windows-Sysmon",
+        "_source.rule.firedtimes": 4,
+        "_source.rule.mail": false,
+        "_source.rule.level": 4,
+        "_source.rule.description": "Windows command prompt started by an abnormal process",
+        "_source.rule.groups": [
+          "sysmon",
+          "sysmon_eid1_detections",
+          "windows"
+        ],
+        "_source.rule.mitre.technique": [
+          "Windows Command Shell"
+        ],
+        "_source.rule.mitre.id": [
+          "T1059.003"
+        ],
+        "_source.rule.mitre.tactic": [
+          "Execution"
+        ],
+        "_source.rule.id": "92052",
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-29T00:24:06.261Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777422246.1834086",
+        "_source.timestamp": "2026-04-29T01:24:06.261+0100",
+        "ML_prediction": "Execution"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "severity": "medium",
+      "title": "Abnormal Windows Command Prompt Execution",
+      "mitre_technique_id": "T1059.003",
+      "mitre_technique_name": "Command and Scripting Interpreter",
+      "mitre_tactic": "Execution",
+      "explanation": "An abnormal process started a Windows command prompt on the host DESKTOP-80FLS88, which is known to be a potential attacker with a high risk score and a history of using various MITRE ATT&CK techniques.",
+      "attack_sequence": [
+        "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "A Windows Command Prompt has been started by an abnormal process"
+      ],
+      "iocs": [
+        {
+          "type": "ip",
+          "value": "10.0.2.15",
+          "context": "Source IP of the abnormal process"
+        },
+        {
+          "type": "user",
+          "value": "DESKTOP-80FLS88\\\\mossaabReverse",
+          "context": "User associated with the abnormal process"
+        },
+        {
+          "type": "host",
+          "value": "DESKTOP-80FLS88",
+          "context": "Target host of the abnormal process"
+        }
+      ],
+      "remediation_steps": [
+        {
+          "priority": "immediate",
+          "action": "Investigate the scheduled task that triggered the command prompt execution"
+        },
+        {
+          "priority": "short_term",
+          "action": "Review and update security policies for executable file paths to minimize the attack surface"
+        },
+        {
+          "priority": "long_term",
+          "action": "Implement host-based intrusion detection and prevention systems (HIDS/HIPS) to detect and block potential Command and Scripting Interpreter attacks"
+        }
+      ],
+      "confidence": 0.8,
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260429_012557.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 34.59,
+    "alert_id": "1777422246.1834086"
+  }
+}

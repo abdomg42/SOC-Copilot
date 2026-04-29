@@ -1,0 +1,98 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 4971 >>
+stream
+0.050 0.150 0.400 rg 0 792.0 595.0 50 re f
+BT /F1 9 Tf 50.0 820.0 Td 1.000 1.000 1.000 rg (SOC INCIDENT REPORT) Tj ET
+BT /F1 8 Tf 495.0 820.0 Td 0.700 0.800 0.950 rg (Page 1 of 1) Tj ET
+0.050 0.150 0.400 rg 0.0 746.0 595.0 40.0 re f
+BT /F1 20 Tf 50.0 762.0 Td 1.000 1.000 1.000 rg (Powershell Execution Detected) Tj ET
+0.800 0.600 0.000 rg 50.0 724.0 116.0 17.0 re f
+BT /F1 9 Tf 50.0 730.0 Td 1.000 1.000 1.000 rg (  Severity: MEDIUM  ) Tj ET
+0.880 0.920 0.970 rg 50.0 656.0 495.0 56.0 re f
+0.40 w 0.200 0.400 0.700 RG 50.0 712.0 m 545.0 712.0 l S
+0.40 w 0.200 0.400 0.700 RG 50.0 656.0 m 545.0 656.0 l S
+BT /F1 9 Tf 58.0 696.0 Td 0.400 0.400 0.400 rg (Generated) Tj ET
+BT /F1 9 Tf 218.0 696.0 Td 0.000 0.000 0.000 rg (2026-04-29 01:28) Tj ET
+BT /F1 9 Tf 58.0 682.0 Td 0.400 0.400 0.400 rg (Confidence) Tj ET
+BT /F1 9 Tf 218.0 682.0 Td 0.000 0.000 0.000 rg (80%) Tj ET
+BT /F1 9 Tf 58.0 668.0 Td 0.400 0.400 0.400 rg (Severity) Tj ET
+BT /F1 9 Tf 218.0 668.0 Td 0.000 0.000 0.000 rg (MEDIUM) Tj ET
+BT /F1 13 Tf 50.0 604.0 Td 0.200 0.400 0.700 rg (Executive Summary) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 592.0 m 545.0 592.0 l S
+BT /F1 10 Tf 50.0 582.0 Td 0.000 0.000 0.000 rg (An alert was triggered indicating a Powershell process was spawned on the target host) Tj ET
+BT /F1 10 Tf 50.0 568.0 Td 0.000 0.000 0.000 rg (`DESKTOP-80FLS88` by the source IP `10.0.2.15`. The IP address has a high risk score and a) Tj ET
+BT /F1 10 Tf 50.0 554.0 Td 0.000 0.000 0.000 rg (history of using various MITRE ATT&CK techniques.) Tj ET
+BT /F1 13 Tf 50.0 522.0 Td 0.200 0.400 0.700 rg (Indicators of Compromise) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 510.0 m 545.0 510.0 l S
+BT /F1 12 Tf 54.0 500.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 500.0 Td 0.000 0.000 0.000 rg (ip: 10.0.2.15) Tj ET
+BT /F1 12 Tf 54.0 486.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 486.0 Td 0.000 0.000 0.000 rg (host: DESKTOP-80FLS88) Tj ET
+BT /F1 13 Tf 50.0 454.0 Td 0.200 0.400 0.700 rg (IoC Details) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 442.0 m 545.0 442.0 l S
+0.050 0.150 0.400 rg 50.0 428.0 495.0 20.0 re f
+BT /F1 9 Tf 54.0 432.0 Td 1.000 1.000 1.000 rg (Type) Tj ET
+BT /F1 9 Tf 219.0 432.0 Td 1.000 1.000 1.000 rg (Value) Tj ET
+BT /F1 9 Tf 384.0 432.0 Td 1.000 1.000 1.000 rg (Context) Tj ET
+0.880 0.920 0.970 rg 50.0 407.0 495.0 16.0 re f
+BT /F1 8 Tf 54.0 410.0 Td 0.000 0.000 0.000 rg (ip) Tj ET
+BT /F1 8 Tf 219.0 410.0 Td 0.000 0.000 0.000 rg (10.0.2.15) Tj ET
+BT /F1 8 Tf 384.0 410.0 Td 0.000 0.000 0.000 rg (Known attacker with a high risk score and a history of using various MITRE ATT&CK techniques) Tj ET
+0.30 w 0.800 0.840 0.900 RG 50.0 398.0 m 545.0 398.0 l S
+BT /F1 8 Tf 54.0 396.0 Td 0.000 0.000 0.000 rg (host) Tj ET
+BT /F1 8 Tf 219.0 396.0 Td 0.000 0.000 0.000 rg (DESKTOP-80FLS88) Tj ET
+BT /F1 8 Tf 384.0 396.0 Td 0.000 0.000 0.000 rg (Target host where the Powershell process was spawned) Tj ET
+0.30 w 0.800 0.840 0.900 RG 50.0 384.0 m 545.0 384.0 l S
+BT /F1 13 Tf 50.0 330.0 Td 0.200 0.400 0.700 rg (Attack Timeline) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 318.0 m 545.0 318.0 l S
+BT /F1 12 Tf 54.0 308.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 308.0 Td 0.000 0.000 0.000 rg (A Newly Scheduled Task has been Detected on DESKTOP-80FLS88) Tj ET
+BT /F1 12 Tf 54.0 294.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 294.0 Td 0.000 0.000 0.000 rg (A Powershell process was spawned on DESKTOP-80FLS88) Tj ET
+BT /F1 13 Tf 50.0 262.0 Td 0.200 0.400 0.700 rg (MITRE ATT&CK Context) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 250.0 m 545.0 250.0 l S
+0.880 0.920 0.970 rg 50.0 206.0 495.0 42.0 re f
+0.40 w 0.200 0.400 0.700 RG 50.0 248.0 m 545.0 248.0 l S
+0.40 w 0.200 0.400 0.700 RG 50.0 206.0 m 545.0 206.0 l S
+BT /F1 9 Tf 58.0 232.0 Td 0.400 0.400 0.400 rg (Technique ID) Tj ET
+BT /F1 9 Tf 218.0 232.0 Td 0.000 0.000 0.000 rg (T1059.001) Tj ET
+BT /F1 9 Tf 58.0 218.0 Td 0.400 0.400 0.400 rg (Tactic) Tj ET
+BT /F1 9 Tf 218.0 218.0 Td 0.000 0.000 0.000 rg (Execution) Tj ET
+BT /F1 13 Tf 50.0 154.0 Td 0.200 0.400 0.700 rg (Remediation Steps) Tj ET
+0.80 w 0.200 0.400 0.700 RG 50.0 142.0 m 545.0 142.0 l S
+BT /F1 12 Tf 54.0 132.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 132.0 Td 0.000 0.000 0.000 rg ([immediate] Investigate the purpose of the Powershell process and determine if it was malicious.) Tj ET
+BT /F1 12 Tf 54.0 118.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 118.0 Td 0.000 0.000 0.000 rg ([short_term] Implement host-based intrusion detection systems \\\(HIDS\\\) to monitor and alert on suspicious PowerShell activity.) Tj ET
+BT /F1 12 Tf 54.0 104.0 Td 0.200 0.400 0.700 rg (·) Tj ET
+BT /F1 9 Tf 68.0 104.0 Td 0.000 0.000 0.000 rg ([long_term] Review and update the organization's PowerShell usage policy to minimize the risk of abuse.) Tj ET
+0.50 w 0.050 0.150 0.400 RG 50.0 52.0 m 545.0 52.0 l S
+BT /F1 7 Tf 50.0 40.0 Td 0.400 0.400 0.400 rg (This report is automatically generated and must be validated by a SOC analyst.) Tj ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 4 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+5 0 obj
+<< /Type /Catalog /Pages 4 0 R >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000005102 00000 n 
+0000005228 00000 n 
+0000005285 00000 n 
+trailer
+<< /Size 6 /Root 5 0 R >>
+startxref
+5334
+%%EOF

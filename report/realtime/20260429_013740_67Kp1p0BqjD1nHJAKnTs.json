@@ -1,0 +1,195 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.29",
+    "_id": "67Kp1p0BqjD1nHJAKnTs",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "image": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+            "processGuid": "{de1afa58-51f3-69f1-e508-000000003800}",
+            "processId": "6252",
+            "utcTime": "2026-04-29 00:33:57.106",
+            "targetFilename": "C:\\\\Users\\\\mossaabReverse\\\\AppData\\\\Local\\\\Temp\\\\__PSScriptPolicyTest_wihtjggo.p5b.ps1",
+            "ruleName": "technique_id=T1059.001,technique_name=PowerShell",
+            "creationUtcTime": "2026-04-29 00:33:57.106",
+            "user": "DESKTOP-80FLS88\\\\mossaabReverse"
+          },
+          "system": {
+            "eventID": "11",
+            "keywords": "0x8000000000000000",
+            "providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "level": "4",
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "opcode": "0",
+            "message": "\"File created:\r\nRuleName: technique_id=T1059.001,technique_name=PowerShell\r\nUtcTime: 2026-04-29 00:33:57.106\r\nProcessGuid: {de1afa58-51f3-69f1-e508-000000003800}\r\nProcessId: 6252\r\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nTargetFilename: C:\\Users\\mossaabReverse\\AppData\\Local\\Temp\\__PSScriptPolicyTest_wihtjggo.p5b.ps1\r\nCreationUtcTime: 2026-04-29 00:33:57.106\r\nUser: DESKTOP-80FLS88\\mossaabReverse\"",
+            "version": "2",
+            "systemTime": "2026-04-29T00:33:57.1762355Z",
+            "eventRecordID": "175598",
+            "threadID": "4236",
+            "computer": "DESKTOP-80FLS88",
+            "task": "11",
+            "processID": "3144",
+            "severityValue": "INFORMATION",
+            "providerName": "Microsoft-Windows-Sysmon"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 111,
+        "mail": true,
+        "level": 15,
+        "description": "Executable file dropped in folder commonly used by malware",
+        "groups": [
+          "sysmon",
+          "sysmon_eid11_detections",
+          "windows"
+        ],
+        "mitre": {
+          "technique": [
+            "Ingress Tool Transfer"
+          ],
+          "id": [
+            "T1105"
+          ],
+          "tactic": [
+            "Command and Control"
+          ]
+        },
+        "id": "92213"
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-29T00:35:01.624Z",
+      "location": "EventChannel",
+      "id": "1777422901.2340795",
+      "timestamp": "2026-04-29T01:35:01.624+0100"
+    },
+    "sort": [
+      1777422901624
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.image": "C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe",
+        "_source.data.win.eventdata.processGuid": "{de1afa58-51f3-69f1-e508-000000003800}",
+        "_source.data.win.eventdata.processId": "6252",
+        "_source.data.win.eventdata.utcTime": "2026-04-29 00:33:57.106",
+        "_source.data.win.eventdata.targetFilename": "C:\\\\Users\\\\mossaabReverse\\\\AppData\\\\Local\\\\Temp\\\\__PSScriptPolicyTest_wihtjggo.p5b.ps1",
+        "_source.data.win.eventdata.ruleName": "technique_id=T1059.001,technique_name=PowerShell",
+        "_source.data.win.eventdata.creationUtcTime": "2026-04-29 00:33:57.106",
+        "_source.data.win.eventdata.user": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.system.eventID": "11",
+        "_source.data.win.system.keywords": "0x8000000000000000",
+        "_source.data.win.system.providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "Microsoft-Windows-Sysmon/Operational",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"File created:\r\nRuleName: technique_id=T1059.001,technique_name=PowerShell\r\nUtcTime: 2026-04-29 00:33:57.106\r\nProcessGuid: {de1afa58-51f3-69f1-e508-000000003800}\r\nProcessId: 6252\r\nImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\nTargetFilename: C:\\Users\\mossaabReverse\\AppData\\Local\\Temp\\__PSScriptPolicyTest_wihtjggo.p5b.ps1\r\nCreationUtcTime: 2026-04-29 00:33:57.106\r\nUser: DESKTOP-80FLS88\\mossaabReverse\"",
+        "_source.data.win.system.version": "2",
+        "_source.data.win.system.systemTime": "2026-04-29T00:33:57.1762355Z",
+        "_source.data.win.system.eventRecordID": "175598",
+        "_source.data.win.system.threadID": "4236",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "11",
+        "_source.data.win.system.processID": "3144",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Microsoft-Windows-Sysmon",
+        "_source.rule.firedtimes": 111,
+        "_source.rule.mail": true,
+        "_source.rule.level": 15,
+        "_source.rule.description": "Executable file dropped in folder commonly used by malware",
+        "_source.rule.groups": [
+          "sysmon",
+          "sysmon_eid11_detections",
+          "windows"
+        ],
+        "_source.rule.mitre.technique": [
+          "Ingress Tool Transfer"
+        ],
+        "_source.rule.mitre.id": [
+          "T1105"
+        ],
+        "_source.rule.mitre.tactic": [
+          "Command and Control"
+        ],
+        "_source.rule.id": "92213",
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-29T00:35:01.624Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777422901.2340795",
+        "_source.timestamp": "2026-04-29T01:35:01.624+0100",
+        "ML_prediction": "Command and Control"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "severity": "critical",
+      "title": "Executable File Drop by Known Attacker",
+      "mitre_technique_id": "T1105",
+      "mitre_technique_name": "Ingress Tool Transfer",
+      "mitre_tactic": "Command and Control",
+      "explanation": "An executable file was dropped in a folder commonly used by malware by a known attacker with a high risk score and a history of using various MITRE ATT&CK techniques.",
+      "attack_sequence": [
+        "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "An executable file was dropped in a folder commonly used by malware"
+      ],
+      "iocs": [
+        {
+          "type": "ip",
+          "value": "10.0.2.15",
+          "context": "Source IP of the alert"
+        },
+        {
+          "type": "user",
+          "value": "DESKTOP-80FLS88\\\\mossaabReverse",
+          "context": "User associated with the alert"
+        },
+        {
+          "type": "host",
+          "value": "DESKTOP-80FLS88",
+          "context": "Host where the alert occurred"
+        }
+      ],
+      "remediation_steps": [
+        {
+          "priority": "immediate",
+          "action": "Investigate the dropped file and determine if it is malicious"
+        },
+        {
+          "priority": "immediate",
+          "action": "Isolate the affected host from the network to prevent further spread of the malware"
+        },
+        {
+          "priority": "short_term",
+          "action": "Review the security configuration of the affected host and address any vulnerabilities"
+        }
+      ],
+      "confidence": 1.0,
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260429_013738.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 33.76,
+    "alert_id": "1777422901.2340795"
+  }
+}

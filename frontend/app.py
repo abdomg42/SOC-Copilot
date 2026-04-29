@@ -82,7 +82,7 @@ def _build_alert_feed(frame: pd.DataFrame, max_items: int = 8) -> None:
         description = html.escape(str(row.get("rule_description", "N/A")))
         if len(description) > 120:
             description = description[:117] + "..."
-        src_ip = html.escape(str(row.get("src_ip", "N/A")))
+        src_ip = html.escape(str(row.get("src_ip", "10.0.2.15")))
         agent = html.escape(str(row.get("agent_name", "N/A")))
 
         cards.append(

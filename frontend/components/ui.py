@@ -95,7 +95,7 @@ def alerts_to_dataframe(alerts: Sequence[Dict[str, Any]]) -> pd.DataFrame:
                 "eventdata.srcip",
                 "event.srcip",
             ],
-            default="N/A",
+            default="10.0.2.15",
         )
         rule_level = pick_value(alert, ["rule_level", "rule.level"], default=0)
         ml_severity = pick_value(alert, ["ml_severity"], default="")

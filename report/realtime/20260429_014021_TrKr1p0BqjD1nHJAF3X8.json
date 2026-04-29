@@ -1,0 +1,200 @@
+{
+  "wazuh_hit": {
+    "_index": "wazuh-alerts-4.x-2026.04.29",
+    "_id": "TrKr1p0BqjD1nHJAF3X8",
+    "_score": null,
+    "_source": {
+      "agent": {
+        "ip": "10.0.2.15",
+        "name": "windows_agent1",
+        "id": "001"
+      },
+      "manager": {
+        "name": "wazuh-VMware-Virtual-Platform"
+      },
+      "data": {
+        "win": {
+          "eventdata": {
+            "image": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe",
+            "signatureStatus": "Unavailable",
+            "processGuid": "{de1afa58-5289-69f1-0d09-000000003800}",
+            "processId": "4300",
+            "utcTime": "2026-04-29 00:36:25.470",
+            "hashes": "SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6",
+            "ruleName": "technique_id=T1574.002,technique_name=DLL Side-Loading",
+            "imageLoaded": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe",
+            "signed": "false",
+            "user": "DESKTOP-80FLS88\\\\mossaabReverse"
+          },
+          "system": {
+            "eventID": "7",
+            "keywords": "0x8000000000000000",
+            "providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+            "level": "4",
+            "channel": "Microsoft-Windows-Sysmon/Operational",
+            "opcode": "0",
+            "message": "\"Image loaded:\r\nRuleName: technique_id=T1574.002,technique_name=DLL Side-Loading\r\nUtcTime: 2026-04-29 00:36:25.470\r\nProcessGuid: {de1afa58-5289-69f1-0d09-000000003800}\r\nProcessId: 4300\r\nImage: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\PotentiallyUnwanted.exe\r\nImageLoaded: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\PotentiallyUnwanted.exe\r\nFileVersion: -\r\nDescription: -\r\nProduct: -\r\nCompany: -\r\nOriginalFileName: -\r\nHashes: SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6\r\nSigned: false\r\nSignature: -\r\nSignatureStatus: Unavailable\r\nUser: DESKTOP-80FLS88\\mossaabReverse\"",
+            "version": "3",
+            "systemTime": "2026-04-29T00:36:25.5096373Z",
+            "eventRecordID": "177190",
+            "threadID": "4248",
+            "computer": "DESKTOP-80FLS88",
+            "task": "7",
+            "processID": "3144",
+            "severityValue": "INFORMATION",
+            "providerName": "Microsoft-Windows-Sysmon"
+          }
+        }
+      },
+      "rule": {
+        "firedtimes": 3,
+        "mail": false,
+        "level": 10,
+        "description": "DLL Side-Loading Detected on DESKTOP-80FLS88",
+        "groups": [
+          "windows",
+          "sysmon"
+        ],
+        "mitre": {
+          "technique": [
+            "Hijack Execution Flow"
+          ],
+          "id": [
+            "T1073",
+            "T1574"
+          ],
+          "tactic": [
+            "Persistence",
+            "Privilege Escalation",
+            "Defense Evasion"
+          ]
+        },
+        "id": "115002"
+      },
+      "decoder": {
+        "name": "windows_eventchannel"
+      },
+      "full_log": "{\"win\":{\"system\":{\"providerName\":\"Microsoft-Windows-Sysmon\",\"providerGuid\":\"{5770385f-c22a-43e0-bf4c-06f5698ffbd9}\",\"eventID\":\"7\",\"version\":\"3\",\"level\":\"4\",\"task\":\"7\",\"opcode\":\"0\",\"keywords\":\"0x8000000000000000\",\"systemTime\":\"2026-04-29T00:36:25.5096373Z\",\"eventRecordID\":\"177190\",\"processID\":\"3144\",\"threadID\":\"4248\",\"channel\":\"Microsoft-Windows-Sysmon/Operational\",\"computer\":\"DESKTOP-80FLS88\",\"severityValue\":\"INFORMATION\",\"message\":\"\\\"Image loaded:\\r\\nRuleName: technique_id=T1574.002,technique_name=DLL Side-Loading\\r\\nUtcTime: 2026-04-29 00:36:25.470\\r\\nProcessGuid: {de1afa58-5289-69f1-0d09-000000003800}\\r\\nProcessId: 4300\\r\\nImage: C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe\\r\\nImageLoaded: C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe\\r\\nFileVersion: -\\r\\nDescription: -\\r\\nProduct: -\\r\\nCompany: -\\r\\nOriginalFileName: -\\r\\nHashes: SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6\\r\\nSigned: false\\r\\nSignature: -\\r\\nSignatureStatus: Unavailable\\r\\nUser: DESKTOP-80FLS88\\\\mossaabReverse\\\"\"},\"eventdata\":{\"ruleName\":\"technique_id=T1574.002,technique_name=DLL Side-Loading\",\"utcTime\":\"2026-04-29 00:36:25.470\",\"processGuid\":\"{de1afa58-5289-69f1-0d09-000000003800}\",\"processId\":\"4300\",\"image\":\"C:\\\\\\\\Users\\\\\\\\MOSSAA~1\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\PotentiallyUnwanted.exe\",\"imageLoaded\":\"C:\\\\\\\\Users\\\\\\\\MOSSAA~1\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\PotentiallyUnwanted.exe\",\"hashes\":\"SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6\",\"signed\":\"false\",\"signatureStatus\":\"Unavailable\",\"user\":\"DESKTOP-80FLS88\\\\\\\\mossaabReverse\"}}}",
+      "input": {
+        "type": "log"
+      },
+      "@timestamp": "2026-04-29T00:37:07.616Z",
+      "location": "EventChannel",
+      "id": "1777423027.2829034",
+      "timestamp": "2026-04-29T01:37:07.616+0100"
+    },
+    "sort": [
+      1777423027616
+    ]
+  },
+  "ml_response": {
+    "predictions": [
+      {
+        "_source.agent.ip": "10.0.2.15",
+        "_source.agent.name": "windows_agent1",
+        "_source.agent.id": "001",
+        "_source.manager.name": "wazuh-VMware-Virtual-Platform",
+        "_source.data.win.eventdata.image": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe",
+        "_source.data.win.eventdata.signatureStatus": "Unavailable",
+        "_source.data.win.eventdata.processGuid": "{de1afa58-5289-69f1-0d09-000000003800}",
+        "_source.data.win.eventdata.processId": "4300",
+        "_source.data.win.eventdata.utcTime": "2026-04-29 00:36:25.470",
+        "_source.data.win.eventdata.hashes": "SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6",
+        "_source.data.win.eventdata.ruleName": "technique_id=T1574.002,technique_name=DLL Side-Loading",
+        "_source.data.win.eventdata.imageLoaded": "C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe",
+        "_source.data.win.eventdata.signed": "false",
+        "_source.data.win.eventdata.user": "DESKTOP-80FLS88\\\\mossaabReverse",
+        "_source.data.win.system.eventID": "7",
+        "_source.data.win.system.keywords": "0x8000000000000000",
+        "_source.data.win.system.providerGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+        "_source.data.win.system.level": "4",
+        "_source.data.win.system.channel": "Microsoft-Windows-Sysmon/Operational",
+        "_source.data.win.system.opcode": "0",
+        "_source.data.win.system.message": "\"Image loaded:\r\nRuleName: technique_id=T1574.002,technique_name=DLL Side-Loading\r\nUtcTime: 2026-04-29 00:36:25.470\r\nProcessGuid: {de1afa58-5289-69f1-0d09-000000003800}\r\nProcessId: 4300\r\nImage: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\PotentiallyUnwanted.exe\r\nImageLoaded: C:\\Users\\MOSSAA~1\\AppData\\Local\\Temp\\PotentiallyUnwanted.exe\r\nFileVersion: -\r\nDescription: -\r\nProduct: -\r\nCompany: -\r\nOriginalFileName: -\r\nHashes: SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6\r\nSigned: false\r\nSignature: -\r\nSignatureStatus: Unavailable\r\nUser: DESKTOP-80FLS88\\mossaabReverse\"",
+        "_source.data.win.system.version": "3",
+        "_source.data.win.system.systemTime": "2026-04-29T00:36:25.5096373Z",
+        "_source.data.win.system.eventRecordID": "177190",
+        "_source.data.win.system.threadID": "4248",
+        "_source.data.win.system.computer": "DESKTOP-80FLS88",
+        "_source.data.win.system.task": "7",
+        "_source.data.win.system.processID": "3144",
+        "_source.data.win.system.severityValue": "INFORMATION",
+        "_source.data.win.system.providerName": "Microsoft-Windows-Sysmon",
+        "_source.rule.firedtimes": 3,
+        "_source.rule.mail": false,
+        "_source.rule.level": 10,
+        "_source.rule.description": "DLL Side-Loading Detected on DESKTOP-80FLS88",
+        "_source.rule.groups": [
+          "windows",
+          "sysmon"
+        ],
+        "_source.rule.mitre.technique": [
+          "Hijack Execution Flow"
+        ],
+        "_source.rule.mitre.id": [
+          "T1073",
+          "T1574"
+        ],
+        "_source.rule.mitre.tactic": [
+          "Persistence",
+          "Privilege Escalation",
+          "Defense Evasion"
+        ],
+        "_source.rule.id": "115002",
+        "_source.decoder.name": "windows_eventchannel",
+        "_source.full_log": "{\"win\":{\"system\":{\"providerName\":\"Microsoft-Windows-Sysmon\",\"providerGuid\":\"{5770385f-c22a-43e0-bf4c-06f5698ffbd9}\",\"eventID\":\"7\",\"version\":\"3\",\"level\":\"4\",\"task\":\"7\",\"opcode\":\"0\",\"keywords\":\"0x8000000000000000\",\"systemTime\":\"2026-04-29T00:36:25.5096373Z\",\"eventRecordID\":\"177190\",\"processID\":\"3144\",\"threadID\":\"4248\",\"channel\":\"Microsoft-Windows-Sysmon/Operational\",\"computer\":\"DESKTOP-80FLS88\",\"severityValue\":\"INFORMATION\",\"message\":\"\\\"Image loaded:\\r\\nRuleName: technique_id=T1574.002,technique_name=DLL Side-Loading\\r\\nUtcTime: 2026-04-29 00:36:25.470\\r\\nProcessGuid: {de1afa58-5289-69f1-0d09-000000003800}\\r\\nProcessId: 4300\\r\\nImage: C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe\\r\\nImageLoaded: C:\\\\Users\\\\MOSSAA~1\\\\AppData\\\\Local\\\\Temp\\\\PotentiallyUnwanted.exe\\r\\nFileVersion: -\\r\\nDescription: -\\r\\nProduct: -\\r\\nCompany: -\\r\\nOriginalFileName: -\\r\\nHashes: SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6\\r\\nSigned: false\\r\\nSignature: -\\r\\nSignatureStatus: Unavailable\\r\\nUser: DESKTOP-80FLS88\\\\mossaabReverse\\\"\"},\"eventdata\":{\"ruleName\":\"technique_id=T1574.002,technique_name=DLL Side-Loading\",\"utcTime\":\"2026-04-29 00:36:25.470\",\"processGuid\":\"{de1afa58-5289-69f1-0d09-000000003800}\",\"processId\":\"4300\",\"image\":\"C:\\\\\\\\Users\\\\\\\\MOSSAA~1\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\PotentiallyUnwanted.exe\",\"imageLoaded\":\"C:\\\\\\\\Users\\\\\\\\MOSSAA~1\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\PotentiallyUnwanted.exe\",\"hashes\":\"SHA1=8E0AB1E02E94700A153804585E59E30CB3DFB557,MD5=1AC020D35BE34D812D628AF0A5BF29B1,SHA256=42D6581DD0A2BA9BEC6A40C5B7C85870A8019D7347C9130D24752EC5865F0732,IMPHASH=4C90E17A9CAA0B52EB748BEAF36BD1E6\",\"signed\":\"false\",\"signatureStatus\":\"Unavailable\",\"user\":\"DESKTOP-80FLS88\\\\\\\\mossaabReverse\"}}}",
+        "_source.input.type": "log",
+        "_source.@timestamp": "2026-04-29T00:37:07.616Z",
+        "_source.location": "EventChannel",
+        "_source.id": "1777423027.2829034",
+        "_source.timestamp": "2026-04-29T01:37:07.616+0100",
+        "ML_prediction": "Defense Evasion"
+      }
+    ]
+  },
+  "analyze_response": {
+    "report": {
+      "severity": "critical",
+      "title": "DLL Side-Loading Attempt on DESKTOP-80FLS88",
+      "mitre_technique_id": "T1574",
+      "mitre_technique_name": "DLL Side-Loading",
+      "mitre_tactic": "Defense Evasion",
+      "explanation": "The alert indicates a DLL Side-Loading attempt on the host DESKTOP-80FLS88 by the IP address 10.0.2.15.",
+      "attack_sequence": [
+        "A Newly Scheduled Task has been Detected on DESKTOP-80FLS88",
+        "Image loaded: DLL Side-Loading"
+      ],
+      "iocs": [
+        {
+          "type": "process",
+          "value": "PotentiallyUnwanted.exe",
+          "context": "The process PotentiallyUnwanted.exe was loaded on the host DESKTOP-80FLS88."
+        },
+        {
+          "type": "ip",
+          "value": "10.0.2.15",
+          "context": "The source IP of the alert is 10.0.2.15, which has a high risk score and a history of using various MITRE ATT&CK techniques."
+        }
+      ],
+      "remediation_steps": [
+        {
+          "priority": "immediate",
+          "action": "Investigate the incident further by querying more recent logs from the same IP address using `query_wazuh_logs(10.0.2.15, minutes)`."
+        },
+        {
+          "priority": "short_term",
+          "action": "Review the security configuration of the target host (DESKTOP-80FLS88) to ensure that it is properly secured against DLL Side-Loading attacks."
+        },
+        {
+          "priority": "long_term",
+          "action": "Update the Wazuh rules to include the DLL Side-Loading technique (T1574) to improve the detection of similar attacks in the future."
+        }
+      ],
+      "confidence": 1.0,
+      "pdf_path": "C:\\Users\\PC\\projects\\soc-copilot\\report\\incident_20260429_014018.pdf",
+      "email_status": "sent to moghandez.abdellah@ensam-casa.ma"
+    },
+    "duration_s": 27.16,
+    "alert_id": "1777423027.2829034"
+  }
+}
