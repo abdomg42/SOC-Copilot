@@ -2,14 +2,6 @@
 
 SOC Copilot is a security operations assistant that combines a FastAPI agent backend, a Streamlit frontend, knowledge-base ingestion, and ML helpers for alert enrichment and inference.
 
-## Architecture
-
-Below is the system architecture diagram showing collection, processing, the AI agent (LangGraph + Ollama + RAG + Neo4j), and the Streamlit UI.
-
-![SOC Copilot architecture](docs/architecture.png)
-
-_If the image does not appear, place the provided diagram file at `docs/architecture.png` in the repository root._
-
 ## Repository Layout
 
 ```text
