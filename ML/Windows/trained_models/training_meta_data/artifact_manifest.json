@@ -1,19 +1,19 @@
 {
-  "output_directory": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models",
+  "output_directory": "/kaggle/working/apt_model_bundle",
   "saved_models": {
-    "RandomForest": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_randomforest.pkl",
-    "LightGBM": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_lightgbm.pkl",
-    "XGBoost": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_xgboost.pkl",
-    "rf": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_rf.pkl",
-    "lgbm": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_lgbm.pkl",
-    "xgboost_clf": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_xgboost_clf.pkl",
-    "best_model": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/model_best_model.pkl"
+    "RandomForest": "/kaggle/working/apt_model_bundle/model_randomforest.pkl",
+    "LightGBM": "/kaggle/working/apt_model_bundle/model_lightgbm.pkl",
+    "XGBoost": "/kaggle/working/apt_model_bundle/model_xgboost.pkl",
+    "rf": "/kaggle/working/apt_model_bundle/model_rf.pkl",
+    "lgbm": "/kaggle/working/apt_model_bundle/model_lgbm.pkl",
+    "xgboost_clf": "/kaggle/working/apt_model_bundle/model_xgboost_clf.pkl",
+    "best_model": "/kaggle/working/apt_model_bundle/model_best_model.pkl"
   },
   "saved_objects": {
-    "preprocessor": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/preprocessor.pkl",
-    "var_filter": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/var_filter.pkl",
-    "label_encoder": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/label_encoder.pkl",
-    "inference_bundle": "/content/drive/MyDrive/Projet_Metier_Dataset_Collab/Windows_APT_ML_Project/version_2_saved_models/inference_bundle.pkl"
+    "preprocessor": "/kaggle/working/apt_model_bundle/preprocessor.pkl",
+    "var_filter": "/kaggle/working/apt_model_bundle/var_filter.pkl",
+    "label_encoder": "/kaggle/working/apt_model_bundle/label_encoder.pkl",
+    "inference_bundle": "/kaggle/working/apt_model_bundle/inference_bundle.pkl"
   },
   "files": [
     "class_metadata.json",

@@ -1,10 +1,10 @@
 {
   "project": "Windows APT 2025 Detection",
   "model_name": "LightGBM",
-  "training_date": "2026-04-24T15:47:56.050880",
+  "training_date": "2026-05-02T17:13:31.564863",
   "dataset": "Windows-APT 2025 (Wazuh SIEM Export)",
   "sample_size": 102011,
-  "n_features": 45,
+  "n_features": 39,
   "n_classes": 10,
   "classes": [
     "Benign/Unknown",
@@ -18,7 +18,7 @@
     "Persistence",
     "Privilege Escalation"
   ],
-  "best_macro_f1": 0.9619,
-  "best_weighted_f1": 0.9728,
+  "best_macro_f1": 0.7983,
+  "best_weighted_f1": 0.8913,
   "notes": "This bundle contains all required objects for production inference. Raw future logs must pass through the SAME feature engineering logic, then preprocessor -> variance filter -> model prediction."
 }

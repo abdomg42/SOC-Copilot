@@ -35,14 +35,8 @@
     "feat_dst_port_well_known",
     "feat_dst_port_http",
     "feat_dst_is_private",
-    "feat_rule_level",
-    "feat_rule_high_sev",
-    "feat_rule_critical",
-    "feat_fired_times",
     "feat_channel_ord",
-    "feat_decoder_name_ord",
     "feat_sev_value_ord",
-    "feat_agent_name_ord",
     "feat_provider_name_ord",
     "feat_integrity_cat_ord"
   ],
@@ -93,10 +87,6 @@
     "feat_dst_port_high",
     "feat_dst_is_private",
     "feat_dst_is_loopback",
-    "feat_rule_level",
-    "feat_rule_high_sev",
-    "feat_rule_critical",
-    "feat_fired_times",
     "feat_hour",
     "feat_dow",
     "feat_is_night",
@@ -104,11 +94,9 @@
   ],
   "categorical_features": [
     "feat_channel",
-    "feat_decoder_name",
     "feat_sev_value",
-    "feat_agent_name",
     "feat_provider_name",
     "feat_integrity_cat"
   ],
-  "n_features_final": 45
+  "n_features_final": 39
 }
